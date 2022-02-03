@@ -1,0 +1,28 @@
+#
+# Exclude these files from release archives.
+# This will also make them unavailable when using Composer with `--prefer-dist`.
+# https://git-scm.com/docs/gitattributes
+#
+/tests             export-ignore
+/.github           export-ignore
+.editorconfig      export-ignore
+.gitattributes     export-ignore
+.gitignore         export-ignore
+phpunit.xml.dist   export-ignore
+phpcs.xml.dist     export-ignore
+CHANGELOG.md       export-ignore
+CONTRIBUTING.md    export-ignore
+README.md          export-ignore
+phpstan.neon.dist  export-ignore
+
+#
+# Auto detect text files and perform LF normalization
+#
+* text=auto
+
+#
+# The above will handle all files NOT found below
+#
+*.md text
+*.php text
+*.inc text

@@ -1,0 +1,59 @@
+{
+    "name": "canvural/phpstan-blade-rule",
+    "description": "PHPStan rule for static analysis of Blade templates",
+    "type": "phpstan-extension",
+    "require": {
+        "php": "^8.0",
+        "phpstan/phpstan": "^1.4.4",
+        "illuminate/view": "^8.82 || ^9",
+        "symplify/template-phpstan-compiler": "^10.0.20",
+        "illuminate/filesystem": "^8.82 || ^9.0",
+        "illuminate/contracts": "^8.82 || ^9.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "roave/security-advisories": "dev-latest",
+        "orchestra/testbench": "^6.24",
+        "doctrine/coding-standard": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vural\\PHPStanBladeRule\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vural\\PHPStanBladeRule\\Tests\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Can Vural",
+            "email": "can9119@gmail.com"
+        }
+    ],
+    "scripts": {
+        "cs": "vendor/bin/phpcs",
+        "fix-cs": "vendor/bin/phpcbf",
+        "phpstan": "vendor/bin/phpstan",
+        "tests": "vendor/bin/phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1-dev"
+        },
+        "phpstan": {
+            "includes": [
+                "config/extension.neon"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

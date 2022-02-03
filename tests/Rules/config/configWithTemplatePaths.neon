@@ -1,0 +1,5 @@
+includes:
+    - ../../tests.neon
+parameters:
+    templatePaths:
+        - tests/Rules/templates
