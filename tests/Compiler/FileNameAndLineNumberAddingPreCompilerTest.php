@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Vural\PHPStanBladeRule\Tests\Compiler;
 
-use Generator;
+use Iterator;
 use PHPUnit\Framework\TestCase;
+use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
+use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
+use Symplify\EasyTesting\StaticFixtureSplitter;
+use Symplify\SmartFileSystem\SmartFileInfo;
 use Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler;
+
+use function trim;
 
 /** @covers \Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler */
 class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
@@ -22,16 +28,26 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 
     /**
      * @test
-     * @dataProvider basicTemplateProvider
+     * @dataProvider fixtureProvider
      */
-    function it_will_add_file_name_and_line_number_for_basic_templates(string $raw, string $expected): void
+    function it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
 
-        $this->assertSame(
-            $expected,
-            $this->compiler->compileString($raw)
-        );
+        $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
+        $phpFileContent   = $this->compiler->compileString(trim($inputAndExpected->getInput()));
+
+        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
+
+        $this->assertSame($phpFileContent, trim($inputAndExpected->getExpected()));
+    }
+
+    /**
+     * @return Iterator<SmartFileInfo>
+     */
+    public function fixtureProvider(): Iterator
+    {
+        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
     }
 
     /** @test */
@@ -77,26 +93,5 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
             $compiler->compileString('{{ $foo }}')
         );
-    }
-
-    /**
-     * @phpstan-return Generator<string, string[], mixed, mixed>
-     */
-    public function basicTemplateProvider(): Generator
-    {
-        yield 'Single line template' => ['{{ $foo }}', '/** file: foo.blade.php, line: 1 */{{ $foo }}'];
-        yield 'Multi line template' => [
-            <<<'TEMPLATE'
-<h1>
-  {{ $foo }}
-</h1>
-TEMPLATE
-,
-            <<<'TEMPLATE'
-/** file: foo.blade.php, line: 1 */<h1>
-/** file: foo.blade.php, line: 2 */  {{ $foo }}
-/** file: foo.blade.php, line: 3 */</h1>
-TEMPLATE,
-        ];
     }
 }
