@@ -8,14 +8,18 @@ use Illuminate\Support\Str;
 
 use function explode;
 use function implode;
+use function preg_match;
 use function rtrim;
 use function sprintf;
 use function str_contains;
+use function trim;
 
 use const PHP_EOL;
 
 final class FileNameAndLineNumberAddingPreCompiler
 {
+    private const PHP_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
+
     private string $fileName;
 
     /**
@@ -33,7 +37,9 @@ final class FileNameAndLineNumberAddingPreCompiler
         $lineNumber = 1;
 
         foreach ($lines as $key => $line) {
-            $lines[$key] = sprintf('/** file: %s, line: %d */', $this->fileName, $lineNumber) . $line;
+            if ($line !== '' && ! preg_match(self::PHP_COMMENT_REGEX, trim($line))) {
+                $lines[$key] = sprintf('/** file: %s, line: %d */', $this->fileName, $lineNumber) . $line;
+            }
 
             $lineNumber++;
         }

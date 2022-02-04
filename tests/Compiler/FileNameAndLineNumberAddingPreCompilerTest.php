@@ -39,7 +39,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 
-        $this->assertSame($phpFileContent, trim($inputAndExpected->getExpected()));
+        $this->assertSame(trim($inputAndExpected->getExpected()), $phpFileContent);
     }
 
     /**
