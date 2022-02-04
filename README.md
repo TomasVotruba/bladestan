@@ -1,6 +1,15 @@
 # phpstan-blade-rule
 
-PHPStan rule for static analysis of Blade templates.
+<p align="center">
+  <a href="https://github.com/canvural/phpstan-blade-rule/actions"><img src="https://github.com/canvural/phpstan-blade-rule/workflows/Tests/badge.svg" alt="Build Status"></a>
+  <a href=""><img src="https://img.shields.io/badge/PHPStan-Level%20Max-brightgreen.svg?style=flat&logo=php" alt="PHPStan level max"></a>
+  <a href="https://packagist.org/packages/canvural/phpstan-blade-rule/stats"><img src="https://poser.pugx.org/canvural/phpstan-blade-rule/d/total.svg" alt="Total Downloads"></a>
+  <a href="https://packagist.org/packages/canvural/phpstan-blade-rule"><img src="https://poser.pugx.org/canvural/phpstan-blade-rule/v/stable.svg" alt="Latest Version"></a>
+  <a href="https://github.com/canvural/phpstan-blade-rule/blob/main/LICENSE.md"><img src="https://poser.pugx.org/canvural/phpstan-blade-rule/license.svg" alt="License"></a>
+  <br><br>
+  PHPStan rule for static analysis of Blade templates.
+</p>
+<hr>
 
 ## Installation
 
