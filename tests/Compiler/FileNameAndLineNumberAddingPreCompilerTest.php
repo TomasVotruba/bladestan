@@ -64,11 +64,11 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
     }
 
     /** @test */
-    function it_will_loop_over_template_paths_to_find_correct_one()
+    function it_will_loop_over_template_paths_to_find_correct_one(): void
     {
         $compiler = new FileNameAndLineNumberAddingPreCompiler([
             'resources/views',
-            'foo/bar'
+            'foo/bar',
         ]);
 
         $compiler->setFileName('/var/www/foo/bar/users/index.blade.php');
