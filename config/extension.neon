@@ -29,6 +29,9 @@ services:
     - Vural\PHPStanBladeRule\NodeAnalyzer\ViewDataParametersAnalyzer
     - Vural\PHPStanBladeRule\NodeAnalyzer\CompactFunctionCallParameterResolver
     - Vural\PHPStanBladeRule\NodeAnalyzer\ValueResolver
-    - Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler
+    - 
+        class: Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler
+        arguments:
+            templatePaths: %templatePaths%
     - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor

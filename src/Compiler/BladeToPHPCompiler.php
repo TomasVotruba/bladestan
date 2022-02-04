@@ -96,7 +96,7 @@ final class BladeToPHPCompiler
         $fileContent = $this->fileSystem->get($filePath);
 
         // TODO: extract class
-        $fileContent = $this->preCompiler->setFileName($this->fileSystem->basename($filePath))->compileString($fileContent);
+        $fileContent = $this->preCompiler->setFileName($filePath)->compileString($fileContent);
 
         $rawPhpContent = $this->compileAndGetStrippedPHP($fileContent);
 
@@ -108,7 +108,7 @@ final class BladeToPHPCompiler
                     $includedFilePath = $this->fileViewFinder->find($include);
                     $fileContents     = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->preCompiler->setFileName($this->fileSystem->basename($includedFilePath))->compileString($fileContents);
+                    $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($fileContents);
                     $includedContent     = $this->compileAndGetStrippedPHP(
                         $preCompiledContents,
                         false

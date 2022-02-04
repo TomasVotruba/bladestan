@@ -62,7 +62,6 @@ vendor/bin/phpstan analyse src -l8 --error-format blade
 
 ### Known issues / TODOs
 
-- [ ] In error formatter relative paths for templates can be displayed, instead of just file name.
 - [ ] Custom directives are not supported. Can be supported by custom bootstrap file maybe.
 - [ ] Blade components are not analyzed. Support for it will come soon. 
 
