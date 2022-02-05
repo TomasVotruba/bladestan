@@ -30,19 +30,12 @@ use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
 use Vural\PHPStanBladeRule\ValueObject\PhpFileContentsWithLineMap;
 
-use function array_map;
 use function array_merge;
-use function array_unshift;
 use function getcwd;
-use function implode;
 use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
 use function sprintf;
-use function str_starts_with;
-use function trim;
-
-use const PHP_EOL;
 
 final class BladeToPHPCompiler
 {
@@ -55,11 +48,6 @@ final class BladeToPHPCompiler
      * @see https://regex101.com/r/BGw7Lf/1
      */
     private const VIEW_INCLUDE_REPLACE_REGEX = '#echo \$__env->make\(\'%s\',( \[(.*?)?],)? \\\Illuminate\\\Support\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\);#s';
-
-    /**
-     * @see https://regex101.com/r/inJurv/1
-     */
-    private const PHP_OPEN_CLOSE_TAGS_REGEX = '#(/\*\* file: .*?, line: \d+ \*/)?.*?<\?php(.*?)\?>#';
 
     private Parser $parser;
 
@@ -75,6 +63,7 @@ final class BladeToPHPCompiler
         private FileViewFinder $fileViewFinder,
         private FileNameAndLineNumberAddingPreCompiler $preCompiler,
         private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
+        private PhpContentExtractor $phpContentExtractor,
         private array $components = [],
     ) {
         $parserFactory = new ParserFactory();
@@ -98,7 +87,7 @@ final class BladeToPHPCompiler
         // TODO: extract class
         $fileContent = $this->preCompiler->setFileName($filePath)->compileString($fileContent);
 
-        $rawPhpContent = $this->compileAndGetStrippedPHP($fileContent);
+        $rawPhpContent = $this->phpContentExtractor->extract($this->compiler->compileString($fileContent));
 
         $includes = $this->getIncludes($rawPhpContent);
 
@@ -109,8 +98,9 @@ final class BladeToPHPCompiler
                     $fileContents     = $this->fileSystem->get($includedFilePath);
 
                     $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($fileContents);
-                    $includedContent     = $this->compileAndGetStrippedPHP(
-                        $preCompiledContents,
+                    $compiledContent     = $this->compiler->compileString($preCompiledContents);
+                    $includedContent     = $this->phpContentExtractor->extract(
+                        $compiledContent,
                         false
                     );
                 } catch (Throwable $e) {
@@ -127,30 +117,6 @@ final class BladeToPHPCompiler
         $phpLinesToTemplateLines = $this->phpLineToTemplateLineResolver->resolve($decoratedPhpContent);
 
         return new PhpFileContentsWithLineMap($decoratedPhpContent, $phpLinesToTemplateLines);
-    }
-
-    /** TODO: extract class */
-    private function compileAndGetStrippedPHP(string $fileContent, bool $addPHPOpeningTag = true): string
-    {
-        $htmlMixedPHP = $this->compiler->compileString($fileContent);
-
-        preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $htmlMixedPHP, $matches);
-
-        foreach ($matches[1] as $key => $match) {
-            if ($match !== '' || str_starts_with(trim($matches[2][$key]), 'echo $__env->make')) {
-                continue;
-            }
-
-            $matches[1][$key] = $matches[1][$key - 1];
-        }
-
-        $phpContents = array_map(static fn ($a, $b) => $a . $b, $matches[1], $matches[2]);
-
-        if ($phpContents !== [] && $addPHPOpeningTag) {
-            array_unshift($phpContents, '<?php');
-        }
-
-        return implode(PHP_EOL, $phpContents);
     }
 
     /**
