@@ -47,7 +47,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
      */
     public function fixtureProvider(): Iterator
     {
-        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
+        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/FileNameAndLineNumberAddingPreCompiler', '*.blade.php');
     }
 
     /** @test */
