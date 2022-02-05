@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Vural\PHPStanBladeRule\Tests\Rules;
 
+use PHPStan\Rules\Cast\EchoRule;
 use PHPStan\Rules\Operators\InvalidBinaryOperationRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
@@ -26,7 +27,10 @@ class LaravelViewFunctionRuleTest extends RuleTestCase
     protected function getRule(): Rule
     {
         return new BladeRule(
-            [self::getContainer()->getByType(InvalidBinaryOperationRule::class)],
+            [
+                self::getContainer()->getByType(InvalidBinaryOperationRule::class),
+                self::getContainer()->getByType(EchoRule::class),
+            ],
             self::getContainer()->getByType(BladeViewMethodsMatcher::class),
             self::getContainer()->getByType(LaravelViewFunctionMatcher::class),
             new ViewRuleHelper(
