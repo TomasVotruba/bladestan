@@ -34,4 +34,5 @@ services:
         arguments:
             templatePaths: %templatePaths%
     - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
+    - Vural\PHPStanBladeRule\Compiler\PhpContentExtractor
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
