@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vural\PHPStanBladeRule\Rules;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
@@ -18,6 +17,7 @@ use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
 use Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory;
 
 use function array_merge;
+use function file_get_contents;
 use function file_put_contents;
 use function md5;
 use function sys_get_temp_dir;
@@ -39,7 +39,6 @@ final class ViewRuleHelper
      *
      * @return RuleError[]
      *
-     * @throws FileNotFoundException
      * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope, array $renderTemplatesWithParameters): array
@@ -69,7 +68,6 @@ final class ViewRuleHelper
      *
      * @return RuleError[]
      *
-     * @throws FileNotFoundException
      * @throws ShouldNotHappenException
      */
     private function processTemplateFilePath(
@@ -78,7 +76,13 @@ final class ViewRuleHelper
         Scope $scope,
         int $phpLine
     ): array {
-        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent($templateFilePath, $variablesAndTypes);
+        $fileContents               = file_get_contents($templateFilePath);
+
+        if ($fileContents === false) {
+            return [];
+        }
+
+        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent($templateFilePath, $fileContents, $variablesAndTypes);
 
         $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
 

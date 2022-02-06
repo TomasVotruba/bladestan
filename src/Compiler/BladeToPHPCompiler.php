@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Vural\PHPStanBladeRule\Compiler;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Events\NullDispatcher;
@@ -78,32 +77,32 @@ final class BladeToPHPCompiler
     /**
      * @param array<VariableAndType> $variablesAndTypes
      *
-     * @throws ShouldNotHappenException|FileNotFoundException
+     * @throws ShouldNotHappenException
      */
-    public function compileContent(string $filePath, array $variablesAndTypes): PhpFileContentsWithLineMap
+    public function compileContent(string $filePath, string $fileContents, array $variablesAndTypes): PhpFileContentsWithLineMap
     {
-        $fileContent = $this->fileSystem->get($filePath);
+        // Precompile contents to add template file name and line numbers
+        $fileContents = $this->preCompiler->setFileName($filePath)->compileString($fileContents);
 
-        // TODO: extract class
-        $fileContent = $this->preCompiler->setFileName($filePath)->compileString($fileContent);
-
-        $rawPhpContent = $this->phpContentExtractor->extract($this->compiler->compileString($fileContent));
+        // Extract PHP content from HTML and PHP mixed content
+        $rawPhpContent = $this->phpContentExtractor->extract($this->compiler->compileString($fileContents));
 
         $includes = $this->getIncludes($rawPhpContent);
 
+        // Recursively fetch and compile includes
         while ($includes !== []) {
             foreach ($includes as $include) {
                 try {
-                    $includedFilePath = $this->fileViewFinder->find($include);
-                    $fileContents     = $this->fileSystem->get($includedFilePath);
+                    $includedFilePath     = $this->fileViewFinder->find($include);
+                    $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($fileContents);
+                    $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($includedFileContents);
                     $compiledContent     = $this->compiler->compileString($preCompiledContents);
                     $includedContent     = $this->phpContentExtractor->extract(
                         $compiledContent,
                         false
                     );
-                } catch (Throwable $e) {
+                } catch (Throwable) {
                     $includedContent = '';
                 }
 
@@ -121,6 +120,8 @@ final class BladeToPHPCompiler
 
     /**
      * @param VariableAndType[] $variablesAndTypes
+     *
+     * @throws ShouldNotHappenException
      */
     private function decoratePhpContent(string $phpContent, array $variablesAndTypes): string
     {
