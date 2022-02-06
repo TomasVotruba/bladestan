@@ -3,4 +3,4 @@
     $foo = config('foo.bar');
 @endphp
 
-{{ $foo }}
+{{ $foo + 10 }}
