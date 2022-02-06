@@ -76,7 +76,7 @@ final class ViewRuleHelper
         Scope $scope,
         int $phpLine
     ): array {
-        $fileContents               = file_get_contents($templateFilePath);
+        $fileContents = file_get_contents($templateFilePath);
 
         if ($fileContents === false) {
             return [];

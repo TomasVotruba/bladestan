@@ -12,7 +12,7 @@ use function count;
 
 final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
 {
-    /** @return null|Node|Node[] */
+    /** @return Node|Node[]|null */
     public function leaveNode(Node $node): null|Node|array
     {
         if (! $node instanceof Node\Stmt\Echo_) {
