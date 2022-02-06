@@ -8,7 +8,11 @@ use function array_map;
 use function array_unshift;
 use function implode;
 use function preg_match_all;
+use function str_replace;
 use function str_starts_with;
+use function strip_tags;
+use function token_get_all;
+use function token_name;
 use function trim;
 
 use const PHP_EOL;
@@ -25,6 +29,8 @@ final class PhpContentExtractor
      */
     public function extract(string $bladeCompiledContent, bool $addPHPOpeningTag = true): string
     {
+        $bladeCompiledContent = $this->removeHtmlTags($bladeCompiledContent);
+
         preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $bladeCompiledContent, $matches);
 
         foreach ($matches[1] as $key => $match) {
@@ -42,5 +48,21 @@ final class PhpContentExtractor
         }
 
         return implode(PHP_EOL, $phpContents);
+    }
+
+    private function removeHtmlTags(string $input): string
+    {
+        $strippedInput = $input;
+        $tokens        = token_get_all($input);
+
+        foreach ($tokens as $token) {
+            if (token_name((int) $token[0]) !== 'T_INLINE_HTML') {
+                continue;
+            }
+
+            $strippedInput = str_replace($token[1], strip_tags($token[1]), $strippedInput);
+        }
+
+        return $strippedInput;
     }
 }
