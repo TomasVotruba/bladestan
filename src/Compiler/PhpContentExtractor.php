@@ -20,7 +20,7 @@ use const PHP_EOL;
 final class PhpContentExtractor
 {
     /**
-     * @see https://regex101.com/r/ENwa4O/1
+     * @see https://regex101.com/r/WomL6O/1
      */
     private const PHP_OPEN_CLOSE_TAGS_REGEX = '#^(/\*\* file: .*?, line: \d+ \*/)(?!\s?/\*\* file: ).*?<\?php(.*?)\?>$#ms';
 
@@ -63,6 +63,6 @@ final class PhpContentExtractor
             $strippedInput = str_replace($token[1], strip_tags($token[1]), $strippedInput);
         }
 
-        return $strippedInput;
+        return str_replace('">', '', $strippedInput);
     }
 }
