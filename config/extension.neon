@@ -28,6 +28,7 @@ services:
     - Vural\PHPStanBladeRule\NodeAnalyzer\BladeViewMethodsMatcher
     - Vural\PHPStanBladeRule\NodeAnalyzer\ViewDataParametersAnalyzer
     - Vural\PHPStanBladeRule\NodeAnalyzer\CompactFunctionCallParameterResolver
+    - Vural\PHPStanBladeRule\NodeAnalyzer\MagicViewWithCallParameterResolver
     - Vural\PHPStanBladeRule\NodeAnalyzer\ValueResolver
     - 
         class: Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler

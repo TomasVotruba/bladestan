@@ -8,3 +8,4 @@ parameters:
         - tests
     excludePaths:
         - tests/*/Fixture/*
+        - tests/Rules/data/*

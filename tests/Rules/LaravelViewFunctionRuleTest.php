@@ -61,6 +61,18 @@ class LaravelViewFunctionRuleTest extends RuleTestCase
                 'Binary operation "+" between string and 6 results in an error.',
                 13,
             ],
+            [
+                'Binary operation "+" between string and 10 results in an error.',
+                15,
+            ],
+            [
+                'Binary operation "+" between int and \'foo\' results in an error.',
+                15,
+            ],
+            [
+                'Binary operation "+" between string and 10 results in an error.',
+                18,
+            ],
         ]);
     }
 

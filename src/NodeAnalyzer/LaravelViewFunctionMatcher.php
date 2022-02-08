@@ -14,7 +14,8 @@ final class LaravelViewFunctionMatcher
 {
     public function __construct(
         private TemplateFilePathResolver $templateFilePathResolver,
-        private ViewDataParametersAnalyzer $viewDataParametersAnalyzer
+        private ViewDataParametersAnalyzer $viewDataParametersAnalyzer,
+        private MagicViewWithCallParameterResolver $magicViewWithCallParameterResolver
     ) {
     }
 
@@ -57,6 +58,8 @@ final class LaravelViewFunctionMatcher
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($args[1], $scope);
         }
+
+        $parametersArray->items = $this->magicViewWithCallParameterResolver->resolve($funcCall) + $parametersArray->items;
 
         $result = [];
         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
