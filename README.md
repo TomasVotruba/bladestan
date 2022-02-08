@@ -45,7 +45,7 @@ parameters:
     templatePaths:
         - resources/views
 ```
-⚠️ The paths you add to `templatePaths` should be **relative** to the root of your app (for example where your `vendor` folder is or where your `phpstan.neon` is, and should **not** contain `..` or `.` 
+⚠️ The paths you add to `templatePaths` should be **relative** to the root of your app (for example where your `vendor` folder is or where your `phpstan.neon` is), and should **not** contain `..` or `.` 
 
 ## Features
 
