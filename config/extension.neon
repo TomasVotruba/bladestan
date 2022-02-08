@@ -18,7 +18,7 @@ services:
         class: Illuminate\View\FileViewFinder
         arguments:
             files: Illuminate\Filesystem\Filesystem()
-            paths: %templatePaths%
+            paths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
             extensions: ['blade.php', 'svg']
     - Vural\PHPStanBladeRule\Rules\ViewRuleHelper
     - Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver
@@ -32,7 +32,8 @@ services:
     - 
         class: Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler
         arguments:
-            templatePaths: %templatePaths%
+            templatePaths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
     - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
     - Vural\PHPStanBladeRule\Compiler\PhpContentExtractor
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
+    - class: Vural\PHPStanBladeRule\Support\DirectoryHelper

@@ -3,3 +3,4 @@ includes:
 parameters:
     templatePaths:
         - tests/Rules/templates
+        - tests/Rules/templates/nested/directory

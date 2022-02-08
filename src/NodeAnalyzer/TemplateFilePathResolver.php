@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Vural\PHPStanBladeRule\NodeAnalyzer;
 
 use Illuminate\View\FileViewFinder;
-use Illuminate\View\ViewName;
+use Illuminate\View\ViewFinderInterface;
 use InvalidArgumentException;
 use PhpParser\Node\Expr;
 use PHPStan\Analyser\Scope;
 
+use function explode;
 use function file_exists;
 use function is_string;
+use function str_contains;
+use function str_replace;
 
 /** @see \Symplify\TemplatePHPStanCompiler\NodeAnalyzer\TemplateFilePathResolver */
 final class TemplateFilePathResolver
@@ -48,7 +51,15 @@ final class TemplateFilePathResolver
 
     private function normalizeName(string $name): string
     {
-        return ViewName::normalize($name);
+        $delimiter = ViewFinderInterface::HINT_PATH_DELIMITER;
+
+        if (! str_contains($name, $delimiter)) {
+            return str_replace('/', '.', $name);
+        }
+
+        [$namespace, $name] = explode($delimiter, $name);
+
+        return str_replace('/', '.', $name);
     }
 
     private function findView(string $view): ?string
