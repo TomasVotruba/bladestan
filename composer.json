@@ -4,7 +4,7 @@
     "type": "phpstan-extension",
     "require": {
         "php": "^8.0",
-        "phpstan/phpstan": "^1.4.4",
+        "phpstan/phpstan": "^1.4.6",
         "illuminate/view": "^8.82 || ^9",
         "symplify/template-phpstan-compiler": "^10.0.20",
         "illuminate/filesystem": "^8.82 || ^9.0",
@@ -13,7 +13,7 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
-        "orchestra/testbench": "^6.24",
+        "orchestra/testbench": "^6.24 || ^7.0",
         "doctrine/coding-standard": "^9.0",
         "symplify/easy-testing": "^10.0"
     },
