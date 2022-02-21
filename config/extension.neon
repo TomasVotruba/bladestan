@@ -37,4 +37,5 @@ services:
     - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
     - Vural\PHPStanBladeRule\Compiler\PhpContentExtractor
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
-    - class: Vural\PHPStanBladeRule\Support\DirectoryHelper
+    - Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray
+    - Vural\PHPStanBladeRule\Support\DirectoryHelper

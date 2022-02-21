@@ -8,6 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
 use Iterator;
+use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
@@ -20,6 +21,7 @@ use Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver;
 use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
 use Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use Vural\PHPStanBladeRule\Compiler\PhpContentExtractor;
+use Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray;
 use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
 use function sys_get_temp_dir;
@@ -47,7 +49,8 @@ class BladeToPHPCompilerTest extends TestCase
             new FileViewFinder($fileSystem, $templatePaths),
             new FileNameAndLineNumberAddingPreCompiler($templatePaths),
             new PhpLineToTemplateLineResolver(new BladeLineNumberNodeVisitor()),
-            new PhpContentExtractor()
+            new PhpContentExtractor(),
+            new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator()),
         );
 
         // Setup the variable names and types that'll be available to all templates

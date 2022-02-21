@@ -24,17 +24,26 @@ use Symplify\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
 use Symplify\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use Throwable;
 use Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver;
+use Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray;
 use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
 use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
+use Vural\PHPStanBladeRule\ValueObject\IncludedViewAndVariables;
 use Vural\PHPStanBladeRule\ValueObject\PhpFileContentsWithLineMap;
 
+use function array_keys;
+use function array_map;
 use function array_merge;
 use function getcwd;
+use function implode;
+use function in_array;
 use function preg_match_all;
 use function preg_quote;
 use function preg_replace;
 use function sprintf;
+use function trim;
+
+use const PHP_EOL;
 
 final class BladeToPHPCompiler
 {
@@ -63,10 +72,11 @@ final class BladeToPHPCompiler
         private FileNameAndLineNumberAddingPreCompiler $preCompiler,
         private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private PhpContentExtractor $phpContentExtractor,
+        private ConvertArrayStringToArray $convertArrayStringToArray,
         private array $components = [],
     ) {
         $parserFactory = new ParserFactory();
-        $this->parser  = $parserFactory->create(ParserFactory::PREFER_PHP7);
+        $this->parser  = $parserFactory->create(ParserFactory::ONLY_PHP7);
 
         // Disable component rendering
         $this->compiler->withoutComponentTags();
@@ -89,11 +99,13 @@ final class BladeToPHPCompiler
 
         $includes = $this->getIncludes($rawPhpContent);
 
+        $allVariablesList = array_map(static fn (VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
+
         // Recursively fetch and compile includes
         while ($includes !== []) {
             foreach ($includes as $include) {
                 try {
-                    $includedFilePath     = $this->fileViewFinder->find($include);
+                    $includedFilePath     = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
                     $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($includedFileContents);
@@ -106,7 +118,31 @@ final class BladeToPHPCompiler
                     $includedContent = '';
                 }
 
-                $rawPhpContent = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include)), $includedContent, $rawPhpContent) ?? $rawPhpContent;
+                $usePlaceholder = 'use(%s)';
+
+                $includedContentPlaceHolder = <<<STRING
+(function () %s {
+%s
+%s
+});
+STRING;
+
+                $includedViewVariables = implode(PHP_EOL, array_map(static fn (string $key, string $value) => '$' . $key . ' = ' . $value . ';', array_keys($include->getVariablesAndValues()), $include->getVariablesAndValues()));
+
+                $rawPhpContent = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())), sprintf(
+                    $includedContentPlaceHolder,
+                    sprintf($usePlaceholder, implode(', ', array_map(static fn (string $variable) => '$' . $variable, $allVariablesList))),
+                    $includedViewVariables,
+                    $includedContent
+                ), $rawPhpContent) ?? $rawPhpContent;
+
+                foreach ($include->getVariablesAndValues() as $variable => $value) {
+                    if (in_array($variable, $allVariablesList, true)) {
+                        continue;
+                    }
+
+                    $allVariablesList[] = $variable;
+                }
             }
 
             $includes = $this->getIncludes($rawPhpContent);
@@ -162,12 +198,22 @@ final class BladeToPHPCompiler
         return $nodeTraverser->traverse($stmts);
     }
 
-    /** @return string[] */
+    /** @return IncludedViewAndVariables[] */
     private function getIncludes(string $compiled): array
     {
         preg_match_all(self::VIEW_INCLUDE_REGEX, $compiled, $includes);
 
-        return $includes[1];
+        $return = [];
+
+        foreach ($includes[1] as $i => $include) {
+            $arrayString = trim($includes[2][$i], ' ,');
+
+            $array = $this->convertArrayStringToArray->convert($arrayString);
+
+            $return[] = new IncludedViewAndVariables($include, $array);
+        }
+
+        return $return;
     }
 
     private function setupBladeComponents(): void

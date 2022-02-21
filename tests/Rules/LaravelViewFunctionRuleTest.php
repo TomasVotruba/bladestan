@@ -7,6 +7,7 @@ namespace Vural\PHPStanBladeRule\Tests\Rules;
 use PHPStan\Rules\Cast\EchoRule;
 use PHPStan\Rules\Operators\InvalidBinaryOperationRule;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\Variables\DefinedVariableRule;
 use PHPStan\Testing\RuleTestCase;
 use Symplify\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
 use Symplify\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
@@ -30,6 +31,7 @@ class LaravelViewFunctionRuleTest extends RuleTestCase
             [
                 self::getContainer()->getByType(InvalidBinaryOperationRule::class),
                 self::getContainer()->getByType(EchoRule::class),
+                self::getContainer()->getByType(DefinedVariableRule::class),
             ],
             self::getContainer()->getByType(BladeViewMethodsMatcher::class),
             self::getContainer()->getByType(LaravelViewFunctionMatcher::class),
@@ -72,6 +74,38 @@ class LaravelViewFunctionRuleTest extends RuleTestCase
             [
                 'Binary operation "+" between string and 10 results in an error.',
                 18,
+            ],
+            [
+                'Variable $bar might not be defined.',
+                18,
+            ],
+            [
+                'Binary operation "+" between string and 10 results in an error.',
+                20,
+            ],
+            [
+                'Binary operation "+" between \'10bar\' and 30 results in an error.',
+                20,
+            ],
+            [
+                'Binary operation "+" between string and 20 results in an error.',
+                20,
+            ],
+            [
+                'Variable $bar might not be defined.',
+                20,
+            ],
+            [
+                'Binary operation "+" between string and 10 results in an error.',
+                22,
+            ],
+            [
+                'Binary operation "+" between \'10bar\' and 30 results in an error.',
+                22,
+            ],
+            [
+                'Undefined variable: $bar',
+                22,
             ],
         ]);
     }
