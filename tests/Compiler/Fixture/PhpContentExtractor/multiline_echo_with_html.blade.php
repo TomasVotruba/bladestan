@@ -5,6 +5,5 @@
 </div>
 -----
 <?php
-/** file: foo.blade.php, line: 1 */
 /** file: foo.blade.php, line: 2 */ echo e(/** file: foo.blade.php, line: 3 */      $foo
 /** file: foo.blade.php, line: 4 */);
