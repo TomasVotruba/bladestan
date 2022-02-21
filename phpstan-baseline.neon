@@ -36,12 +36,22 @@ parameters:
 			path: tests/Compiler/PhpContentExtractorTest.php
 
 		-
+			message: "#^Method Vural\\\\PHPStanBladeRule\\\\Tests\\\\PHPParser\\\\ConvertArrayStringToArrayTest\\:\\:greenProvider\\(\\) return type has no value type specified in iterable type Generator\\.$#"
+			count: 1
+			path: tests/PHPParser/ConvertArrayStringToArrayTest.php
+
+		-
+			message: "#^Method Vural\\\\PHPStanBladeRule\\\\Tests\\\\PHPParser\\\\ConvertArrayStringToArrayTest\\:\\:redProvider\\(\\) return type has no value type specified in iterable type Generator\\.$#"
+			count: 1
+			path: tests/PHPParser/ConvertArrayStringToArrayTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$rules of class Vural\\\\PHPStanBladeRule\\\\Rules\\\\BladeRule constructor expects array\\<PHPStan\\\\Rules\\\\Rule\\<PhpParser\\\\Node\\>\\>, array\\{PHPStan\\\\Rules\\\\Operators\\\\InvalidBinaryOperationRule\\} given\\.$#"
 			count: 1
 			path: tests/Rules/BladeViewRuleTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$rules of class Vural\\\\PHPStanBladeRule\\\\Rules\\\\BladeRule constructor expects array\\<PHPStan\\\\Rules\\\\Rule\\<PhpParser\\\\Node\\>\\>, array\\{PHPStan\\\\Rules\\\\Operators\\\\InvalidBinaryOperationRule, PHPStan\\\\Rules\\\\Cast\\\\EchoRule\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$rules of class Vural\\\\PHPStanBladeRule\\\\Rules\\\\BladeRule constructor expects array\\<PHPStan\\\\Rules\\\\Rule\\<PhpParser\\\\Node\\>\\>, array\\{PHPStan\\\\Rules\\\\Operators\\\\InvalidBinaryOperationRule, PHPStan\\\\Rules\\\\Cast\\\\EchoRule, PHPStan\\\\Rules\\\\Variables\\\\DefinedVariableRule\\} given\\.$#"
 			count: 1
 			path: tests/Rules/LaravelViewFunctionRuleTest.php
 
