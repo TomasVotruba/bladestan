@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 use function explode;
 use function implode;
+use function in_array;
 use function preg_match;
 use function rtrim;
 use function sprintf;
@@ -18,7 +19,10 @@ use const PHP_EOL;
 
 final class FileNameAndLineNumberAddingPreCompiler
 {
-    private const PHP_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
+    private const PHP_SINGLE_LINE_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
+
+    /** @see https://regex101.com/r/GnVnZE/1 */
+    private const PHP_PARTIAL_COMMENT = '#(\* )?@\w+ \b\w+ \$\w+#';
 
     private string $fileName;
 
@@ -41,7 +45,7 @@ final class FileNameAndLineNumberAddingPreCompiler
         $lineNumber = 1;
 
         foreach ($lines as $key => $line) {
-            if ($line !== '' && ! preg_match(self::PHP_COMMENT_REGEX, trim($line))) {
+            if (! $this->shouldSkip($line)) {
                 $lines[$key] = sprintf('/** file: %s, line: %d */', $this->fileName, $lineNumber) . $line;
             }
 
@@ -65,5 +69,18 @@ final class FileNameAndLineNumberAddingPreCompiler
         $this->fileName = $fileName;
 
         return $this;
+    }
+
+    private function shouldSkip(string $line): bool
+    {
+        if (in_array(trim($line), ['', '/**', '*/'], true)) {
+            return true;
+        }
+
+        if (preg_match(self::PHP_SINGLE_LINE_COMMENT_REGEX, trim($line))) {
+            return true;
+        }
+
+        return preg_match(self::PHP_PARTIAL_COMMENT, trim($line)) === 1;
     }
 }
