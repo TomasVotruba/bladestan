@@ -21,8 +21,8 @@ final class FileNameAndLineNumberAddingPreCompiler
 {
     private const PHP_SINGLE_LINE_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
 
-    /** @see https://regex101.com/r/wB10n8/1 */
-    private const PHP_PARTIAL_COMMENT = '#(\* )?@\w+ \b(.*?) \$\w+#';
+    /** @see https://regex101.com/r/l8SCwz/1 */
+    private const PHP_PARTIAL_COMMENT = '#^(\* )?@\w+ +(.*?) \$\w+#';
 
     private string $fileName;
 
