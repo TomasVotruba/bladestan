@@ -21,7 +21,6 @@ use function file_get_contents;
 use function file_put_contents;
 use function md5;
 use function preg_match;
-use function preg_quote;
 use function sys_get_temp_dir;
 
 final class ViewRuleHelper
