@@ -6,7 +6,7 @@ namespace Vural\PHPStanBladeRule\NodeAnalyzer;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
-use Symplify\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
+use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
 
 use function count;
 

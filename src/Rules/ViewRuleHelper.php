@@ -9,10 +9,10 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
-use Symplify\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
-use Symplify\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
-use Symplify\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
-use Symplify\TemplatePHPStanCompiler\ValueObject\VariableAndType;
+use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
+use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
+use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
+use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
 use Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory;
 

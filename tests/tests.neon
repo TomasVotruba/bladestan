@@ -1,6 +1,6 @@
 includes:
     - ../config/extension.neon
-    - ../vendor/symplify/template-phpstan-compiler/config/services.neon
+    - ../vendor/reveal/template-phpstan-compiler/config/services.neon
     - ../vendor/symplify/astral/config/services.neon
 parameters:
     checkExplicitMixed: true

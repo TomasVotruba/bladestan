@@ -15,7 +15,7 @@
         "illuminate/filesystem": "^8.82 || ^9.0",
         "illuminate/view": "^8.82 || ^9",
         "phpstan/phpstan": "^1.4.6",
-        "symplify/template-phpstan-compiler": "^10.0.20"
+        "reveal/template-phpstan-compiler": "^0.2"
     },
     "require-dev": {
         "doctrine/coding-standard": "^9.0",

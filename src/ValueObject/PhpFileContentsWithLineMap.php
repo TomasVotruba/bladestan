@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Vural\PHPStanBladeRule\ValueObject;
 
-/** @see \Symplify\TemplatePHPStanCompiler\ValueObject\PhpFileContentsWithLineMap */
+/** @see \Reveal\TemplatePHPStanCompiler\ValueObject\PhpFileContentsWithLineMap */
 final class PhpFileContentsWithLineMap
 {
     /**

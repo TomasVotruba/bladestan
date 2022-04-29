@@ -13,7 +13,7 @@ use Vural\PHPStanBladeRule\ValueObject\PhpFileContentsWithLineMap;
 use function array_key_first;
 use function current;
 
-/** @see \Symplify\TemplatePHPStanCompiler\Reporting\TemplateErrorsFactory */
+/** @see \Reveal\TemplatePHPStanCompiler\Reporting\TemplateErrorsFactory */
 final class TemplateErrorsFactory
 {
     /**

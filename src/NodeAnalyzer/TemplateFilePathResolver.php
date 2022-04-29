@@ -16,7 +16,7 @@ use function is_string;
 use function str_contains;
 use function str_replace;
 
-/** @see \Symplify\TemplatePHPStanCompiler\NodeAnalyzer\TemplateFilePathResolver */
+/** @see \Reveal\TemplatePHPStanCompiler\NodeAnalyzer\TemplateFilePathResolver */
 final class TemplateFilePathResolver
 {
     public function __construct(
