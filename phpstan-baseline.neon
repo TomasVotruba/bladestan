@@ -6,6 +6,11 @@ parameters:
 			path: src/Compiler/BladeToPHPCompiler.php
 
 		-
+			message: "#^Parameter \\#1 \\$string of function md5 expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/PHPParser/NodeVisitor/ViewFunctionArgumentsNodeVisitor.php
+
+		-
 			message: "#^Creating new PHPStan\\\\Rules\\\\Registry is not covered by backward compatibility promise\\. The class might change in a minor PHPStan version\\.$#"
 			count: 1
 			path: src/Rules/BladeRule.php

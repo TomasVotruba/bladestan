@@ -39,3 +39,7 @@ services:
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
     - Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray
     - Vural\PHPStanBladeRule\Support\DirectoryHelper
+    -
+        class: Vural\PHPStanBladeRule\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
+        tags:
+            - phpstan.parser.richParserNodeVisitor
