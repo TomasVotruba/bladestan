@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
+use PHPStan\Analyser\FileAnalyser;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
@@ -96,9 +97,18 @@ final class ViewRuleHelper
         $tmpFilePath = sys_get_temp_dir() . '/' . md5($scope->getFile()) . '-blade-compiled.php';
         file_put_contents($tmpFilePath, $phpFileContents);
 
+        /** @var FileAnalyser $fileAnalyser */
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
-        $fileAnalyserResult = $fileAnalyser->analyseFile($tmpFilePath, [], $this->registry, null);
+         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
+
+        $fileAnalyserResult = $fileAnalyser->analyseFile(
+            $tmpFilePath,
+            [],
+            $this->registry,
+            $collectorsRegistry,
+            null
+        );
 
         $ruleErrors = $fileAnalyserResult->getErrors();
 

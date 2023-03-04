@@ -12,12 +12,10 @@ use PHPStan\Rules\RuleError;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
 use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
 
-/** @implements Rule<Node> */
 class BladeRule implements Rule
 {
     /**
      * @param Rule[] $rules
-     * @phpstan-param Rule<Node>[] $rules
      */
     public function __construct(
         array $rules,
