@@ -5,6 +5,8 @@ parameters:
         - src
         - tests
 
+    reportUnmatchedIgnoredErrors: false
+
     excludePaths:
         - 'tests/*/Fixture/*'
         - 'tests/Rules/data/*'
