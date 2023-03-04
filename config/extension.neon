@@ -3,8 +3,9 @@ parameters:
         template_paths: []
 
 parametersSchema:
-    bladestan:
+    bladestan: structure([
         template_paths: listOf(string())
+    ])
 
 services:
     errorFormatter.blade:
@@ -44,7 +45,7 @@ services:
         class: TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
         arguments:
             # @todo too complex to read, tidy up
-            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
+            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%template_paths%)
 
     - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
     - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
