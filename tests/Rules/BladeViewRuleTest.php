@@ -7,14 +7,14 @@ namespace TomasVotruba\Bladestan\Tests\Rules;
 use PHPStan\Rules\Operators\InvalidBinaryOperationRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
-use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
-use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
 use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
 use TomasVotruba\Bladestan\Rules\BladeRule;
 use TomasVotruba\Bladestan\Rules\ViewRuleHelper;
+use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
+use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 
 use function array_merge;
 

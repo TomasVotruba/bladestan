@@ -13,7 +13,7 @@ use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 use function array_key_first;
 use function current;
 
-/** @see \Reveal\TemplatePHPStanCompiler\Reporting\TemplateErrorsFactory */
+/** @see \TomasVotruba\Bladestan\TemplateCompiler\Reporting\TemplateErrorsFactory */
 final class TemplateErrorsFactory
 {
     /**

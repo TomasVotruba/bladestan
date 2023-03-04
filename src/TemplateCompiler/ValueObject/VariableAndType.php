@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\ValueObject;
+namespace TomasVotruba\Bladestan\TemplateCompiler\ValueObject;
 
 use PHPStan\Type\Type;
 use PHPStan\Type\VerbosityLevel;

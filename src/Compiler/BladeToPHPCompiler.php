@@ -20,13 +20,13 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PHPStan\ShouldNotHappenException;
-use Reveal\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
 use Throwable;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
+use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
@@ -85,7 +85,7 @@ final class BladeToPHPCompiler
     }
 
     /**
-     * @param array<VariableAndType> $variablesAndTypes
+     * @param array<\TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType> $variablesAndTypes
      *
      * @throws ShouldNotHappenException
      */

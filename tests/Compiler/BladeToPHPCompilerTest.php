@@ -11,7 +11,6 @@ use Iterator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
-use Reveal\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
@@ -22,8 +21,8 @@ use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 
-use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function sys_get_temp_dir;
 use function trim;
 
@@ -31,7 +30,7 @@ use function trim;
 class BladeToPHPCompilerTest extends TestCase
 {
     /**
-     * @var VariableAndType[]
+     * @var \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[]
      */
     private array $variables;
 
@@ -60,10 +59,9 @@ class BladeToPHPCompilerTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider fixtureProvider
      */
-    public function it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
+    public function test_it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
         $phpFileContent = $this->compiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);

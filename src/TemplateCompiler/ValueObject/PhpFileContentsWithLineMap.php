@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\ValueObject;
+namespace TomasVotruba\Bladestan\TemplateCompiler\ValueObject;
 
-/** @see \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\PhpFileContentsWithLineMap */
+use Webmozart\Assert\Assert;
+
 final class PhpFileContentsWithLineMap
 {
     /**
-     * @param array<int, array<string, int>> $phpToTemplateLines
+     * @param array<int, int> $phpToTemplateLines
      */
     public function __construct(
         private string $phpFileContents,
         private array $phpToTemplateLines
     ) {
+        Assert::allInteger(array_keys($phpToTemplateLines));
+        Assert::allInteger($phpToTemplateLines);
     }
 
     public function getPhpFileContents(): string
@@ -22,7 +25,7 @@ final class PhpFileContentsWithLineMap
     }
 
     /**
-     * @return array<int, array<string, int>>
+     * @return array<int, int>
      */
     public function getPhpToTemplateLines(): array
     {

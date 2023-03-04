@@ -10,13 +10,12 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
-use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
-use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
-use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
+use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
+use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function array_merge;
 use function file_get_contents;
 use function file_put_contents;
@@ -72,7 +71,7 @@ final class ViewRuleHelper
     }
 
     /**
-     * @param VariableAndType[] $variablesAndTypes
+     * @param \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[] $variablesAndTypes
      *
      * @return RuleError[]
      *

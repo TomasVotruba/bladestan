@@ -37,10 +37,9 @@ class PhpContentExtractorTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider fixtureProvider
      */
-    public function it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
+    public function test_it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
         $input = $this->compile($inputAndExpected->getInput());

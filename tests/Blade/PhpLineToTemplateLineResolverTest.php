@@ -27,10 +27,9 @@ class PhpLineToTemplateLineResolverTest extends TestCase
     /**
      * @param array<int, array<string, int>> $expected
      *
-     * @test
      * @dataProvider phpContentAndLineNumberProvider
      */
-    public function it_can_extract_file_name_php_line_number_and_template_line_number(string $phpContent, array $expected): void
+    public function test_it_can_extract_file_name_php_line_number_and_template_line_number(string $phpContent, array $expected): void
     {
         $this->assertSame($expected, $this->phpLineToTemplateLineResolver->resolve($phpContent));
     }

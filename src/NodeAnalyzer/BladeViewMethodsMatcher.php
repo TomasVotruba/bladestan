@@ -10,7 +10,7 @@ use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
-use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
 use function count;
 use function in_array;

@@ -8,8 +8,7 @@
         "illuminate/contracts": "^8.8 || ^9.0 || ^10.0",
         "illuminate/filesystem": "^8.8 || ^9.0 || ^10.0",
         "illuminate/view": "^8.8 || ^9.0 || ^10.0",
-        "phpstan/phpstan": "^1.10",
-        "symplify/template-phpstan-compiler": "^10.0"
+        "phpstan/phpstan": "^1.10"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",

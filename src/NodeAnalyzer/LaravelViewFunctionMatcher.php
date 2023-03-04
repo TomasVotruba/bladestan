@@ -6,7 +6,7 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
-use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
 use function count;
 

@@ -27,10 +27,9 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider fixtureProvider
      */
-    public function it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
+    public function test_it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
 
@@ -50,10 +49,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/FileNameAndLineNumberAddingPreCompiler', '*.blade.php');
     }
 
-    /**
-     * @test
-     */
-    public function it_can_change_file_name_for_same_template(): void
+    public function test_it_can_change_file_name_for_same_template(): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
 
@@ -70,10 +66,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function it_shows_the_template_directory(): void
+    public function test_it_shows_the_template_directory(): void
     {
         $this->compiler->setFileName('/var/www/resources/views/users/index.blade.php');
 
@@ -83,10 +76,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function it_will_loop_over_template_paths_to_find_correct_one(): void
+    public function test_it_will_loop_over_template_paths_to_find_correct_one(): void
     {
         $compiler = new FileNameAndLineNumberAddingPreCompiler([
             'resources/views',

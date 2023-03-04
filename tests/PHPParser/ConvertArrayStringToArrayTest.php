@@ -4,30 +4,27 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\PHPParser;
 
-use Generator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 
-/** @covers \TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray */
-class ConvertArrayStringToArrayTest extends TestCase
+final class ConvertArrayStringToArrayTest extends TestCase
 {
     /**
      * @param array<string, mixed> $expected
      *
-     * @test
      * @dataProvider greenProvider
      * @dataProvider redProvider
      */
-    public function it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
+    public function test_it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
     {
         $converter = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
 
         $this->assertSame($expected, $converter->convert($array));
     }
 
-    public function greenProvider(): Generator
+    public static function greenProvider(): \Iterator
     {
         yield [
             "['foo' => 'bar', 'bar' => 'baz,bax']", [
@@ -44,7 +41,7 @@ class ConvertArrayStringToArrayTest extends TestCase
             ]];
     }
 
-    public function redProvider(): Generator
+    public static function redProvider(): \Iterator
     {
         yield ['', []];
         yield ['123', []];
