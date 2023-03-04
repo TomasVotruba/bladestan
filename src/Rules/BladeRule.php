@@ -6,6 +6,7 @@ namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
+use PHPStan\Rules\DirectRegistry;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -23,7 +24,7 @@ class BladeRule implements Rule
         private LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
         private ViewRuleHelper $ruleHelper
     ) {
-        $this->ruleHelper->setRegistry(new Registry($rules));
+        $this->ruleHelper->setRegistry(new DirectRegistry($rules));
     }
 
     public function getNodeType(): string
