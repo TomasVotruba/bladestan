@@ -1,7 +1,11 @@
 parameters:
-    templatePaths: []
+    bladestan:
+        templatePaths: []
+
 parametersSchema:
-    templatePaths: listOf(string())
+    bladestan:
+        templatePaths: listOf(string())
+
 services:
     errorFormatter.blade:
         class: Vural\PHPStanBladeRule\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
@@ -10,6 +14,8 @@ services:
             editorUrl: %editorUrl%
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
+
+    # @todo too complex to read, tidy up
     - Illuminate\View\Compilers\BladeCompiler(cachePath: ::sys_get_temp_dir())
     -
         class: Vural\PHPStanBladeRule\Rules\BladeRule
@@ -18,8 +24,11 @@ services:
         class: Illuminate\View\FileViewFinder
         arguments:
             files: Illuminate\Filesystem\Filesystem()
+
+            # @todo too complex to read, tidy up
             paths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
             extensions: ['blade.php', 'svg']
+
     - Vural\PHPStanBladeRule\Rules\ViewRuleHelper
     - Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver
     - Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory
@@ -30,15 +39,19 @@ services:
     - Vural\PHPStanBladeRule\NodeAnalyzer\CompactFunctionCallParameterResolver
     - Vural\PHPStanBladeRule\NodeAnalyzer\MagicViewWithCallParameterResolver
     - Vural\PHPStanBladeRule\NodeAnalyzer\ValueResolver
-    - 
+
+    -
         class: Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler
         arguments:
+            # @todo too complex to read, tidy up
             templatePaths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
+
     - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
     - Vural\PHPStanBladeRule\Compiler\PhpContentExtractor
     - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
     - Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray
     - Vural\PHPStanBladeRule\Support\DirectoryHelper
+
     -
         class: Vural\PHPStanBladeRule\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:

@@ -1,7 +1,8 @@
-vendor/
+# composre
+/vendor
 composer.lock
-.phpcs-cache
-phpstan.neon
-.build
-.phpunit.result.cache
+
+# tools
+.phpunit.cache
+
 .idea

@@ -1,5 +1,5 @@
 {
-    "name": "canvural/phpstan-blade-rule",
+    "name": "tomasvotruba/bladestan",
     "description": "PHPStan rule for static analysis of Blade templates",
     "license": "MIT",
     "type": "phpstan-extension",
@@ -10,43 +10,28 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "illuminate/contracts": "^8.82 || ^9.0",
-        "illuminate/filesystem": "^8.82 || ^9.0",
-        "illuminate/view": "^8.82 || ^9",
-        "phpstan/phpstan": "^1.7",
-        "reveal/template-phpstan-compiler": "^0.2"
+        "php": "^8.1",
+        "illuminate/contracts": "^8.8 || ^9.0 || ^10.0",
+        "illuminate/filesystem": "^8.8 || ^9.0 || ^10.0",
+        "illuminate/view": "^8.8 || ^9.0 || ^10.0",
+        "phpstan/phpstan": "^1.10"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^9.0",
-        "ergebnis/composer-normalize": "^2.24",
-        "orchestra/testbench": "^6.24 || ^7.0",
-        "phpunit/phpunit": "^9.5",
-        "roave/security-advisories": "dev-latest",
-        "symplify/easy-testing": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "symplify/easy-testing": "^10.0",
+        "symplify/easy-coding-standard": "^11.2"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Vural\\PHPStanBladeRule\\": "src/"
+            "TomasVotruba\\BladeStan\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Vural\\PHPStanBladeRule\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "ergebnis/composer-normalize": true
+            "TomasVotruba\\BladeStan\\Tests\\": "tests"
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "0.1-dev"
-        },
         "phpstan": {
             "includes": [
                 "config/extension.neon"
@@ -54,9 +39,8 @@
         }
     },
     "scripts": {
-        "cs": "vendor/bin/phpcs",
-        "fix-cs": "vendor/bin/phpcbf",
-        "phpstan": "vendor/bin/phpstan",
-        "tests": "vendor/bin/phpunit"
+        "check-cs": "vendor/bin/ecs",
+        "fix-cs": "vendor/bin/ecs --fix",
+        "phpstan": "vendor/bin/phpstan"
     }
 }
