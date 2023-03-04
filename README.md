@@ -12,9 +12,9 @@ composer require tomasvotruba/bladestan --dev
 
 Configure paths of views for the rule to scan using `templatePaths` config parameter key.
 
-```neon
+```yaml
 parameters:
-    templatePaths:
+    template_paths:
         - resources/views
 ```
 
@@ -35,6 +35,6 @@ vendor/bin/phpstan analyse src -l8 --error-format blade
 ## Credits
 
 People:
- 
+
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
 - [All Contributors](https://github.com/tomasvotruba/bladestane)

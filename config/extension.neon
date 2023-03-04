@@ -1,10 +1,10 @@
 parameters:
     bladestan:
-        templatePaths: []
+        template_paths: []
 
 parametersSchema:
     bladestan:
-        templatePaths: listOf(string())
+        template_paths: listOf(string())
 
 services:
     errorFormatter.blade:
@@ -26,7 +26,7 @@ services:
             files: Illuminate\Filesystem\Filesystem()
 
             # @todo too complex to read, tidy up
-            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
+            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%template_paths%)
             extensions: ['blade.php', 'svg']
 
     - TomasVotruba\Bladestan\Rules\ViewRuleHelper
