@@ -100,7 +100,7 @@ final class ViewRuleHelper
         /** @var FileAnalyser $fileAnalyser */
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
-         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
+        $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
 
         $fileAnalyserResult = $fileAnalyser->analyseFile(
             $tmpFilePath,
