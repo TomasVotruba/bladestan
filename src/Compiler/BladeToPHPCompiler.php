@@ -81,7 +81,7 @@ final class BladeToPHPCompiler
         // Disable component rendering
         $this->compiler->withoutComponentTags();
 
-        //$this->setupBladeComponents();
+        $this->setupBladeComponents();
     }
 
     /**
@@ -99,7 +99,7 @@ final class BladeToPHPCompiler
 
         $includes = $this->getIncludes($rawPhpContent);
 
-        $allVariablesList = array_map(static fn (\TomasVotruba\Bladestan\ValueObject\VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
+        $allVariablesList = array_map(static fn (\TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
 
         // Recursively fetch and compile includes
         while ($includes !== []) {
@@ -156,7 +156,7 @@ STRING;
     }
 
     /**
-     * @param VariableAndType[] $variablesAndTypes
+     * @param \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[] $variablesAndTypes
      */
     private function decoratePhpContent(string $phpContent, array $variablesAndTypes): string
     {
