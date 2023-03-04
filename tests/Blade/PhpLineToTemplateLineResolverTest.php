@@ -9,10 +9,8 @@ use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
-/**
- * @covers \TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver
- * @covers \TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
- */
+#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor::class)]
 class PhpLineToTemplateLineResolverTest extends TestCase
 {
     private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver;
@@ -26,9 +24,8 @@ class PhpLineToTemplateLineResolverTest extends TestCase
 
     /**
      * @param array<int, array<string, int>> $expected
-     *
-     * @dataProvider phpContentAndLineNumberProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('phpContentAndLineNumberProvider')]
     public function test_it_can_extract_file_name_php_line_number_and_template_line_number(string $phpContent, array $expected): void
     {
         $this->assertSame($expected, $this->phpLineToTemplateLineResolver->resolve($phpContent));
@@ -37,7 +34,7 @@ class PhpLineToTemplateLineResolverTest extends TestCase
     /**
      * @phpstan-return Generator<string, array{0: string, 1: array<int, array<string, int>>}, mixed, mixed>
      */
-    public function phpContentAndLineNumberProvider(): Generator
+    public static function phpContentAndLineNumberProvider(): Generator
     {
         yield 'File with no contents' => [
             '',
