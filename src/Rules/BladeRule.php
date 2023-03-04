@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Rules;
+namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
-use Vural\PHPStanBladeRule\NodeAnalyzer\BladeViewMethodsMatcher;
-use Vural\PHPStanBladeRule\NodeAnalyzer\LaravelViewFunctionMatcher;
+use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
+use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
 
 /** @implements Rule<Node> */
 class BladeRule implements Rule
@@ -33,7 +33,6 @@ class BladeRule implements Rule
         return Node::class;
     }
 
-    /** @inheritDoc */
     public function processNode(Node $node, Scope $scope): array
     {
         if ($node instanceof Node\Expr\FuncCall) {
@@ -47,7 +46,9 @@ class BladeRule implements Rule
         return [];
     }
 
-    /** @return RuleError[] */
+    /**
+     * @return RuleError[]
+     */
     private function processLaravelViewFunction(Node\Expr\FuncCall $node, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($node, $scope);
@@ -55,7 +56,9 @@ class BladeRule implements Rule
         return $this->ruleHelper->processNode($node, $scope, $renderTemplatesWithParameters);
     }
 
-    /** @return RuleError[] */
+    /**
+     * @return RuleError[]
+     */
     private function processBladeView(Node\Expr\MethodCall $node, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->bladeViewMethodsMatcher->match($node, $scope);

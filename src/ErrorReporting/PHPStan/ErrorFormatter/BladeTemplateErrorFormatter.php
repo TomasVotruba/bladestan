@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\ErrorReporting\PHPStan\ErrorFormatter;
+namespace TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter;
 
 use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalyseCommand;
@@ -71,8 +71,8 @@ class BladeTemplateErrorFormatter
             foreach ($errors as $error) {
                 $message = $error->getMessage();
                 if ($error->getTip() !== null) {
-                    $tip      = $error->getTip();
-                    $tip      = str_replace('%configurationFile%', $projectConfigFile, $tip);
+                    $tip = $error->getTip();
+                    $tip = str_replace('%configurationFile%', $projectConfigFile, $tip);
                     $message .= "\n💡 " . $tip;
                 }
 
@@ -81,7 +81,7 @@ class BladeTemplateErrorFormatter
                 }
 
                 $templateFilePath = $error->getMetadata()['template_file_path'] ?? null;
-                $templateLine     = $error->getMetadata()['template_line'] ?? null;
+                $templateLine = $error->getMetadata()['template_line'] ?? null;
 
                 if ($templateFilePath && $templateLine) {
                     $message .= ' <fg=magenta;options=bold>(template: ' . $templateFilePath . ', line: ' . $templateLine . ')</>';

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler;
 
 use Iterator;
 use PHPUnit\Framework\TestCase;
@@ -10,11 +10,11 @@ use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
-use Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler;
+use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 
 use function trim;
 
-/** @covers \Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler */
+/** @covers \TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler */
 class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 {
     private FileNameAndLineNumberAddingPreCompiler $compiler;
@@ -30,12 +30,12 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
      * @test
      * @dataProvider fixtureProvider
      */
-    function it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
+    public function it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
 
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $phpFileContent   = $this->compiler->compileString(trim($inputAndExpected->getInput()));
+        $phpFileContent = $this->compiler->compileString(trim($inputAndExpected->getInput()));
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 
@@ -50,8 +50,10 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/FileNameAndLineNumberAddingPreCompiler', '*.blade.php');
     }
 
-    /** @test */
-    function it_can_change_file_name_for_same_template(): void
+    /**
+     * @test
+     */
+    public function it_can_change_file_name_for_same_template(): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
 
@@ -68,8 +70,10 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    /** @test */
-    function it_shows_the_template_directory(): void
+    /**
+     * @test
+     */
+    public function it_shows_the_template_directory(): void
     {
         $this->compiler->setFileName('/var/www/resources/views/users/index.blade.php');
 
@@ -79,8 +83,10 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    /** @test */
-    function it_will_loop_over_template_paths_to_find_correct_one(): void
+    /**
+     * @test
+     */
+    public function it_will_loop_over_template_paths_to_find_correct_one(): void
     {
         $compiler = new FileNameAndLineNumberAddingPreCompiler([
             'resources/views',

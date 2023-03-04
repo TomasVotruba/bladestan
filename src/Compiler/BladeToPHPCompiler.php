@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Compiler;
+namespace TomasVotruba\Bladestan\Compiler;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Events\Dispatcher;
@@ -23,13 +23,13 @@ use PHPStan\ShouldNotHappenException;
 use Reveal\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
 use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use Throwable;
-use Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver;
-use Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray;
-use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
-use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
-use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
-use Vural\PHPStanBladeRule\ValueObject\IncludedViewAndVariables;
-use Vural\PHPStanBladeRule\ValueObject\PhpFileContentsWithLineMap;
+use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
+use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
+use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
+use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
+use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
+use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
+use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
 use function array_keys;
 use function array_map;
@@ -76,7 +76,7 @@ final class BladeToPHPCompiler
         private array $components = [],
     ) {
         $parserFactory = new ParserFactory();
-        $this->parser  = $parserFactory->create(ParserFactory::ONLY_PHP7);
+        $this->parser = $parserFactory->create(ParserFactory::ONLY_PHP7);
 
         // Disable component rendering
         $this->compiler->withoutComponentTags();
@@ -105,12 +105,12 @@ final class BladeToPHPCompiler
         while ($includes !== []) {
             foreach ($includes as $include) {
                 try {
-                    $includedFilePath     = $this->fileViewFinder->find($include->getIncludedViewName());
+                    $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
                     $preCompiledContents = $this->preCompiler->setFileName($includedFilePath)->compileString($includedFileContents);
-                    $compiledContent     = $this->compiler->compileString($preCompiledContents);
-                    $includedContent     = $this->phpContentExtractor->extract(
+                    $compiledContent = $this->compiler->compileString($preCompiledContents);
+                    $includedContent = $this->phpContentExtractor->extract(
                         $compiledContent,
                         false
                     );
@@ -130,7 +130,7 @@ STRING;
                 $includedViewVariables = implode(PHP_EOL, array_map(static fn (string $key, string $value) => '$' . $key . ' = ' . $value . ';', array_keys($include->getVariablesAndValues()), $include->getVariablesAndValues()));
 
                 $usedVariablesString = implode(', ', array_map(static fn (string $variable) => '$' . $variable, $allVariablesList));
-                $rawPhpContent       = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())), sprintf(
+                $rawPhpContent = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())), sprintf(
                     $includedContentPlaceHolder,
                     $usedVariablesString !== '' ? sprintf($usePlaceholder, $usedVariablesString) : '',
                     $includedViewVariables,
@@ -149,7 +149,7 @@ STRING;
             $includes = $this->getIncludes($rawPhpContent);
         }
 
-        $decoratedPhpContent     = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
+        $decoratedPhpContent = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
         $phpLinesToTemplateLines = $this->phpLineToTemplateLineResolver->resolve($decoratedPhpContent);
 
         return new PhpFileContentsWithLineMap($decoratedPhpContent, $phpLinesToTemplateLines);
@@ -199,7 +199,9 @@ STRING;
         return $nodeTraverser->traverse($stmts);
     }
 
-    /** @return IncludedViewAndVariables[] */
+    /**
+     * @return IncludedViewAndVariables[]
+     */
     private function getIncludes(string $compiled): array
     {
         preg_match_all(self::VIEW_INCLUDE_REGEX, $compiled, $includes);

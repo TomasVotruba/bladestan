@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -12,25 +12,27 @@ use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
-use Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler;
-use Vural\PHPStanBladeRule\Compiler\PhpContentExtractor;
+use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
+use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 
 use function sys_get_temp_dir;
 use function trim;
 
-/** @covers \Vural\PHPStanBladeRule\Compiler\PhpContentExtractor */
+/** @covers \TomasVotruba\Bladestan\Compiler\PhpContentExtractor */
 class PhpContentExtractorTest extends TestCase
 {
     private PhpContentExtractor $extractor;
+
     private BladeCompiler $compiler;
+
     private FileNameAndLineNumberAddingPreCompiler $preCompiler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->extractor   = new PhpContentExtractor();
-        $this->compiler    = new BladeCompiler(new Filesystem(), sys_get_temp_dir());
+        $this->extractor = new PhpContentExtractor();
+        $this->compiler = new BladeCompiler(new Filesystem(), sys_get_temp_dir());
         $this->preCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
@@ -38,11 +40,11 @@ class PhpContentExtractorTest extends TestCase
      * @test
      * @dataProvider fixtureProvider
      */
-    function it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
+    public function it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $input            = $this->compile($inputAndExpected->getInput());
-        $phpFileContent   = $this->extractor->extract($input);
+        $input = $this->compile($inputAndExpected->getInput());
+        $phpFileContent = $this->extractor->extract($input);
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 

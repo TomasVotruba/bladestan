@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -19,7 +19,9 @@ final class LaravelViewFunctionMatcher
     ) {
     }
 
-    /** @return RenderTemplateWithParameters[] */
+    /**
+     * @return RenderTemplateWithParameters[]
+     */
     public function match(Node\Expr\FuncCall $funcCall, Scope $scope): array
     {
         $funcName = $funcCall->name;

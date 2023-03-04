@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Compiler;
+namespace TomasVotruba\Bladestan\Compiler;
 
 use function array_map;
 use function array_unshift;
@@ -59,7 +59,7 @@ final class PhpContentExtractor
     private function removeHtmlTags(string $input): string
     {
         $strippedInput = $input;
-        $tokens        = token_get_all($input);
+        $tokens = token_get_all($input);
 
         foreach ($tokens as $token) {
             if (token_name((int) $token[0]) !== 'T_INLINE_HTML') {

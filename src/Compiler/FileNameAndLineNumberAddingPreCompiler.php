@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Compiler;
+namespace TomasVotruba\Bladestan\Compiler;
 
 use Illuminate\Support\Str;
 
@@ -21,7 +21,9 @@ final class FileNameAndLineNumberAddingPreCompiler
 {
     private const PHP_SINGLE_LINE_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
 
-    /** @see https://regex101.com/r/SfpjMO/1 */
+    /**
+     * @see https://regex101.com/r/SfpjMO/1
+     */
     private const PHP_PARTIAL_COMMENT = '#^(\* )?@(var|param|method|extends|implements|template) +(.*?) \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*#';
 
     private string $fileName;

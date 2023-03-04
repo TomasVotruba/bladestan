@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -38,7 +38,6 @@ final class BladeLineNumberNodeVisitor extends NodeVisitorAbstract
         return $nodes;
     }
 
-    /** @return null */
     public function enterNode(Node $node)
     {
         $docComment = $node->getDocComment();

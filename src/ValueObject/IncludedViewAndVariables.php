@@ -2,13 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\ValueObject;
+namespace TomasVotruba\Bladestan\ValueObject;
 
 final class IncludedViewAndVariables
 {
-    /** @param array<string, string> $variablesAndValues */
-    public function __construct(private string $includedViewName, private array $variablesAndValues)
-    {
+    /**
+     * @param array<string, string> $variablesAndValues
+     */
+    public function __construct(
+        private string $includedViewName,
+        private array $variablesAndValues
+    ) {
     }
 
     /**

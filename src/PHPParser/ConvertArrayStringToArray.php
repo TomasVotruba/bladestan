@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\PHPParser;
+namespace TomasVotruba\Bladestan\PHPParser;
 
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
@@ -23,13 +23,17 @@ final class ConvertArrayStringToArray
 {
     private Parser $parser;
 
-    public function __construct(private Standard $printer, private ConstExprEvaluator $constExprEvaluator)
-    {
+    public function __construct(
+        private Standard $printer,
+        private ConstExprEvaluator $constExprEvaluator
+    ) {
         $parserFactory = new ParserFactory();
-        $this->parser  = $parserFactory->create(ParserFactory::ONLY_PHP7);
+        $this->parser = $parserFactory->create(ParserFactory::ONLY_PHP7);
     }
 
-    /** @return array<string, string> */
+    /**
+     * @return array<string, string>
+     */
     public function convert(string $array): array
     {
         $array = '<?php ' . $array . ';';

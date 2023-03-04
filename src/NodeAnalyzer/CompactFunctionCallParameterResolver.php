@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use PhpParser\Node;
 

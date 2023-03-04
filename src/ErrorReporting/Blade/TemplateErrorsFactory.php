@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\ErrorReporting\Blade;
+namespace TomasVotruba\Bladestan\ErrorReporting\Blade;
 
 use PHPStan\Analyser\Error;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
-use Vural\PHPStanBladeRule\ValueObject\PhpFileContentsWithLineMap;
+use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
 use function array_key_first;
 use function current;
@@ -66,7 +66,9 @@ final class TemplateErrorsFactory
      */
     private function resolveNearestPhpLine(array $phpToTemplateLines, int $desiredLine): array
     {
-        $lastTemplateLine = ['' => 1];
+        $lastTemplateLine = [
+            '' => 1,
+        ];
 
         foreach ($phpToTemplateLines as $phpLine => $templateLine) {
             if ($desiredLine > $phpLine) {

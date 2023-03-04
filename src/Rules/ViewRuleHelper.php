@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Rules;
+namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -13,8 +13,8 @@ use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
 use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
 use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
-use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
-use Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory;
+use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
+use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 
 use function array_merge;
 use function file_get_contents;

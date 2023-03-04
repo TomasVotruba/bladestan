@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\View\FileViewFinder;
 use Illuminate\View\ViewFinderInterface;
@@ -25,7 +25,9 @@ final class TemplateFilePathResolver
     ) {
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public function resolveExistingFilePaths(Expr $expr, Scope $scope): array
     {
         $resolvedValue = $this->valueResolver->resolve($expr, $scope);

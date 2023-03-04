@@ -2,20 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\ValueObject;
+namespace TomasVotruba\Bladestan\ValueObject;
 
 final class Loop
 {
-    /** @var 0|positive-int */
+    /**
+     * @var 0|positive-int
+     */
     public int $index;
 
-    /** @var positive-int */
+    /**
+     * @var positive-int
+     */
     public int $iteration;
 
-    /** @var positive-int */
+    /**
+     * @var positive-int
+     */
     public int $remaining;
 
-    /** @var positive-int */
+    /**
+     * @var positive-int
+     */
     public int $count;
 
     public bool $first;
@@ -26,7 +34,9 @@ final class Loop
 
     public bool $odd;
 
-    /** @var positive-int */
+    /**
+     * @var positive-int
+     */
     public int $depth;
 
     /** @var __benevolent<Loop|null> */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\ValueObject;
+namespace TomasVotruba\Bladestan\ValueObject;
 
 /** @see \Reveal\TemplatePHPStanCompiler\ValueObject\PhpFileContentsWithLineMap */
 final class PhpFileContentsWithLineMap

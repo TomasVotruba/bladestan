@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\View\Factory;
@@ -27,7 +27,9 @@ final class BladeViewMethodsMatcher
     ) {
     }
 
-    /** @return RenderTemplateWithParameters[] */
+    /**
+     * @return RenderTemplateWithParameters[]
+     */
     public function match(Node\Expr\MethodCall $methodCall, Scope $scope): array
     {
         $methodName = $this->resolveName($methodCall);

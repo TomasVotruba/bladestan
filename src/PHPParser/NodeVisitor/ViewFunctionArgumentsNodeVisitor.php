@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
@@ -23,12 +23,11 @@ class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
     ) {
     }
 
-    /** @var array<string, mixed>> */
+    /**
+     * @var array<string, mixed>>
+     */
     private array $stack = [];
 
-    /**
-     * @inheritDoc
-     */
     public function beforeTraverse(array $nodes): ?array
     {
         $this->stack = [];

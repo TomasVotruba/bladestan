@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Tests\Rules;
+namespace TomasVotruba\Bladestan\Tests\Rules;
 
 use PHPStan\Rules\Operators\InvalidBinaryOperationRule;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
 use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
-use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
-use Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory;
-use Vural\PHPStanBladeRule\NodeAnalyzer\BladeViewMethodsMatcher;
-use Vural\PHPStanBladeRule\NodeAnalyzer\LaravelViewFunctionMatcher;
-use Vural\PHPStanBladeRule\Rules\BladeRule;
-use Vural\PHPStanBladeRule\Rules\ViewRuleHelper;
+use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
+use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
+use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
+use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
+use TomasVotruba\Bladestan\Rules\BladeRule;
+use TomasVotruba\Bladestan\Rules\ViewRuleHelper;
 
 use function array_merge;
 
@@ -68,7 +68,9 @@ class BladeViewRuleTest extends RuleTestCase
         ]);
     }
 
-    /** @return string[] */
+    /**
+     * @return string[]
+     */
     public static function getAdditionalConfigFiles(): array
     {
         return array_merge(parent::getAdditionalConfigFiles(), [__DIR__ . '/config/configWithTemplatePaths.neon']);

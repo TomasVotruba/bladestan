@@ -8,7 +8,7 @@ parametersSchema:
 
 services:
     errorFormatter.blade:
-        class: Vural\PHPStanBladeRule\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
+        class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
         arguments:
             showTipsOfTheDay: %tipsOfTheDay%
             editorUrl: %editorUrl%
@@ -18,7 +18,7 @@ services:
     # @todo too complex to read, tidy up
     - Illuminate\View\Compilers\BladeCompiler(cachePath: ::sys_get_temp_dir())
     -
-        class: Vural\PHPStanBladeRule\Rules\BladeRule
+        class: TomasVotruba\Bladestan\Rules\BladeRule
         tags: [phpstan.rules.rule]
     -
         class: Illuminate\View\FileViewFinder
@@ -26,33 +26,33 @@ services:
             files: Illuminate\Filesystem\Filesystem()
 
             # @todo too complex to read, tidy up
-            paths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
+            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
             extensions: ['blade.php', 'svg']
 
-    - Vural\PHPStanBladeRule\Rules\ViewRuleHelper
-    - Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver
-    - Vural\PHPStanBladeRule\ErrorReporting\Blade\TemplateErrorsFactory
-    - Vural\PHPStanBladeRule\NodeAnalyzer\TemplateFilePathResolver
-    - Vural\PHPStanBladeRule\NodeAnalyzer\LaravelViewFunctionMatcher
-    - Vural\PHPStanBladeRule\NodeAnalyzer\BladeViewMethodsMatcher
-    - Vural\PHPStanBladeRule\NodeAnalyzer\ViewDataParametersAnalyzer
-    - Vural\PHPStanBladeRule\NodeAnalyzer\CompactFunctionCallParameterResolver
-    - Vural\PHPStanBladeRule\NodeAnalyzer\MagicViewWithCallParameterResolver
-    - Vural\PHPStanBladeRule\NodeAnalyzer\ValueResolver
+    - TomasVotruba\Bladestan\Rules\ViewRuleHelper
+    - TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver
+    - TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory
+    - TomasVotruba\Bladestan\NodeAnalyzer\TemplateFilePathResolver
+    - TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher
+    - TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher
+    - TomasVotruba\Bladestan\NodeAnalyzer\ViewDataParametersAnalyzer
+    - TomasVotruba\Bladestan\NodeAnalyzer\CompactFunctionCallParameterResolver
+    - TomasVotruba\Bladestan\NodeAnalyzer\MagicViewWithCallParameterResolver
+    - TomasVotruba\Bladestan\NodeAnalyzer\ValueResolver
 
     -
-        class: Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler
+        class: TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
         arguments:
             # @todo too complex to read, tidy up
-            templatePaths: @Vural\PHPStanBladeRule\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
+            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%templatePaths%)
 
-    - Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler
-    - Vural\PHPStanBladeRule\Compiler\PhpContentExtractor
-    - Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
-    - Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray
-    - Vural\PHPStanBladeRule\Support\DirectoryHelper
+    - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
+    - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
+    - TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
+    - TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray
+    - TomasVotruba\Bladestan\Support\DirectoryHelper
 
     -
-        class: Vural\PHPStanBladeRule\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
+        class: TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:
             - phpstan.parser.richParserNodeVisitor

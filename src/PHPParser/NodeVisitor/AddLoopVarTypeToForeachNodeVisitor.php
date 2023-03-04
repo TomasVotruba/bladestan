@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\Nop;
 use PhpParser\NodeVisitorAbstract;
-use Vural\PHPStanBladeRule\ValueObject\Loop;
+use TomasVotruba\Bladestan\ValueObject\Loop;
 
 use function array_pop;
 use function array_unshift;
@@ -18,7 +18,9 @@ use function sprintf;
 
 final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
 {
-    /** @return Node[]|null */
+    /**
+     * @return Node[]|null
+     */
     public function leaveNode(Node $node): ?array
     {
         if (! $node instanceof Node\Stmt\Foreach_) {

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 
 final class ViewDataParametersAnalyzer
 {
-    public function __construct(private CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver)
-    {
+    public function __construct(
+        private CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver
+    ) {
     }
 
     public function resolveParametersArray(Node\Arg $arg, Scope $scope): Node\Expr\Array_

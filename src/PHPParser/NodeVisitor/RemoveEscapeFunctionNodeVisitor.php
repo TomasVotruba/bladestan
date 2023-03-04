@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Nop;
@@ -12,7 +12,9 @@ use function count;
 
 final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
 {
-    /** @return Node|Node[]|null */
+    /**
+     * @return Node|Node[]|null
+     */
     public function leaveNode(Node $node): null|Node|array
     {
         if (! $node instanceof Node\Stmt\Echo_) {

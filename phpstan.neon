@@ -1,11 +1,10 @@
-includes:
-    - phpstan-baseline.neon
 parameters:
-    tmpDir: .build/phpstan/
-    level: 9
+    level: 8
+
     paths:
         - src
         - tests
+
     excludePaths:
         - tests/*/Fixture/*
         - tests/Rules/data/*

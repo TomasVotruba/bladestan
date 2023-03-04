@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Support;
+namespace TomasVotruba\Bladestan\Support;
 
 use PHPStan\File\FileHelper;
 
@@ -11,8 +11,9 @@ use function str_replace;
 
 final class DirectoryHelper
 {
-    public function __construct(private FileHelper $fileHelper)
-    {
+    public function __construct(
+        private FileHelper $fileHelper
+    ) {
     }
 
     /**

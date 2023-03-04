@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
@@ -12,8 +12,9 @@ use PHPStan\Type\ConstantScalarType;
 
 final class ValueResolver
 {
-    public function __construct(private ConstExprEvaluator $constExprEvaluator)
-    {
+    public function __construct(
+        private ConstExprEvaluator $constExprEvaluator
+    ) {
     }
 
     public function resolve(Expr $expr, Scope $scope): mixed

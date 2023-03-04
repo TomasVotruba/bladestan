@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Tests\PHPParser;
+namespace TomasVotruba\Bladestan\Tests\PHPParser;
 
 use Generator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
-use Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray;
+use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 
-/** @covers \Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray */
+/** @covers \TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray */
 class ConvertArrayStringToArrayTest extends TestCase
 {
     /**
@@ -20,7 +20,7 @@ class ConvertArrayStringToArrayTest extends TestCase
      * @dataProvider greenProvider
      * @dataProvider redProvider
      */
-    function it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
+    public function it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
     {
         $converter = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
 
@@ -29,9 +29,19 @@ class ConvertArrayStringToArrayTest extends TestCase
 
     public function greenProvider(): Generator
     {
-        yield ["['foo' => 'bar', 'bar' => 'baz,bax']", ['foo' => "'bar'", 'bar' => "'baz,bax'"]];
-        yield ["['foo' => \$foo . 'bar']", ['foo' => "\$foo . 'bar'"]];
-        yield ["['foo' => \$foo->someMethod()]", ['foo' => '$foo->someMethod()']];
+        yield [
+            "['foo' => 'bar', 'bar' => 'baz,bax']", [
+                'foo' => "'bar'",
+                'bar' => "'baz,bax'",
+            ]];
+        yield [
+            "['foo' => \$foo . 'bar']", [
+                'foo' => "\$foo . 'bar'",
+            ]];
+        yield [
+            "['foo' => \$foo->someMethod()]", [
+                'foo' => '$foo->someMethod()',
+            ]];
     }
 
     public function redProvider(): Generator

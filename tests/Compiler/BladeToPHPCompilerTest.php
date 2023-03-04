@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -17,20 +17,22 @@ use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
-use Vural\PHPStanBladeRule\Blade\PhpLineToTemplateLineResolver;
-use Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler;
-use Vural\PHPStanBladeRule\Compiler\FileNameAndLineNumberAddingPreCompiler;
-use Vural\PHPStanBladeRule\Compiler\PhpContentExtractor;
-use Vural\PHPStanBladeRule\PHPParser\ConvertArrayStringToArray;
-use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
+use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
+use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
+use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
+use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
+use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
 use function sys_get_temp_dir;
 use function trim;
 
-/** @covers \Vural\PHPStanBladeRule\Compiler\BladeToPHPCompiler */
+/** @covers \TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler */
 class BladeToPHPCompilerTest extends TestCase
 {
-    /** @var VariableAndType[] */
+    /**
+     * @var VariableAndType[]
+     */
     private array $variables;
 
     private BladeToPHPCompiler $compiler;
@@ -61,10 +63,10 @@ class BladeToPHPCompilerTest extends TestCase
      * @test
      * @dataProvider fixtureProvider
      */
-    function it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
+    public function it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $phpFileContent   = $this->compiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
+        $phpFileContent = $this->compiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent->getPhpFileContents(), $fileInfo);
 

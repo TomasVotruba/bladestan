@@ -2,24 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\Blade;
+namespace TomasVotruba\Bladestan\Blade;
 
 use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use Vural\PHPStanBladeRule\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
 final class PhpLineToTemplateLineResolver
 {
     private Parser $parser;
 
-    public function __construct(private BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor)
-    {
+    public function __construct(
+        private BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor
+    ) {
         $parserFactory = new ParserFactory();
-        $this->parser  = $parserFactory->create(ParserFactory::PREFER_PHP7);
+        $this->parser = $parserFactory->create(ParserFactory::PREFER_PHP7);
     }
 
-    /** @return array<int, array<string, int>> */
+    /**
+     * @return array<int, array<string, int>>
+     */
     public function resolve(string $phpFileContent): array
     {
         $stmts = $this->parser->parse($phpFileContent);

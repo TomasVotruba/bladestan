@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vural\PHPStanBladeRule\NodeAnalyzer;
+namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Support\Str;
 use PhpParser\Node;
@@ -12,7 +12,9 @@ use function substr;
 
 final class MagicViewWithCallParameterResolver
 {
-    /** @return Node\Expr\ArrayItem[] */
+    /**
+     * @return Node\Expr\ArrayItem[]
+     */
     public function resolve(Node\Expr\FuncCall $funcCall): array
     {
         $result = [];
