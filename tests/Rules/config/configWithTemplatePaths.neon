@@ -1,6 +1,8 @@
 includes:
     - ../../tests.neon
+
 parameters:
-    templatePaths:
-        - tests/Rules/templates
-        - tests/Rules/templates/nested/directory
+    bladestan:
+        template_paths:
+            - tests/Rules/templates
+            - tests/Rules/templates/nested/directory
