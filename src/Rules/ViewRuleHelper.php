@@ -13,10 +13,10 @@ use PHPStan\ShouldNotHappenException;
 use Reveal\TemplatePHPStanCompiler\PHPStan\FileAnalyserProvider;
 use Reveal\TemplatePHPStanCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use Reveal\TemplatePHPStanCompiler\ValueObject\RenderTemplateWithParameters;
-use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 
+use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function array_merge;
 use function file_get_contents;
 use function file_put_contents;

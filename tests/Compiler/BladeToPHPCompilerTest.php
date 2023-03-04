@@ -12,7 +12,6 @@ use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 use Reveal\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
-use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
@@ -24,6 +23,7 @@ use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
+use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function sys_get_temp_dir;
 use function trim;
 

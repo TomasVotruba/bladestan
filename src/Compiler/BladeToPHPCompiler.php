@@ -21,7 +21,6 @@ use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PHPStan\ShouldNotHappenException;
 use Reveal\TemplatePHPStanCompiler\NodeFactory\VarDocNodeFactory;
-use Reveal\TemplatePHPStanCompiler\ValueObject\VariableAndType;
 use Throwable;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
@@ -31,6 +30,7 @@ use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
+use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function array_keys;
 use function array_map;
 use function array_merge;
@@ -99,7 +99,7 @@ final class BladeToPHPCompiler
 
         $includes = $this->getIncludes($rawPhpContent);
 
-        $allVariablesList = array_map(static fn (VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
+        $allVariablesList = array_map(static fn (\TomasVotruba\Bladestan\ValueObject\VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
 
         // Recursively fetch and compile includes
         while ($includes !== []) {
@@ -157,8 +157,6 @@ STRING;
 
     /**
      * @param VariableAndType[] $variablesAndTypes
-     *
-     * @throws ShouldNotHappenException
      */
     private function decoratePhpContent(string $phpContent, array $variablesAndTypes): string
     {

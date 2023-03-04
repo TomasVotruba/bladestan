@@ -6,5 +6,9 @@ parameters:
         - tests
 
     excludePaths:
-        - tests/*/Fixture/*
-        - tests/Rules/data/*
+        - 'tests/*/Fixture/*'
+        - 'tests/Rules/data/*'
+
+    ignoredErrors:
+        # this package relies havily on the file analyse
+        - '#Calling PHPStan\\Analyser\\FileAnalyser::analyseFile\()\ is not covered by backward compatibility promise#'
