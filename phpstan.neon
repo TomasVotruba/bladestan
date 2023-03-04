@@ -11,4 +11,4 @@ parameters:
 
     ignoreErrors:
         # this package relies havily on the file analyse
-        - '#Calling PHPStan\\Analyser\\FileAnalyser::analyseFile\()\ is not covered by backward compatibility promise#'
+        - '#Calling PHPStan\\Analyser\\FileAnalyser::analyseFile\(\) is not covered by backward compatibility promise#'
