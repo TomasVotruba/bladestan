@@ -7,7 +7,6 @@ namespace TomasVotruba\Bladestan\Rules;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\DirectRegistry;
-use PHPStan\Rules\Registry;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
