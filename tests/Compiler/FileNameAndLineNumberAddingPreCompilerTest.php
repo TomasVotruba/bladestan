@@ -14,7 +14,7 @@ use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 
 use function trim;
 
-/** @covers \TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler */
+#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler::class)]
 class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 {
     private FileNameAndLineNumberAddingPreCompiler $compiler;
@@ -26,9 +26,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         $this->compiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
-    /**
-     * @dataProvider fixtureProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
     public function test_it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');
@@ -38,13 +36,13 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 
-        $this->assertSame(trim($inputAndExpected->getExpected()), $phpFileContent);
+        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent);
     }
 
     /**
      * @return Iterator<SmartFileInfo>
      */
-    public function fixtureProvider(): Iterator
+    public static function fixtureProvider(): Iterator
     {
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/FileNameAndLineNumberAddingPreCompiler', '*.blade.php');
     }

@@ -18,7 +18,7 @@ use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 use function sys_get_temp_dir;
 use function trim;
 
-/** @covers \TomasVotruba\Bladestan\Compiler\PhpContentExtractor */
+#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\PhpContentExtractor::class)]
 class PhpContentExtractorTest extends TestCase
 {
     private PhpContentExtractor $extractor;
@@ -36,9 +36,7 @@ class PhpContentExtractorTest extends TestCase
         $this->preCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
-    /**
-     * @dataProvider fixtureProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
     public function test_it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
@@ -47,13 +45,13 @@ class PhpContentExtractorTest extends TestCase
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 
-        $this->assertSame(trim($inputAndExpected->getExpected()), trim($phpFileContent));
+        $this->assertSame(trim((string) $inputAndExpected->getExpected()), trim($phpFileContent));
     }
 
     /**
      * @return Iterator<SmartFileInfo>
      */
-    public function fixtureProvider(): Iterator
+    public static function fixtureProvider(): Iterator
     {
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/PhpContentExtractor', '*.blade.php');
     }

@@ -26,7 +26,7 @@ use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use function sys_get_temp_dir;
 use function trim;
 
-/** @covers \TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler */
+#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler::class)]
 class BladeToPHPCompilerTest extends TestCase
 {
     /**
@@ -58,9 +58,7 @@ class BladeToPHPCompilerTest extends TestCase
         $this->variables = [];
     }
 
-    /**
-     * @dataProvider fixtureProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
     public function test_it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
@@ -68,13 +66,13 @@ class BladeToPHPCompilerTest extends TestCase
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent->getPhpFileContents(), $fileInfo);
 
-        $this->assertSame(trim($inputAndExpected->getExpected()), $phpFileContent->getPhpFileContents());
+        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent->getPhpFileContents());
     }
 
     /**
      * @return Iterator<SmartFileInfo>
      */
-    public function fixtureProvider(): Iterator
+    public static function fixtureProvider(): Iterator
     {
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/BladeToPHPCompiler', '*.blade.php');
     }

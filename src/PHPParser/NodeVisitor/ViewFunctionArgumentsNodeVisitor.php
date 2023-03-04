@@ -11,6 +11,7 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
 use PHPStan\ShouldNotHappenException;
+use Webmozart\Assert\Assert;
 
 final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 {
@@ -76,10 +77,14 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
                 $rootViewNode->var->name->toCodeString() === 'view' &&
                 count($rootViewNode->var->getArgs()) > 0
             ) {
-                $key = md5(json_encode($rootViewNode->var));
+                $cacheKey = $rootViewNode->var->getAttribute('phpstan_cache');
+                Assert::string($cacheKey);
+                Assert::notEmpty($cacheKey);
 
-                if (! array_key_exists($key, $this->stack)) {
-                    $this->stack[$key] = $namesAndArgs;
+                //  = md5(json_encode($rootViewNode->var));
+
+                if (! array_key_exists($cacheKey, $this->stack)) {
+                    $this->stack[$cacheKey] = $namesAndArgs;
                 }
             }
         }

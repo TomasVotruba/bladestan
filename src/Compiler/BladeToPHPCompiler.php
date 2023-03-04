@@ -30,7 +30,6 @@ use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
-use TomasVotruba\Bladestan\ValueObject\VariableAndType;
 use function array_keys;
 use function array_map;
 use function array_merge;
