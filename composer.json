@@ -30,7 +30,8 @@
     "extra": {
         "phpstan": {
             "includes": [
-                "config/extension.neon"
+                "config/extension.neon",
+                "config/template-compiler/php-parser.neon"
             ]
         }
     },
