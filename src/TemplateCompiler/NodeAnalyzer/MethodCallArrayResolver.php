@@ -9,9 +9,6 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 
-/**
- * @api
- */
 final class MethodCallArrayResolver
 {
     public function __construct(

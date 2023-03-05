@@ -12,9 +12,6 @@ use PHPStan\Rules\Methods\CallMethodsRule;
 use PHPStan\Rules\Rule;
 use TomasVotruba\Bladestan\TemplateCompiler\Reflection\PrivatesAccessor;
 
-/**
- * @api
- */
 final class TemplateRulesRegistry extends DirectRegistry
 {
     /**

@@ -9,9 +9,6 @@ use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\PhpFileContentsWithLineMap;
 
-/**
- * @api
- */
 final class TemplateErrorsFactory
 {
     /**

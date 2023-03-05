@@ -6,9 +6,6 @@ namespace TomasVotruba\Bladestan\TemplateCompiler\ValueObject;
 
 use PhpParser\Node\Expr\Array_;
 
-/**
- * @api
- */
 final class RenderTemplateWithParameters
 {
     public function __construct(
