@@ -6,3 +6,11 @@ services:
     - TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver
     - TomasVotruba\Bladestan\TemplateCompiler\Reporting\TemplateErrorsFactory
     - TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter
+    - TomasVotruba\Bladestan\PHPParser\SimplePhpParser
+
+    - TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
+
+    -
+        factory: TomasVotruba\Bladestan\Configuration\Configuration
+        arguments:
+            - %bladestan%
