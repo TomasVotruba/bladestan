@@ -25,7 +25,7 @@ parameters:
 We provide custom PHPStan error formatter to better display the template errors. The custom error formatter extends the PHPStan's table error formatter and just adds additional information about template errors to the message.
 
 An example:
-![](./assets/example.png "Custom error formatter output example")
+![example](.github/assets/example.png "Custom error formatter output example")
 
 To use this custom error formatter you need to run PHPStan with `--error-format blade` option. For example:
 ```shell
