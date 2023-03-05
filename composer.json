@@ -12,7 +12,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",
-        "symplify/easy-testing": "^10.0",
         "symplify/easy-coding-standard": "^11.2",
         "rector/rector": "^0.15.20",
         "laravel/framework": "^10.2",

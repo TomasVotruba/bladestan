@@ -5,32 +5,24 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Blade;
 
 use PhpParser\NodeTraverser;
-use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\PHPParser\SimplePhpParser;
 
 final class PhpLineToTemplateLineResolver
 {
-    private readonly Parser $parser;
-
     public function __construct(
-        private readonly BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor
+        private readonly BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor,
+        private readonly SimplePhpParser $simplePhpParser,
     ) {
-        $parserFactory = new ParserFactory();
-        $this->parser = $parserFactory->create(ParserFactory::PREFER_PHP7);
     }
 
     /**
      * @return array<int, array<string, int>>
      */
-    public function resolve(string $phpFileContent): array
+    public function resolve(string $phpFileContents): array
     {
-        $stmts = $this->parser->parse($phpFileContent);
+        $stmts = $this->simplePhpParser->parse($phpFileContents);
         if ($stmts === []) {
-            return [];
-        }
-
-        if ($stmts === null) {
             return [];
         }
 

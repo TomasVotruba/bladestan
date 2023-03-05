@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Compiler;
 
 use Illuminate\Support\Str;
+use TomasVotruba\Bladestan\Configuration\Configuration;
 
 final class FileNameAndLineNumberAddingPreCompiler
 {
@@ -21,11 +22,8 @@ final class FileNameAndLineNumberAddingPreCompiler
 
     private string $fileName;
 
-    /**
-     * @param string[] $templatePaths
-     */
     public function __construct(
-        private readonly array $templatePaths,
+        private readonly Configuration $configuration
     ) {
     }
 
@@ -54,9 +52,12 @@ final class FileNameAndLineNumberAddingPreCompiler
         return implode(PHP_EOL, $lines);
     }
 
+    /**
+     * @todo remove fluent, make service method with fileName as argument to avoid miss-use
+     */
     public function setFileName(string $fileName): self
     {
-        foreach ($this->templatePaths as $templatePath) {
+        foreach ($this->configuration->getTemplatePaths() as $templatePath) {
             $templatePath = rtrim($templatePath, '/') . '/';
 
             if (str_contains($fileName, $templatePath)) {

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\Blade;
 
-use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 
-final class PhpLineToTemplateLineResolverTest extends TestCase
+final class PhpLineToTemplateLineResolverTest extends AbstractTestCase
 {
     private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver;
 
@@ -18,22 +16,19 @@ final class PhpLineToTemplateLineResolverTest extends TestCase
     {
         parent::setUp();
 
-        $this->phpLineToTemplateLineResolver = new PhpLineToTemplateLineResolver(new BladeLineNumberNodeVisitor());
+        $this->phpLineToTemplateLineResolver = $this->getService(PhpLineToTemplateLineResolver::class);
     }
 
     /**
      * @param array<int, array<string, int>> $expected
      */
     #[DataProvider('phpContentAndLineNumberProvider')]
-    public function test_it_can_extract_file_name_php_line_number_and_template_line_number(string $phpContent, array $expected): void
+    public function testExtractFileLines(string $phpContent, array $expected): void
     {
         $this->assertSame($expected, $this->phpLineToTemplateLineResolver->resolve($phpContent));
     }
 
-    /**
-     * @phpstan-return Generator<string, array{0: string, 1: array<int, array<string, int>>}, mixed, mixed>
-     */
-    public static function phpContentAndLineNumberProvider(): Generator
+    public static function phpContentAndLineNumberProvider(): \Iterator
     {
         yield 'File with no contents' => [
             '',

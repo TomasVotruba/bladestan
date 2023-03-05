@@ -18,7 +18,7 @@ final class ConvertArrayStringToArrayTest extends TestCase
      */
     #[DataProvider('greenProvider')]
     #[DataProvider('redProvider')]
-    public function test_it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
+    public function testConvertArrayLikeStringToPhpArray(string $array, array $expected): void
     {
         $convertArrayStringToArray = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
 

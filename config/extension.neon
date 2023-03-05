@@ -48,12 +48,6 @@ services:
     - TomasVotruba\Bladestan\NodeAnalyzer\MagicViewWithCallParameterResolver
     - TomasVotruba\Bladestan\NodeAnalyzer\ValueResolver
 
-    -
-        class: TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
-        arguments:
-            # @todo too complex to read, tidy up
-            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%bladestan.template_paths%)
-
     - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
     - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
     - TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
