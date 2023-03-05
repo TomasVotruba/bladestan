@@ -75,6 +75,7 @@ STRING;
         private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private readonly PhpContentExtractor $phpContentExtractor,
         private readonly ConvertArrayStringToArray $convertArrayStringToArray,
+        private readonly FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler,
         private readonly SimplePhpParser $simplePhpParser,
         private readonly array $components = [],
     ) {
