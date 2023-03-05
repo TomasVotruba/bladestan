@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter;
 
 use PHPStan\Analyser\Error;
-use PHPStan\Command\AnalyseCommand;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
 use PHPStan\File\RelativePathHelper;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * @see https://github.com/phpstan/phpstan-src/blob/master/src/Command/ErrorFormatter/TableErrorFormatter.php
@@ -17,7 +17,6 @@ final class BladeTemplateErrorFormatter
 {
     public function __construct(
         private readonly RelativePathHelper $relativePathHelper,
-        private readonly bool $showTipsOfTheDay,
         private readonly ?string $editorUrl,
     ) {
     }
@@ -35,17 +34,7 @@ final class BladeTemplateErrorFormatter
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
             $style->success('No errors');
-            if ($this->showTipsOfTheDay && $analysisResult->isDefaultLevelUsed()) {
-                $output->writeLineFormatted('💡 Tip of the Day:');
-                $output->writeLineFormatted(sprintf(
-                    "PHPStan is performing only the most basic checks.\nYou can pass a higher rule level through the <fg=cyan>--%s</> option\n(the default and current level is %d) to analyse code more thoroughly.",
-                    AnalyseCommand::OPTION_LEVEL,
-                    AnalyseCommand::DEFAULT_LEVEL,
-                ));
-                $output->writeLineFormatted('');
-            }
-
-            return 0;
+            return Command::SUCCESS;
         }
 
         /** @var array<string, Error[]> $fileErrors */
@@ -106,10 +95,10 @@ final class BladeTemplateErrorFormatter
 
         if ($analysisResult->getTotalErrorsCount() > 0) {
             $style->error($finalMessage);
-        } else {
-            $style->warning($finalMessage);
+            return Command::FAILURE;
         }
 
-        return $analysisResult->getTotalErrorsCount() > 0 ? 1 : 0;
+        $style->warning($finalMessage);
+        return Command::SUCCESS;
     }
 }

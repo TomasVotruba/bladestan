@@ -15,7 +15,6 @@ services:
     errorFormatter.blade:
         class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
         arguments:
-            showTipsOfTheDay: %tipsOfTheDay%
             editorUrl: %editorUrl%
 
     - PhpParser\ConstExprEvaluator
