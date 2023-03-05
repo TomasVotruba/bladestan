@@ -75,12 +75,12 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
+        $arg = $this->findTemplateDataArgument($methodName, $methodCall);
 
-        if (! $templateDataArgument instanceof Arg) {
+        if (! $arg instanceof Arg) {
             $parametersArray = new Array_();
         } else {
-            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);
+            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($arg, $scope);
         }
 
         $result = [];
