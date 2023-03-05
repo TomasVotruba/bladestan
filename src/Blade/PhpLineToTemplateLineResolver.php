@@ -26,8 +26,11 @@ final class PhpLineToTemplateLineResolver
     public function resolve(string $phpFileContent): array
     {
         $stmts = $this->parser->parse($phpFileContent);
+        if ($stmts === []) {
+            return [];
+        }
 
-        if ($stmts === [] || $stmts === null) {
+        if ($stmts === null) {
             return [];
         }
 

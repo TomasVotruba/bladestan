@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
+use PHPStan\Analyser\Error;
 use PHPStan\Analyser\FileAnalyser;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
@@ -12,6 +13,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
+use TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter;
 use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
 use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
@@ -21,20 +23,12 @@ final class ViewRuleHelper
 {
     private Registry $registry;
 
-    /**
-     * @var string[]
-     */
-    private const ERRORS_TO_IGNORE_REGEXES = [
-        '#Call to function unset\(\) contains undefined variable \$loop#',
-        '#Variable \$loop in PHPDoc tag @var does not exist#',
-        '#Anonymous function has an unused use (.*?)#',
-    ];
-
     public function __construct(
         private readonly TemplateVariableTypesResolver $templateVariableTypesResolver,
         private readonly FileAnalyserProvider $fileAnalyserProvider,
         private readonly TemplateErrorsFactory $templateErrorsFactory,
         private readonly BladeToPHPCompiler $bladeToPhpCompiler,
+        private readonly ErrorFilter $errorFilter,
     ) {
     }
 
@@ -106,20 +100,13 @@ final class ViewRuleHelper
             null
         );
 
+        /** @var Error[] $ruleErrors */
         $ruleErrors = $fileAnalyserResult->getErrors();
 
-        foreach ($ruleErrors as $key => $ruleError) {
-            foreach (self::ERRORS_TO_IGNORE_REGEXES as $errorToIgnoreRegex) {
-                if (! preg_match($errorToIgnoreRegex, $ruleError->getMessage())) {
-                    continue;
-                }
-
-                unset($ruleErrors[$key]);
-            }
-        }
+        $usefulRuleErrors = $this->errorFilter->filterErrors($ruleErrors);
 
         return $this->templateErrorsFactory->createErrors(
-            $ruleErrors,
+            $usefulRuleErrors,
             $phpLine,
             $scope->getFile(),
             $phpFileContentsWithLineMap,

@@ -15,13 +15,16 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-use function count;
-use function in_array;
-
 final class BladeViewMethodsMatcher
 {
+    /**
+     * @var string
+     */
     private const MAKE = 'make';
 
+    /**
+     * @var string[]
+     */
     private const VIEW_FACTORY_METHOD_NAMES = ['make', 'renderWhen', 'renderUnless'];
 
     public function __construct(
@@ -55,13 +58,13 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateNameArgument = $this->findTemplateNameArgument($methodName, $methodCall);
+        $templateNameArg = $this->findTemplateNameArg($methodName, $methodCall);
 
-        if ($templateNameArgument === null) {
+        if (! $templateNameArg instanceof Arg) {
             return [];
         }
 
-        $template = $templateNameArgument->value;
+        $template = $templateNameArg->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
             $template,
@@ -72,12 +75,12 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
+        $arg = $this->findTemplateDataArgument($methodName, $methodCall);
 
-        if ($templateDataArgument === null) {
+        if (! $arg instanceof Arg) {
             $parametersArray = new Array_();
         } else {
-            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);
+            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($arg, $scope);
         }
 
         $result = [];
@@ -111,7 +114,7 @@ final class BladeViewMethodsMatcher
         return false;
     }
 
-    private function findTemplateNameArgument(string $methodName, MethodCall $methodCall): ?Arg
+    private function findTemplateNameArg(string $methodName, MethodCall $methodCall): ?Arg
     {
         if (count($methodCall->getArgs()) < 1) {
             return null;

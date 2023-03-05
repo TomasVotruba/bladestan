@@ -4,7 +4,9 @@ includes:
 
 parameters:
     bladestan:
-        template_paths: []
+        template_paths:
+            # default to typical Laravel directory
+            - resources/views
 
 parametersSchema:
     bladestan: structure([
@@ -15,8 +17,8 @@ services:
     errorFormatter.blade:
         class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
         arguments:
-            showTipsOfTheDay: %tipsOfTheDay%
             editorUrl: %editorUrl%
+
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
 

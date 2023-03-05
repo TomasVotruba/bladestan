@@ -5,25 +5,18 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter;
 
 use PHPStan\Analyser\Error;
-use PHPStan\Command\AnalyseCommand;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
 use PHPStan\File\RelativePathHelper;
-
-use function array_map;
-use function count;
-use function is_string;
-use function sprintf;
-use function str_replace;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * @see https://github.com/phpstan/phpstan-src/blob/master/src/Command/ErrorFormatter/TableErrorFormatter.php
  */
-class BladeTemplateErrorFormatter
+final class BladeTemplateErrorFormatter
 {
     public function __construct(
         private readonly RelativePathHelper $relativePathHelper,
-        private readonly bool $showTipsOfTheDay,
         private readonly ?string $editorUrl,
     ) {
     }
@@ -37,23 +30,11 @@ class BladeTemplateErrorFormatter
             $projectConfigFile = $this->relativePathHelper->getRelativePath($analysisResult->getProjectConfigFile());
         }
 
-        $style = $output->getStyle();
+        $outputStyle = $output->getStyle();
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
-            $style->success('No errors');
-            if ($this->showTipsOfTheDay) {
-                if ($analysisResult->isDefaultLevelUsed()) {
-                    $output->writeLineFormatted('💡 Tip of the Day:');
-                    $output->writeLineFormatted(sprintf(
-                        "PHPStan is performing only the most basic checks.\nYou can pass a higher rule level through the <fg=cyan>--%s</> option\n(the default and current level is %d) to analyse code more thoroughly.",
-                        AnalyseCommand::OPTION_LEVEL,
-                        AnalyseCommand::DEFAULT_LEVEL,
-                    ));
-                    $output->writeLineFormatted('');
-                }
-            }
-
-            return 0;
+            $outputStyle->success('No errors');
+            return Command::SUCCESS;
         }
 
         /** @var array<string, Error[]> $fileErrors */
@@ -95,16 +76,16 @@ class BladeTemplateErrorFormatter
 
             $relativeFilePath = $this->relativePathHelper->getRelativePath($file);
 
-            $style->table(['Line', $relativeFilePath], $rows);
+            $outputStyle->table(['Line', $relativeFilePath], $rows);
         }
 
-        if (count($analysisResult->getNotFileSpecificErrors()) > 0) {
-            $style->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
+        if ($analysisResult->getNotFileSpecificErrors() !== []) {
+            $outputStyle->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
         }
 
         $warningsCount = count($analysisResult->getWarnings());
         if ($warningsCount > 0) {
-            $style->table(['', 'Warning'], array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings()));
+            $outputStyle->table(['', 'Warning'], array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings()));
         }
 
         $finalMessage = sprintf($analysisResult->getTotalErrorsCount() === 1 ? 'Found %d error' : 'Found %d errors', $analysisResult->getTotalErrorsCount());
@@ -113,11 +94,11 @@ class BladeTemplateErrorFormatter
         }
 
         if ($analysisResult->getTotalErrorsCount() > 0) {
-            $style->error($finalMessage);
-        } else {
-            $style->warning($finalMessage);
+            $outputStyle->error($finalMessage);
+            return Command::FAILURE;
         }
 
-        return $analysisResult->getTotalErrorsCount() > 0 ? 1 : 0;
+        $outputStyle->warning($finalMessage);
+        return Command::SUCCESS;
     }
 }

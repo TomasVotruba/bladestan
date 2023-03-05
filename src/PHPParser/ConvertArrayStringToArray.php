@@ -14,10 +14,6 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-use function assert;
-use function count;
-use function is_string;
-
 /**
  * This class converts the string `['foo' => 'bar', 'bar' => 'baz']` to actual PHP array `['foo' => 'bar', 'bar' => 'baz']`
  */
@@ -26,7 +22,7 @@ final class ConvertArrayStringToArray
     private readonly Parser $parser;
 
     public function __construct(
-        private readonly Standard $printer,
+        private readonly Standard $standard,
         private readonly ConstExprEvaluator $constExprEvaluator
     ) {
         $parserFactory = new ParserFactory();
@@ -41,8 +37,11 @@ final class ConvertArrayStringToArray
         $array = '<?php ' . $array . ';';
 
         $stmts = $this->parser->parse($array);
+        if ($stmts === null) {
+            return [];
+        }
 
-        if ($stmts === null || count($stmts) !== 1) {
+        if (count($stmts) !== 1) {
             return [];
         }
 
@@ -72,7 +71,7 @@ final class ConvertArrayStringToArray
                 continue;
             }
 
-            $value = $this->printer->prettyPrintExpr($item->value);
+            $value = $this->standard->prettyPrintExpr($item->value);
 
             $result[$key] = $value;
         }

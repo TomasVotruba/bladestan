@@ -18,19 +18,19 @@ use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 
 final class PhpContentExtractorTest extends TestCase
 {
-    private PhpContentExtractor $extractor;
+    private PhpContentExtractor $phpContentExtractor;
 
-    private BladeCompiler $compiler;
+    private BladeCompiler $bladeCompiler;
 
-    private FileNameAndLineNumberAddingPreCompiler $preCompiler;
+    private FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->extractor = new PhpContentExtractor();
-        $this->compiler = new BladeCompiler(new Filesystem(), sys_get_temp_dir());
-        $this->preCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
+        $this->phpContentExtractor = new PhpContentExtractor();
+        $this->bladeCompiler = new BladeCompiler(new Filesystem(), sys_get_temp_dir());
+        $this->fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
     #[DataProvider('fixtureProvider')]
@@ -38,7 +38,7 @@ final class PhpContentExtractorTest extends TestCase
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
         $input = $this->compile($inputAndExpected->getInput());
-        $phpFileContent = $this->extractor->extract($input);
+        $phpFileContent = $this->phpContentExtractor->extract($input);
 
         StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
 
@@ -55,8 +55,8 @@ final class PhpContentExtractorTest extends TestCase
 
     private function compile(string $bladeTemplate): string
     {
-        $fileContent = $this->preCompiler->setFileName('/foo/resources/views/foo.blade.php')->compileString(trim($bladeTemplate));
+        $fileContent = $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/foo/resources/views/foo.blade.php')->compileString(trim($bladeTemplate));
 
-        return $this->compiler->compileString($fileContent);
+        return $this->bladeCompiler->compileString($fileContent);
     }
 }

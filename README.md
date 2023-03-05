@@ -10,12 +10,14 @@ composer require tomasvotruba/bladestan --dev
 
 ## Configure
 
-Configure paths of views for the rule to scan using `templatePaths` config parameter key.
+Configure paths to your Blade views, unless you use the default `resources/views` directory:
 
 ```yaml
 parameters:
-    template_paths:
-        - resources/views
+    bladestan:
+        template_paths:
+            # default
+            - resources/views
 ```
 
 ## Features
@@ -25,11 +27,13 @@ parameters:
 We provide custom PHPStan error formatter to better display the template errors. The custom error formatter extends the PHPStan's table error formatter and just adds additional information about template errors to the message.
 
 An example:
+
 ![](./assets/example.png "Custom error formatter output example")
 
-To use this custom error formatter you need to run PHPStan with `--error-format blade` option. For example:
+How to use custom error formatter?
+
 ```shell
-vendor/bin/phpstan analyse src -l8 --error-format blade
+vendor/bin/phpstan --error-format blade
 ```
 
 ## Credits

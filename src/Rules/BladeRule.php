@@ -26,9 +26,9 @@ final class BladeRule implements Rule
         array $rules,
         private readonly BladeViewMethodsMatcher $bladeViewMethodsMatcher,
         private readonly LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
-        private readonly ViewRuleHelper $ruleHelper
+        private readonly ViewRuleHelper $viewRuleHelper
     ) {
-        $this->ruleHelper->setRegistry(new DirectRegistry($rules));
+        $this->viewRuleHelper->setRegistry(new DirectRegistry($rules));
     }
 
     public function getNodeType(): string
@@ -52,20 +52,20 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(FuncCall $node, Scope $scope): array
+    private function processLaravelViewFunction(FuncCall $funcCall, Scope $scope): array
     {
-        $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($node, $scope);
+        $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($funcCall, $scope);
 
-        return $this->ruleHelper->processNode($node, $scope, $renderTemplatesWithParameters);
+        return $this->viewRuleHelper->processNode($funcCall, $scope, $renderTemplatesWithParameters);
     }
 
     /**
      * @return RuleError[]
      */
-    private function processBladeView(MethodCall $node, Scope $scope): array
+    private function processBladeView(MethodCall $methodCall, Scope $scope): array
     {
-        $renderTemplatesWithParameters = $this->bladeViewMethodsMatcher->match($node, $scope);
+        $renderTemplatesWithParameters = $this->bladeViewMethodsMatcher->match($methodCall, $scope);
 
-        return $this->ruleHelper->processNode($node, $scope, $renderTemplatesWithParameters);
+        return $this->viewRuleHelper->processNode($methodCall, $scope, $renderTemplatesWithParameters);
     }
 }

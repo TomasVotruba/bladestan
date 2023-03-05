@@ -4,28 +4,17 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Compiler;
 
-use function array_map;
-use function array_unshift;
-use function explode;
-use function implode;
-use function preg_match;
-use function preg_match_all;
-use function rtrim;
-use function str_replace;
-use function str_starts_with;
-use function strip_tags;
-use function token_name;
-use function trim;
-
-use const PHP_EOL;
-
 final class PhpContentExtractor
 {
     /**
      * @see https://regex101.com/r/WomL6O/1
+     * @var string
      */
     private const PHP_OPEN_CLOSE_TAGS_REGEX = '#^(/\*\* file: .*?, line: \d+ \*/)(?!\s?/\*\* file: ).*?<\?php(.*?)\?>$#ms';
 
+    /**
+     * @var string
+     */
     private const TEMPLATE_FILE_NAME_AND_LINE_NUMBER_STRICT_REGEX = '#^(/\*\* file: .*?, line: \d+ \*/)$#m';
 
     /**
@@ -39,14 +28,18 @@ final class PhpContentExtractor
         preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $bladeCompiledContent, $matches);
 
         foreach ($matches[1] as $key => $match) {
-            if ($match !== '' || str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
+            if ($match !== '') {
+                continue;
+            }
+
+            if (str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
                 continue;
             }
 
             $matches[1][$key] = $matches[1][$key - 1];
         }
 
-        $phpContents = array_map(static fn ($a, $b) => $a . rtrim((string) $b), $matches[1], $matches[2]);
+        $phpContents = array_map(static fn ($a, $b): string => $a . rtrim((string) $b), $matches[1], $matches[2]);
 
         if ($phpContents !== [] && $addPHPOpeningTag) {
             array_unshift($phpContents, '<?php');

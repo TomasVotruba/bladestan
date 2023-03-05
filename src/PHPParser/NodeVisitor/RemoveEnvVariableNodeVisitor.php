@@ -25,16 +25,23 @@ final class RemoveEnvVariableNodeVisitor extends NodeVisitorAbstract
             return NodeTraverser::REMOVE_NODE;
         }
 
-        if (
-            $node instanceof Expression &&
-            $node->expr instanceof Assign &&
-            $node->expr->var instanceof Variable &&
-            $node->expr->var->name === 'loop'
-        ) {
-            return NodeTraverser::REMOVE_NODE;
+        if (! $node instanceof Expression) {
+            return null;
         }
 
-        return null;
+        if (! $node->expr instanceof Assign) {
+            return null;
+        }
+
+        if (! $node->expr->var instanceof Variable) {
+            return null;
+        }
+
+        if ($node->expr->var->name !== 'loop') {
+            return null;
+        }
+
+        return NodeTraverser::REMOVE_NODE;
     }
 
     private function isEnvCall(Node $node): bool

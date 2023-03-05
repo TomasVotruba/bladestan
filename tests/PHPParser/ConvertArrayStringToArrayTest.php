@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\PHPParser;
 
+use Iterator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 
@@ -14,16 +16,16 @@ final class ConvertArrayStringToArrayTest extends TestCase
     /**
      * @param array<string, mixed> $expected
      */
-    #[\PHPUnit\Framework\Attributes\DataProvider('greenProvider')]
-    #[\PHPUnit\Framework\Attributes\DataProvider('redProvider')]
+    #[DataProvider('greenProvider')]
+    #[DataProvider('redProvider')]
     public function test_it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
     {
-        $converter = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
+        $convertArrayStringToArray = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
 
-        $this->assertSame($expected, $converter->convert($array));
+        $this->assertSame($expected, $convertArrayStringToArray->convert($array));
     }
 
-    public static function greenProvider(): \Iterator
+    public static function greenProvider(): Iterator
     {
         yield [
             "['foo' => 'bar', 'bar' => 'baz,bax']", [
@@ -40,7 +42,7 @@ final class ConvertArrayStringToArrayTest extends TestCase
             ]];
     }
 
-    public static function redProvider(): \Iterator
+    public static function redProvider(): Iterator
     {
         yield ['', []];
         yield ['123', []];

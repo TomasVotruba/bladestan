@@ -30,9 +30,9 @@ final class BladeToPHPCompilerTest extends TestCase
     /**
      * @var VariableAndType[]
      */
-    private array $variables;
+    private array $variables = [];
 
-    private BladeToPHPCompiler $compiler;
+    private BladeToPHPCompiler $bladeToPHPCompiler;
 
     protected function setUp(): void
     {
@@ -40,7 +40,7 @@ final class BladeToPHPCompilerTest extends TestCase
 
         $templatePaths = [__DIR__ . '/Fixture/BladeToPHPCompiler'];
 
-        $this->compiler = new BladeToPHPCompiler(
+        $this->bladeToPHPCompiler = new BladeToPHPCompiler(
             $fileSystem = new Filesystem(),
             new BladeCompiler($fileSystem, sys_get_temp_dir()),
             new Standard(),
@@ -60,11 +60,11 @@ final class BladeToPHPCompilerTest extends TestCase
     public function test_it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $phpFileContent = $this->compiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
+        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
 
-        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent->getPhpFileContents(), $fileInfo);
+        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContentsWithLineMap->getPhpFileContents(), $fileInfo);
 
-        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent->getPhpFileContents());
+        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContentsWithLineMap->getPhpFileContents());
     }
 
     /**
