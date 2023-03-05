@@ -15,7 +15,7 @@
 /** file: foo.blade.php, line: 1 */
 if (isset($errors)) {
     /** file: foo.blade.php, line: 2 */
-    if ((is_countable($errors) ? count($errors) : 0) > 0) {
+    if (count($errors) > 0) {
         /** file: foo.blade.php, line: 5 */
         $__currentLoopData = $errors->all();
         foreach ($__currentLoopData as $error) {
