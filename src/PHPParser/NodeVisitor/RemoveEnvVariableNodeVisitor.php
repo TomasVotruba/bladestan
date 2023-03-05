@@ -25,15 +25,15 @@ final class RemoveEnvVariableNodeVisitor extends NodeVisitorAbstract
             return NodeTraverser::REMOVE_NODE;
         }
 
-        if (!$node instanceof Expression) {
+        if (! $node instanceof Expression) {
             return null;
         }
 
-        if (!$node->expr instanceof Assign) {
+        if (! $node->expr instanceof Assign) {
             return null;
         }
 
-        if (!$node->expr->var instanceof Variable) {
+        if (! $node->expr->var instanceof Variable) {
             return null;
         }
 

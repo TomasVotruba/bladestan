@@ -60,7 +60,7 @@ final class BladeViewMethodsMatcher
 
         $templateNameArgument = $this->findTemplateNameArgument($methodName, $methodCall);
 
-        if (!$templateNameArgument instanceof Arg) {
+        if (! $templateNameArgument instanceof Arg) {
             return [];
         }
 
@@ -77,7 +77,7 @@ final class BladeViewMethodsMatcher
 
         $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
 
-        if (!$templateDataArgument instanceof Arg) {
+        if (! $templateDataArgument instanceof Arg) {
             $parametersArray = new Array_();
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);

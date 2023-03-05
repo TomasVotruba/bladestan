@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\PHPParser;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Iterator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 
