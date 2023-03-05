@@ -6,27 +6,29 @@ namespace TomasVotruba\Bladestan\Tests\Compiler\FileNameAndLineNumberAddingPreCo
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Configuration\Configuration;
+use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 
-final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
+final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
 {
     private FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler;
 
     protected function setUp(): void
     {
+        $this->templatePaths = ['resources/views'];
+
         parent::setUp();
 
-        $this->fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
+        $this->fileNameAndLineNumberAddingPreCompiler = $this->getService(FileNameAndLineNumberAddingPreCompiler::class);
     }
 
     #[DataProvider('fixtureProvider')]
-    public function test_it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
+    public function testUpdateLineNumbers(SmartFileInfo $fileInfo): void
     {
         $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
 
@@ -43,7 +45,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
     }
 
-    public function test_it_can_change_file_name_for_same_template(): void
+    public function testChangeFileForSameTemplate(): void
     {
         $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
 
@@ -60,7 +62,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    public function test_it_shows_the_template_directory(): void
+    public function testShowTemplateDirectory(): void
     {
         $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/users/index.blade.php');
 
@@ -70,7 +72,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         );
     }
 
-    public function test_it_will_loop_over_template_paths_to_find_correct_one(): void
+    public function testFindCorrectTemplatePath(): void
     {
         $configuration = new Configuration([
             Configuration::TEMPLATE_PATHS => [
