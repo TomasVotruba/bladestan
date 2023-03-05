@@ -7,7 +7,6 @@ namespace TomasVotruba\Bladestan\ErrorReporting\Blade;
 use PHPStan\Analyser\Error;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
 /**

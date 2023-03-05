@@ -7,23 +7,23 @@ namespace TomasVotruba\Bladestan\Tests\PHPParser;
 use Iterator;
 use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
+use TomasVotruba\Bladestan\PHPParser\ArrayStringToArrayConverter;
 
-final class ConvertArrayStringToArrayTest extends PHPStanTestCase
+final class ArrayStringToArrayConverterTest extends PHPStanTestCase
 {
-    private ConvertArrayStringToArray $convertArrayStringToArray;
+    private ArrayStringToArrayConverter $convertArrayStringToArray;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->convertArrayStringToArray = self::getContainer()->getByType(ConvertArrayStringToArray::class);
+
+        $this->convertArrayStringToArray = self::getContainer()->getByType(ArrayStringToArrayConverter::class);
     }
 
     /**
      * @param array<string, mixed> $expectedArray
      */
-    #[DataProvider('greenProvider')]
-    #[DataProvider('redProvider')]
+    #[DataProvider('provideData')]
     public function testConvertArrayLikeStringToPhpArray(string $arrayString, array $expectedArray): void
     {
         $convertedArray = $this->convertArrayStringToArray->convert($arrayString);
@@ -31,7 +31,7 @@ final class ConvertArrayStringToArrayTest extends PHPStanTestCase
         $this->assertSame($expectedArray, $convertedArray);
     }
 
-    public static function greenProvider(): Iterator
+    public static function provideData(): Iterator
     {
         yield [
             "['foo' => 'bar', 'bar' => 'baz,bax']", [
@@ -46,10 +46,7 @@ final class ConvertArrayStringToArrayTest extends PHPStanTestCase
             "['foo' => \$foo->someMethod()]", [
                 'foo' => '$foo->someMethod()',
             ]];
-    }
 
-    public static function redProvider(): Iterator
-    {
         yield ['', []];
         yield ['123', []];
         yield ["'foo'", []];

@@ -16,8 +16,10 @@ use PhpParser\PrettyPrinter\Standard;
 
 /**
  * This class converts the string `['foo' => 'bar', 'bar' => 'baz']` to actual PHP array `['foo' => 'bar', 'bar' => 'baz']`
+ *
+ * @see \TomasVotruba\Bladestan\Tests\PHPParser\ArrayStringToArrayConverterTest
  */
-final class ConvertArrayStringToArray
+final class ArrayStringToArrayConverter
 {
     private readonly Parser $parser;
 

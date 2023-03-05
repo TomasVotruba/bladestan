@@ -19,7 +19,7 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinter\Standard;
 use Throwable;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
-use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
+use TomasVotruba\Bladestan\PHPParser\ArrayStringToArrayConverter;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
@@ -71,7 +71,7 @@ STRING;
         private readonly FileViewFinder $fileViewFinder,
         private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private readonly PhpContentExtractor $phpContentExtractor,
-        private readonly ConvertArrayStringToArray $convertArrayStringToArray,
+        private readonly ArrayStringToArrayConverter $convertArrayStringToArray,
         private readonly FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler,
         private readonly SimplePhpParser $simplePhpParser,
         private readonly array $components = [],

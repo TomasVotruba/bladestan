@@ -1,5 +1,0 @@
-includes:
-    - ../config/extension.neon
-
-parameters:
-    checkExplicitMixed: true
