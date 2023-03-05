@@ -11,7 +11,6 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
-use PhpParser\PrettyPrinter\Standard;
 use PHPStan\ShouldNotHappenException;
 use Webmozart\Assert\Assert;
 
