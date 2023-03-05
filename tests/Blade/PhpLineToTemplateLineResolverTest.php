@@ -33,15 +33,9 @@ final class PhpLineToTemplateLineResolverTest extends PHPStanTestCase
 
     public static function provideData(): Iterator
     {
-        yield 'File with no contents' => [
-            '',
-            [],
-        ];
+        yield 'File with no contents' => ['', []];
 
-        yield 'File with no comments' => [
-            "<?php echo 'foo';",
-            [],
-        ];
+        yield 'File with no comments' => ["<?php echo 'foo';", []];
 
         yield 'File with wrong comment style' => [
             <<<'PHP'

@@ -35,7 +35,11 @@ final class BladeToPHPCompilerTest extends PHPStanTestCase
     {
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
-        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputBladeContents, $this->variables);
+        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent(
+            'foo.blade.php',
+            $inputBladeContents,
+            $this->variables
+        );
 
         $this->assertSame($expectedPhpContents, $phpFileContentsWithLineMap->getPhpFileContents());
     }

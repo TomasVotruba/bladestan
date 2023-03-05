@@ -75,7 +75,11 @@ final class ViewRuleHelper
             return [];
         }
 
-        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent($templateFilePath, $fileContents, $variablesAndTypes);
+        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent(
+            $templateFilePath,
+            $fileContents,
+            $variablesAndTypes
+        );
 
         $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
 

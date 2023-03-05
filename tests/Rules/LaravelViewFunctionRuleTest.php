@@ -24,66 +24,21 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
     public function testRule(array $analysedFiles, array $expectedErrorsWithLines): void
     {
         $this->analyse([__DIR__ . '/data/laravel-view-function.php'], [
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                9,
-            ],
-            [
-                'Binary operation "+" between string and \'bar\' results in an error.',
-                9,
-            ],
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                13,
-            ],
-            [
-                'Binary operation "+" between string and 6 results in an error.',
-                15,
-            ],
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                19,
-            ],
-            [
-                'Binary operation "+" between int and \'foo\' results in an error.',
-                19,
-            ],
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                22,
-            ],
-            [
-                'Variable $bar might not be defined.',
-                22,
-            ],
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                24,
-            ],
-            [
-                'Binary operation "+" between \'10bar\' and 30 results in an error.',
-                24,
-            ],
-            [
-                'Binary operation "+" between string and 20 results in an error.',
-                24,
-            ],
-            [
-                'Variable $bar might not be defined.',
-                24,
-            ],
-            [
-                'Binary operation "+" between string and 10 results in an error.',
-                28,
-            ],
-            [
-                'Binary operation "+" between \'10bar\' and 30 results in an error.',
-                28,
-            ],
-            [
-                'Undefined variable: $bar',
-                28,
-            ],
+            ['Binary operation "+" between string and 10 results in an error.', 9],
+            ['Binary operation "+" between string and \'bar\' results in an error.', 9],
+            ['Binary operation "+" between string and 10 results in an error.', 13],
+            ['Binary operation "+" between string and 6 results in an error.', 15],
+            ['Binary operation "+" between string and 10 results in an error.', 19],
+            ['Binary operation "+" between int and \'foo\' results in an error.', 19],
+            ['Binary operation "+" between string and 10 results in an error.', 22],
+            ['Variable $bar might not be defined.', 22],
+            ['Binary operation "+" between string and 10 results in an error.', 24],
+            ['Binary operation "+" between \'10bar\' and 30 results in an error.', 24],
+            ['Binary operation "+" between string and 20 results in an error.', 24],
+            ['Variable $bar might not be defined.', 24],
+            ['Binary operation "+" between string and 10 results in an error.', 28],
+            ['Binary operation "+" between \'10bar\' and 30 results in an error.', 28],
+            ['Undefined variable: $bar', 28],
         ]);
     }
 

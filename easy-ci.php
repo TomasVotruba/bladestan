@@ -10,9 +10,8 @@ return static function (EasyCIConfig $easyCIConfig): void {
         \TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter::class,
         \TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor::class,
 
-
         // service factory used in /config
         \TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory::class,
-        \TomasVotruba\Bladestan\Laravel\View\BladeCompilerFactory::class
+        \TomasVotruba\Bladestan\Laravel\View\BladeCompilerFactory::class,
     ]);
 };

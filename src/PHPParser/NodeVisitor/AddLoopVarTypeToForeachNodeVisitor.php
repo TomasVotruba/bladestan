@@ -39,11 +39,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
         }
 
         $docNop = new Nop();
-        $docNop->setDocComment(new Doc(sprintf(
-            '/** @var %s $%s */',
-            '\\' . Loop::class,
-            'loop'
-        )));
+        $docNop->setDocComment(new Doc(sprintf('/** @var %s $%s */', '\\' . Loop::class, 'loop')));
 
         // Add `$loop` var doc type as the first statement
         array_unshift($node->stmts, $docNop);

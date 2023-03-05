@@ -50,10 +50,7 @@ final class TemplateRulesRegistry extends DirectRegistry
                 }
 
                 /** @var FunctionCallParametersCheck $check */
-                $check = $privatesAccessor->getPrivateProperty(
-                    $activeRule,
-                    'parametersCheck'
-                );
+                $check = $privatesAccessor->getPrivateProperty($activeRule, 'parametersCheck');
 
                 $privatesAccessor->setPrivateProperty($check, 'checkArgumentTypes', true);
             }

@@ -21,7 +21,9 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
 
         parent::setUp();
 
-        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(FileNameAndLineNumberAddingPreCompiler::class);
+        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(
+            FileNameAndLineNumberAddingPreCompiler::class
+        );
     }
 
     #[DataProvider('fixtureProvider')]
@@ -51,15 +53,9 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
 
     public static function provideData(): Iterator
     {
-        yield [
-            '/var/www/resources/views/foo.blade.php',
-            '/** file: foo.blade.php, line: 1 */{{ $foo }}',
-        ];
+        yield ['/var/www/resources/views/foo.blade.php', '/** file: foo.blade.php, line: 1 */{{ $foo }}'];
 
-        yield [
-            '/var/www/resources/views/bar.blade.php',
-            '/** file: bar.blade.php, line: 1 */{{ $foo }}',
-        ];
+        yield ['/var/www/resources/views/bar.blade.php', '/** file: bar.blade.php, line: 1 */{{ $foo }}'];
 
         yield [
             '/var/www/resources/views/users/index.blade.php',
@@ -70,10 +66,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
     public function testFindCorrectTemplatePath(): void
     {
         $configuration = new Configuration([
-            Configuration::TEMPLATE_PATHS => [
-                'resources/views',
-                'foo/bar',
-            ],
+            Configuration::TEMPLATE_PATHS => ['resources/views', 'foo/bar'],
         ]);
 
         $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler($configuration);
@@ -87,8 +80,6 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
 
     public static function getAdditionalConfigFiles(): array
     {
-        return [
-            __DIR__ . '/../../../config/extension.neon',
-        ];
+        return [__DIR__ . '/../../../config/extension.neon'];
     }
 }

@@ -26,7 +26,9 @@ final class PhpContentExtractorTest extends PHPStanTestCase
 
         $this->phpContentExtractor = self::getContainer()->getByType(PhpContentExtractor::class);
         $this->bladeCompiler = self::getContainer()->getByType(BladeCompiler::class);
-        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(FileNameAndLineNumberAddingPreCompiler::class);
+        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(
+            FileNameAndLineNumberAddingPreCompiler::class
+        );
     }
 
     #[DataProvider('fixtureProvider')]
@@ -54,8 +56,6 @@ final class PhpContentExtractorTest extends PHPStanTestCase
      */
     public static function getAdditionalConfigFiles(): array
     {
-        return [
-            __DIR__ . '/../../../config/extension.neon',
-        ];
+        return [__DIR__ . '/../../../config/extension.neon'];
     }
 }
