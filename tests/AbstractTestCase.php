@@ -24,22 +24,16 @@ abstract class AbstractTestCase extends TestCase
     protected function setUp(): void
     {
         $container = new Container();
-        $container->singleton(BladeCompiler::class, function (): BladeCompiler {
-            return new BladeCompiler(new Filesystem(), sys_get_temp_dir());
-        });
+        $container->singleton(BladeCompiler::class, static fn (): BladeCompiler => new BladeCompiler(new Filesystem(), sys_get_temp_dir()));
 
         // by convention to avoid rebuilding docs container and over again
         $templatePaths = $this->templatePaths;
 
-        $container->singleton(FileViewFinder::class, function () use ($templatePaths) {
-            return new FileViewFinder(new Filesystem(), $templatePaths);
-        });
+        $container->singleton(FileViewFinder::class, static fn (): FileViewFinder => new FileViewFinder(new Filesystem(), $templatePaths));
 
-        $container->singleton(Configuration::class, function () use ($templatePaths) {
-            return new Configuration([
-                Configuration::TEMPLATE_PATHS => $templatePaths,
-            ]);
-        });
+        $container->singleton(Configuration::class, static fn (): Configuration => new Configuration([
+            Configuration::TEMPLATE_PATHS => $templatePaths,
+        ]));
 
         $this->container = $container;
     }

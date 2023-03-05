@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\PHPParser;
 
 use PhpParser\Node\Stmt;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
 final class SimplePhpParser
 {
-    private \PhpParser\Parser $nativePhpParser;
+    private readonly Parser $nativePhpParser;
 
     public function __construct()
     {

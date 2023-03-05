@@ -6,13 +6,10 @@ namespace TomasVotruba\Bladestan\Tests\Compiler\FileNameAndLineNumberAddingPreCo
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
-use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
-use Symplify\EasyTesting\StaticFixtureSplitter;
-use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Configuration\Configuration;
 use TomasVotruba\Bladestan\Tests\AbstractTestCase;
+use TomasVotruba\Bladestan\Tests\TestUtils;
 
 final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
 {
@@ -28,21 +25,24 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
     }
 
     #[DataProvider('fixtureProvider')]
-    public function testUpdateLineNumbers(SmartFileInfo $fileInfo): void
+    public function testUpdateLineNumbers(string $filePath): void
     {
         $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
 
-        $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler->compileString(trim($inputAndExpected->getInput()));
+        [$inputBladeContents, $expectedPhpCompiledContent] = TestUtils::splitFixture($filePath);
 
-        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent, $fileInfo);
-
-        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent);
+        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler->compileString($inputBladeContents);
+        $this->assertSame($expectedPhpCompiledContent, $phpFileContent);
     }
 
     public static function fixtureProvider(): Iterator
     {
-        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
+        /** @var string[] $filePaths */
+        $filePaths = glob(__DIR__ . '/Fixture/*');
+
+        foreach ($filePaths as $filePath) {
+            yield [$filePath];
+        }
     }
 
     public function testChangeFileForSameTemplate(): void
