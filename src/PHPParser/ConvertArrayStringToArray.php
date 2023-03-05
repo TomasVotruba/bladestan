@@ -22,7 +22,7 @@ final class ConvertArrayStringToArray
     private readonly Parser $parser;
 
     public function __construct(
-        private readonly Standard $printer,
+        private readonly Standard $standard,
         private readonly ConstExprEvaluator $constExprEvaluator
     ) {
         $parserFactory = new ParserFactory();
@@ -71,7 +71,7 @@ final class ConvertArrayStringToArray
                 continue;
             }
 
-            $value = $this->printer->prettyPrintExpr($item->value);
+            $value = $this->standard->prettyPrintExpr($item->value);
 
             $result[$key] = $value;
         }

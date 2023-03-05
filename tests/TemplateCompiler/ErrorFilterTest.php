@@ -12,11 +12,11 @@ final class ErrorFilterTest extends TestCase
 {
     public function test(): void
     {
-        $errorSkipper = new ErrorFilter();
+        $errorFilter = new ErrorFilter();
 
         $ruleError = new Error('Variable $loop in PHPDoc tag @var does not exist', 'some_file.php');
 
-        $filteredErrors = $errorSkipper->filterErrors([$ruleError]);
+        $filteredErrors = $errorFilter->filterErrors([$ruleError]);
         $this->assertEmpty($filteredErrors);
     }
 }

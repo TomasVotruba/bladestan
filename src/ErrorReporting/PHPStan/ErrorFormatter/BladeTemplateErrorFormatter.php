@@ -30,10 +30,10 @@ final class BladeTemplateErrorFormatter
             $projectConfigFile = $this->relativePathHelper->getRelativePath($analysisResult->getProjectConfigFile());
         }
 
-        $style = $output->getStyle();
+        $outputStyle = $output->getStyle();
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
-            $style->success('No errors');
+            $outputStyle->success('No errors');
             return Command::SUCCESS;
         }
 
@@ -76,16 +76,16 @@ final class BladeTemplateErrorFormatter
 
             $relativeFilePath = $this->relativePathHelper->getRelativePath($file);
 
-            $style->table(['Line', $relativeFilePath], $rows);
+            $outputStyle->table(['Line', $relativeFilePath], $rows);
         }
 
         if ($analysisResult->getNotFileSpecificErrors() !== []) {
-            $style->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
+            $outputStyle->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
         }
 
         $warningsCount = count($analysisResult->getWarnings());
         if ($warningsCount > 0) {
-            $style->table(['', 'Warning'], array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings()));
+            $outputStyle->table(['', 'Warning'], array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings()));
         }
 
         $finalMessage = sprintf($analysisResult->getTotalErrorsCount() === 1 ? 'Found %d error' : 'Found %d errors', $analysisResult->getTotalErrorsCount());
@@ -94,11 +94,11 @@ final class BladeTemplateErrorFormatter
         }
 
         if ($analysisResult->getTotalErrorsCount() > 0) {
-            $style->error($finalMessage);
+            $outputStyle->error($finalMessage);
             return Command::FAILURE;
         }
 
-        $style->warning($finalMessage);
+        $outputStyle->warning($finalMessage);
         return Command::SUCCESS;
     }
 }

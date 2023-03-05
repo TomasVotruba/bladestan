@@ -20,7 +20,7 @@ final class DirectoryHelper
      */
     public function absolutizePaths(array $paths): array
     {
-        return array_map(function (string $path) {
+        return array_map(function (string $path): string {
             $path = $this->fileHelper->absolutizePath($path);
 
             return str_replace(['phar://', 'vendor/phpstan/phpstan/phpstan.phar/'], ['', ''], $path);

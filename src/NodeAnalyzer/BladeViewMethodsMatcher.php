@@ -58,13 +58,13 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateNameArgument = $this->findTemplateNameArgument($methodName, $methodCall);
+        $arg = $this->findTemplateNameArgument($methodName, $methodCall);
 
-        if (! $templateNameArgument instanceof Arg) {
+        if (! $arg instanceof Arg) {
             return [];
         }
 
-        $template = $templateNameArgument->value;
+        $template = $arg->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
             $template,

@@ -28,7 +28,7 @@ final class ViewRuleHelper
         private readonly FileAnalyserProvider $fileAnalyserProvider,
         private readonly TemplateErrorsFactory $templateErrorsFactory,
         private readonly BladeToPHPCompiler $bladeToPhpCompiler,
-        private readonly ErrorFilter $errorSkipper,
+        private readonly ErrorFilter $errorFilter,
     ) {
     }
 
@@ -103,7 +103,7 @@ final class ViewRuleHelper
         /** @var Error[] $ruleErrors */
         $ruleErrors = $fileAnalyserResult->getErrors();
 
-        $usefulRuleErrors = $this->errorSkipper->filterErrors($ruleErrors);
+        $usefulRuleErrors = $this->errorFilter->filterErrors($ruleErrors);
 
         return $this->templateErrorsFactory->createErrors(
             $usefulRuleErrors,
