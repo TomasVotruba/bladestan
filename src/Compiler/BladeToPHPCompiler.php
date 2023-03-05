@@ -90,7 +90,8 @@ STRING;
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
         // Precompile contents to add template file name and line numbers
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString($fileContents);
+        $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath);
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->compileString($fileContents);
 
         // Extract PHP content from HTML and PHP mixed content
         $rawPhpContent = $this->phpContentExtractor->extract($this->bladeCompiler->compileString($fileContents));
@@ -106,7 +107,8 @@ STRING;
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($includedFilePath)->compileString($includedFileContents);
+                    $this->fileNameAndLineNumberAddingPreCompiler->setFileName($includedFilePath);
+                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->compileString($includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
                     $includedContent = $this->phpContentExtractor->extract(
                         $compiledContent,

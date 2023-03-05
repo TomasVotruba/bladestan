@@ -55,7 +55,7 @@ final class FileNameAndLineNumberAddingPreCompiler
     /**
      * @todo remove fluent, make service method with fileName as argument to avoid miss-use
      */
-    public function setFileName(string $fileName): self
+    public function setFileName(string $fileName): void
     {
         foreach ($this->configuration->getTemplatePaths() as $templatePath) {
             $templatePath = rtrim($templatePath, '/') . '/';
@@ -67,8 +67,6 @@ final class FileNameAndLineNumberAddingPreCompiler
         }
 
         $this->fileName = $fileName;
-
-        return $this;
     }
 
     private function shouldSkip(string $line): bool
