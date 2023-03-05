@@ -13,6 +13,9 @@ parametersSchema:
         template_paths: listOf(string())
     ])
 
+rules:
+    - TomasVotruba\Bladestan\Rules\BladeRule
+
 services:
     errorFormatter.blade:
         class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
@@ -22,20 +25,15 @@ services:
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
 
-    # @todo too complex to read, tidy up
-    - Illuminate\View\Compilers\BladeCompiler(cachePath: ::sys_get_temp_dir())
     -
-        class: TomasVotruba\Bladestan\Rules\BladeRule
-        tags: [phpstan.rules.rule]
+        class: Illuminate\View\Compilers\BladeCompiler
+        arguments:
+            cachePath: ::sys_get_temp_dir()
 
+    - TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory
     -
         class: Illuminate\View\FileViewFinder
-        arguments:
-            files: Illuminate\Filesystem\Filesystem()
-
-            # @todo too complex to read, tidy up
-            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%bladestan.template_paths%)
-            extensions: ['blade.php', 'svg']
+        factory: ['@TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory', 'create']
 
     - TomasVotruba\Bladestan\Rules\ViewRuleHelper
     - TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver
