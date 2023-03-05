@@ -18,6 +18,10 @@ final class Configuration
         private readonly array $parameters
     ) {
         Assert::keyExists($this->parameters, self::TEMPLATE_PATHS);
+
+        $templatePaths = $this->parameters[self::TEMPLATE_PATHS];
+        Assert::isArray($templatePaths);
+        Assert::allString($templatePaths);
     }
 
     /**
