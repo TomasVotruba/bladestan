@@ -29,6 +29,7 @@ use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
+use Webmozart\Assert\Assert;
 
 final class BladeToPHPCompiler
 {
@@ -84,11 +85,11 @@ STRING;
 
     /**
      * @param array<VariableAndType> $variablesAndTypes
-     *
-     * @throws ShouldNotHappenException
      */
     public function compileContent(string $filePath, string $fileContents, array $variablesAndTypes): PhpFileContentsWithLineMap
     {
+        Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
+
         // Precompile contents to add template file name and line numbers
         $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString($fileContents);
 

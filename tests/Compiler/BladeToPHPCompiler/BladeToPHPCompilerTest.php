@@ -2,25 +2,17 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler\BladeToPHPCompiler;
 
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\FileViewFinder;
 use Iterator;
-use PhpParser\ConstExprEvaluator;
-use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
-use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
-use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
-use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
-use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
-use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
+use TomasVotruba\Bladestan\Configuration\Configuration;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\Tests\TestUtils;
 
@@ -37,30 +29,25 @@ final class BladeToPHPCompilerTest extends TestCase
     {
         parent::setUp();
 
+        // @todo extract to parent factory
         $container = new Container();
         $container->singleton(BladeCompiler::class, function (): BladeCompiler {
             return new BladeCompiler(new Filesystem(), sys_get_temp_dir());
         });
 
-        $templatePaths = [__DIR__ . '/Fixture/BladeToPHPCompiler'];
+        $templatePaths = [__DIR__ . '/Fixture'];
+
         $container->singleton(FileViewFinder::class, function () use ($templatePaths) {
             return new FileViewFinder(new Filesystem(), $templatePaths);
         });
 
-        $this->bladeToPHPCompiler = $container->make(BladeToPHPCompiler::class);
+        $container->singleton(Configuration::class, function () use ($templatePaths) {
+            return new Configuration([
+                Configuration::TEMPLATE_PATHS => $templatePaths
+             ]);
+        });
 
-        //// @todo this should be handled by container
-        //$this->bladeToPHPCompiler = new BladeToPHPCompiler(
-        //    $fileSystem = new Filesystem(),
-        //    new BladeCompiler($fileSystem, sys_get_temp_dir()),
-        //    new Standard(),
-        //    new VarDocNodeFactory(),
-        //    new FileViewFinder($fileSystem, $templatePaths),
-        //    new FileNameAndLineNumberAddingPreCompiler($templatePaths),
-        //    new PhpLineToTemplateLineResolver(new BladeLineNumberNodeVisitor()),
-        //    new PhpContentExtractor(),
-        //    new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator()),
-        //);
+        $this->bladeToPHPCompiler = $container->make(BladeToPHPCompiler::class);
 
         // Setup the variable names and types that'll be available to all templates
         $this->variables = [];
@@ -75,7 +62,7 @@ final class BladeToPHPCompilerTest extends TestCase
 
         //StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContentsWithLineMap->getPhpFileContents(), $fileInfo);
 
-        $this->assertSame($expectedPhpContents, $phpFileContentsWithLineMap);
+        $this->assertSame($expectedPhpContents, $phpFileContentsWithLineMap->getPhpFileContents());
     }
 
     public static function fixtureProvider(): Iterator

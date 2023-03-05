@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler\FileNameAndLineNumberAddingPreCompiler;
 
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -12,6 +12,7 @@ use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
+use TomasVotruba\Bladestan\Configuration\Configuration;
 
 final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 {
@@ -37,12 +38,9 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent);
     }
 
-    /**
-     * @return Iterator<SmartFileInfo>
-     */
     public static function fixtureProvider(): Iterator
     {
-        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/FileNameAndLineNumberAddingPreCompiler', '*.blade.php');
+        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
     }
 
     public function test_it_can_change_file_name_for_same_template(): void
@@ -74,11 +72,14 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 
     public function test_it_will_loop_over_template_paths_to_find_correct_one(): void
     {
-        $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler([
-            'resources/views',
-            'foo/bar',
+        $configuration = new Configuration([
+            Configuration::TEMPLATE_PATHS => [
+                'resources/views',
+                'foo/bar',
+            ],
         ]);
 
+        $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler($configuration);
         $fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/foo/bar/users/index.blade.php');
 
         $this->assertSame(

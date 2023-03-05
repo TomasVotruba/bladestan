@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
 use Symplify\EasyTesting\StaticFixtureSplitter;
-use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
+use TomasVotruba\Bladestan\Tests\TestUtils;
 
 final class PhpContentExtractorTest extends TestCase
 {
@@ -34,8 +34,10 @@ final class PhpContentExtractorTest extends TestCase
     }
 
     #[DataProvider('fixtureProvider')]
-    public function test_it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
+    public function test_it_can_extract_php_contents_from_compiled_blade_template_string(string $filePath): void
     {
+        TestUtils::splitFixture($filePath);
+
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
         $input = $this->compile($inputAndExpected->getInput());
         $phpFileContent = $this->phpContentExtractor->extract($input);
@@ -45,9 +47,6 @@ final class PhpContentExtractorTest extends TestCase
         $this->assertSame(trim((string) $inputAndExpected->getExpected()), trim($phpFileContent));
     }
 
-    /**
-     * @return Iterator<SmartFileInfo>
-     */
     public static function fixtureProvider(): Iterator
     {
         return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/PhpContentExtractor', '*.blade.php');
