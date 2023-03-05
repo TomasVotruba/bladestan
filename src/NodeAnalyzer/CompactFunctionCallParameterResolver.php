@@ -13,11 +13,11 @@ use PhpParser\Node\Scalar\String_;
 
 final class CompactFunctionCallParameterResolver
 {
-    public function resolveParameters(FuncCall $funcCall): Array_
+    public function resolveParameters(FuncCall $compactFuncCall): Array_
     {
         $resultArray = new Array_();
 
-        $funcArgs = $funcCall->getArgs();
+        $funcArgs = $compactFuncCall->getArgs();
 
         foreach ($funcArgs as $funcArg) {
             if (! $funcArg instanceof Arg) {

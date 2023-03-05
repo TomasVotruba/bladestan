@@ -60,11 +60,11 @@ final class BladeToPHPCompilerTest extends TestCase
     public function test_it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
-        $phpFileContent = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
+        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputAndExpected->getInput(), $this->variables);
 
-        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContent->getPhpFileContents(), $fileInfo);
+        StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContentsWithLineMap->getPhpFileContents(), $fileInfo);
 
-        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContent->getPhpFileContents());
+        $this->assertSame(trim((string) $inputAndExpected->getExpected()), $phpFileContentsWithLineMap->getPhpFileContents());
     }
 
     /**
