@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
+use Nette\Utils\Json;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\PrettyPrinter\Standard;
 use PHPStan\ShouldNotHappenException;
 use Webmozart\Assert\Assert;
 
@@ -77,7 +79,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
                 $rootViewNode->var->name->toCodeString() === 'view' &&
                 count($rootViewNode->var->getArgs()) > 0
             ) {
-                $cacheKey = $rootViewNode->var->getAttribute('phpstan_cache');
+                $cacheKey = Json::encode($rootViewNode->var);
                 Assert::string($cacheKey);
                 Assert::notEmpty($cacheKey);
 

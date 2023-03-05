@@ -28,55 +28,55 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                11,
-            ],
-            [
-                'Binary operation "+" between string and 6 results in an error.',
                 13,
             ],
             [
-                'Binary operation "+" between string and 10 results in an error.',
+                'Binary operation "+" between string and 6 results in an error.',
                 15,
+            ],
+            [
+                'Binary operation "+" between string and 10 results in an error.',
+                19,
             ],
             [
                 'Binary operation "+" between int and \'foo\' results in an error.',
-                15,
+                19,
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                18,
+                22,
             ],
             [
                 'Variable $bar might not be defined.',
-                18,
+                22,
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                20,
+                24,
             ],
             [
                 'Binary operation "+" between \'10bar\' and 30 results in an error.',
-                20,
+                24,
             ],
             [
                 'Binary operation "+" between string and 20 results in an error.',
-                20,
+                24,
             ],
             [
                 'Variable $bar might not be defined.',
-                20,
+                24,
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                22,
+                28,
             ],
             [
                 'Binary operation "+" between \'10bar\' and 30 results in an error.',
-                22,
+                28,
             ],
             [
                 'Undefined variable: $bar',
-                22,
+                28,
             ],
         ]);
     }
