@@ -22,6 +22,8 @@ final class PhpContentExtractorTest extends AbstractTestCase
 
     protected function setUp(): void
     {
+        $this->templatePaths = ['resources/views'];
+
         parent::setUp();
 
         $this->phpContentExtractor = $this->getService(PhpContentExtractor::class);
@@ -35,7 +37,7 @@ final class PhpContentExtractorTest extends AbstractTestCase
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
         $fileContent = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileName('foo.blade.php')
+            ->setFileName('/some-directory-name/resources/views/foo.blade.php')
             ->compileString($inputBladeContents);
 
         $compiledPhpContents = $this->bladeCompiler->compileString($fileContent);
