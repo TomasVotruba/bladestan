@@ -21,10 +21,8 @@ final class BladeTemplateErrorFormatter
     ) {
     }
 
-    public function formatErrors(
-        AnalysisResult $analysisResult,
-        Output $output,
-    ): int {
+    public function formatErrors(AnalysisResult $analysisResult, Output $output): int
+    {
         $projectConfigFile = 'phpstan.neon.dist';
         if ($analysisResult->getProjectConfigFile() !== null) {
             $projectConfigFile = $this->relativePathHelper->getRelativePath($analysisResult->getProjectConfigFile());
@@ -58,7 +56,11 @@ final class BladeTemplateErrorFormatter
                 }
 
                 if (is_string($this->editorUrl)) {
-                    $message .= "\n✏️  " . str_replace(['%file%', '%line%'], [$error->getTraitFilePath() ?? $error->getFilePath(), (string) $error->getLine()], $this->editorUrl);
+                    $message .= "\n✏️  " . str_replace(
+                        ['%file%', '%line%'],
+                        [$error->getTraitFilePath() ?? $error->getFilePath(), (string) $error->getLine()],
+                        $this->editorUrl
+                    );
                 }
 
                 $templateFilePath = $error->getMetadata()['template_file_path'] ?? null;
@@ -68,10 +70,7 @@ final class BladeTemplateErrorFormatter
                     $message .= ' <fg=magenta;options=bold>(template: ' . $templateFilePath . ', line: ' . $templateLine . ')</>';
                 }
 
-                $rows[] = [
-                    (string) $error->getLine(),
-                    $message,
-                ];
+                $rows[] = [(string) $error->getLine(), $message];
             }
 
             $relativeFilePath = $this->relativePathHelper->getRelativePath($file);
@@ -80,15 +79,24 @@ final class BladeTemplateErrorFormatter
         }
 
         if ($analysisResult->getNotFileSpecificErrors() !== []) {
-            $outputStyle->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
+            $outputStyle->table(
+                ['', 'Error'],
+                array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors())
+            );
         }
 
         $warningsCount = count($analysisResult->getWarnings());
         if ($warningsCount > 0) {
-            $outputStyle->table(['', 'Warning'], array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings()));
+            $outputStyle->table(
+                ['', 'Warning'],
+                array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings())
+            );
         }
 
-        $finalMessage = sprintf($analysisResult->getTotalErrorsCount() === 1 ? 'Found %d error' : 'Found %d errors', $analysisResult->getTotalErrorsCount());
+        $finalMessage = sprintf(
+            $analysisResult->getTotalErrorsCount() === 1 ? 'Found %d error' : 'Found %d errors',
+            $analysisResult->getTotalErrorsCount()
+        );
         if ($warningsCount > 0) {
             $finalMessage .= sprintf($warningsCount === 1 ? ' and %d warning' : ' and %d warnings', $warningsCount);
         }

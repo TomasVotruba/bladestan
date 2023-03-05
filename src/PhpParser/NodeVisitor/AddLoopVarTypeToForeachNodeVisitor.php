@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
@@ -39,11 +39,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
         }
 
         $docNop = new Nop();
-        $docNop->setDocComment(new Doc(sprintf(
-            '/** @var %s $%s */',
-            '\\' . Loop::class,
-            'loop'
-        )));
+        $docNop->setDocComment(new Doc(sprintf('/** @var %s $%s */', '\\' . Loop::class, 'loop')));
 
         // Add `$loop` var doc type as the first statement
         array_unshift($node->stmts, $docNop);

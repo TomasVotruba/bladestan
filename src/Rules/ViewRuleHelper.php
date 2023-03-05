@@ -10,7 +10,6 @@ use PHPStan\Analyser\FileAnalyser;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
-use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter;
@@ -36,8 +35,6 @@ final class ViewRuleHelper
      * @param RenderTemplateWithParameters[] $renderTemplatesWithParameters
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope, array $renderTemplatesWithParameters): array
     {
@@ -65,8 +62,6 @@ final class ViewRuleHelper
      * @param VariableAndType[] $variablesAndTypes
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     private function processTemplateFilePath(
         string $templateFilePath,
@@ -80,7 +75,11 @@ final class ViewRuleHelper
             return [];
         }
 
-        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent($templateFilePath, $fileContents, $variablesAndTypes);
+        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent(
+            $templateFilePath,
+            $fileContents,
+            $variablesAndTypes
+        );
 
         $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
 

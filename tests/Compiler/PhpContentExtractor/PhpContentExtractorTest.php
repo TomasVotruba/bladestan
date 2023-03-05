@@ -6,13 +6,13 @@ namespace TomasVotruba\Bladestan\Tests\Compiler\PhpContentExtractor;
 
 use Illuminate\View\Compilers\BladeCompiler;
 use Iterator;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
-use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 use TomasVotruba\Bladestan\Tests\TestUtils;
 
-final class PhpContentExtractorTest extends AbstractTestCase
+final class PhpContentExtractorTest extends PHPStanTestCase
 {
     private PhpContentExtractor $phpContentExtractor;
 
@@ -22,13 +22,13 @@ final class PhpContentExtractorTest extends AbstractTestCase
 
     protected function setUp(): void
     {
-        $this->templatePaths = ['resources/views'];
-
         parent::setUp();
 
-        $this->phpContentExtractor = $this->getService(PhpContentExtractor::class);
-        $this->bladeCompiler = $this->getService(BladeCompiler::class);
-        $this->fileNameAndLineNumberAddingPreCompiler = $this->getService(FileNameAndLineNumberAddingPreCompiler::class);
+        $this->phpContentExtractor = self::getContainer()->getByType(PhpContentExtractor::class);
+        $this->bladeCompiler = self::getContainer()->getByType(BladeCompiler::class);
+        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(
+            FileNameAndLineNumberAddingPreCompiler::class
+        );
     }
 
     #[DataProvider('fixtureProvider')]
@@ -48,11 +48,14 @@ final class PhpContentExtractorTest extends AbstractTestCase
 
     public static function fixtureProvider(): Iterator
     {
-        /** @var string[] $filePaths */
-        $filePaths = glob(__DIR__ . '/Fixture/*');
+        return TestUtils::yieldDirectory(__DIR__ . '/Fixture');
+    }
 
-        foreach ($filePaths as $filePath) {
-            yield [$filePath];
-        }
+    /**
+     * @return string[]
+     */
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/../../../config/extension.neon'];
     }
 }

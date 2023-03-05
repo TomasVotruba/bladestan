@@ -19,11 +19,11 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinter\Standard;
 use Throwable;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
-use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
-use TomasVotruba\Bladestan\PHPParser\SimplePhpParser;
+use TomasVotruba\Bladestan\PhpParser\ArrayStringToArrayConverter;
+use TomasVotruba\Bladestan\PhpParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
+use TomasVotruba\Bladestan\PhpParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
+use TomasVotruba\Bladestan\PhpParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
+use TomasVotruba\Bladestan\PhpParser\SimplePhpParser;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
@@ -71,7 +71,7 @@ STRING;
         private readonly FileViewFinder $fileViewFinder,
         private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private readonly PhpContentExtractor $phpContentExtractor,
-        private readonly ConvertArrayStringToArray $convertArrayStringToArray,
+        private readonly ArrayStringToArrayConverter $arrayStringToArrayConverter,
         private readonly FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler,
         private readonly SimplePhpParser $simplePhpParser,
         private readonly array $components = [],
@@ -85,19 +85,27 @@ STRING;
     /**
      * @param array<VariableAndType> $variablesAndTypes
      */
-    public function compileContent(string $filePath, string $fileContents, array $variablesAndTypes): PhpFileContentsWithLineMap
-    {
+    public function compileContent(
+        string $filePath,
+        string $fileContents,
+        array $variablesAndTypes
+    ): PhpFileContentsWithLineMap {
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
         // Precompile contents to add template file name and line numbers
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString($fileContents);
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString(
+            $fileContents
+        );
 
         // Extract PHP content from HTML and PHP mixed content
         $rawPhpContent = $this->phpContentExtractor->extract($this->bladeCompiler->compileString($fileContents));
 
         $includes = $this->getIncludes($rawPhpContent);
 
-        $allVariablesList = array_map(static fn (VariableAndType $variableAndType): string => $variableAndType->getVariable(), $variablesAndTypes);
+        $allVariablesList = array_map(
+            static fn (VariableAndType $variableAndType): string => $variableAndType->getVariable(),
+            $variablesAndTypes
+        );
 
         // Recursively fetch and compile includes
         while ($includes !== []) {
@@ -106,25 +114,38 @@ STRING;
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($includedFilePath)->compileString($includedFileContents);
+                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName(
+                        $includedFilePath
+                    )->compileString($includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
-                    $includedContent = $this->phpContentExtractor->extract(
-                        $compiledContent,
-                        false
-                    );
+                    $includedContent = $this->phpContentExtractor->extract($compiledContent, false);
                 } catch (Throwable) {
                     $includedContent = '';
                 }
 
-                $includedViewVariables = implode(PHP_EOL, array_map(static fn (string $key, string $value): string => '$' . $key . ' = ' . $value . ';', array_keys($include->getVariablesAndValues()), $include->getVariablesAndValues()));
+                $includedViewVariables = implode(
+                    PHP_EOL,
+                    array_map(
+                        static fn (string $key, string $value): string => '$' . $key . ' = ' . $value . ';',
+                        array_keys($include->getVariablesAndValues()),
+                        $include->getVariablesAndValues()
+                    )
+                );
 
-                $usedVariablesString = implode(', ', array_map(static fn (string $variable): string => '$' . $variable, $allVariablesList));
-                $rawPhpContent = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())), sprintf(
-                    self::INCLUDED_CONTENT_PLACE_HOLDER,
-                    $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',
-                    $includedViewVariables,
-                    $includedContent
-                ), $rawPhpContent) ?? $rawPhpContent;
+                $usedVariablesString = implode(
+                    ', ',
+                    array_map(static fn (string $variable): string => '$' . $variable, $allVariablesList)
+                );
+                $rawPhpContent = preg_replace(
+                    sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())),
+                    sprintf(
+                        self::INCLUDED_CONTENT_PLACE_HOLDER,
+                        $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',
+                        $includedViewVariables,
+                        $includedContent
+                    ),
+                    $rawPhpContent
+                ) ?? $rawPhpContent;
 
                 foreach (array_keys($include->getVariablesAndValues()) as $variable) {
                     if (in_array($variable, $allVariablesList, true)) {
@@ -196,7 +217,7 @@ STRING;
         foreach ($includes[1] as $i => $include) {
             $arrayString = trim((string) $includes[2][$i], ' ,');
 
-            $array = $this->convertArrayStringToArray->convert($arrayString);
+            $array = $this->arrayStringToArrayConverter->convert($arrayString);
 
             $return[] = new IncludedViewAndVariables($include, $array);
         }
@@ -214,8 +235,18 @@ STRING;
 
         //Hack to make the compiler work
         $application = new Application($currentWorkingDirectory);
-        $application->bind(\Illuminate\Contracts\Foundation\Application::class, static fn (): Application => $application);
-        $application->bind(Factory::class, fn (): \Illuminate\View\Factory => new \Illuminate\View\Factory(new EngineResolver(), $this->fileViewFinder, new NullDispatcher(new Dispatcher())));
+        $application->bind(
+            \Illuminate\Contracts\Foundation\Application::class,
+            static fn (): Application => $application
+        );
+        $application->bind(
+            Factory::class,
+            fn (): \Illuminate\View\Factory => new \Illuminate\View\Factory(
+                new EngineResolver(),
+                $this->fileViewFinder,
+                new NullDispatcher(new Dispatcher())
+            )
+        );
 
         $application->alias('view', 'foo');
 

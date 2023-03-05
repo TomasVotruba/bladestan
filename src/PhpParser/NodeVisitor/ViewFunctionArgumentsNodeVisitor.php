@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
 use Nette\Utils\Json;
 use PhpParser\Node;
@@ -49,7 +49,10 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
             $this->argsByMethodNameStack['foo'] = null;
         }
 
-        if ($node instanceof MethodCall && $node->name instanceof Identifier && str_starts_with($node->name->name, 'with')) {
+        if ($node instanceof MethodCall && $node->name instanceof Identifier && str_starts_with(
+            $node->name->name,
+            'with'
+        )) {
             $rootViewNode = $node;
             $namesAndArgs = [];
             while ($rootViewNode->var instanceof MethodCall) {

@@ -5,23 +5,25 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Compiler\FileNameAndLineNumberAddingPreCompiler;
 
 use Iterator;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Configuration\Configuration;
-use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 use TomasVotruba\Bladestan\Tests\TestUtils;
 
-final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
+final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
 {
     private FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler;
 
     protected function setUp(): void
     {
-        $this->templatePaths = ['resources/views'];
+        //$this->templatePaths = ['resources/views'];
 
         parent::setUp();
 
-        $this->fileNameAndLineNumberAddingPreCompiler = $this->getService(FileNameAndLineNumberAddingPreCompiler::class);
+        $this->fileNameAndLineNumberAddingPreCompiler = self::getContainer()->getByType(
+            FileNameAndLineNumberAddingPreCompiler::class
+        );
     }
 
     #[DataProvider('fixtureProvider')]
@@ -37,48 +39,34 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
 
     public static function fixtureProvider(): Iterator
     {
-        /** @var string[] $filePaths */
-        $filePaths = glob(__DIR__ . '/Fixture/*');
-
-        foreach ($filePaths as $filePath) {
-            yield [$filePath];
-        }
+        return TestUtils::yieldDirectory(__DIR__ . '/Fixture');
     }
 
-    public function testChangeFileForSameTemplate(): void
+    #[DataProvider('provideData')]
+    public function testChangeFileForSameTemplate(string $fileName, string $expectedCompiledComments): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
+        $this->fileNameAndLineNumberAddingPreCompiler->setFileName($fileName);
 
-        $this->assertSame(
-            '/** file: foo.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
-        );
-
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/bar.blade.php');
-
-        $this->assertSame(
-            '/** file: bar.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
-        );
+        $compiledComments = $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}');
+        $this->assertSame($expectedCompiledComments, $compiledComments);
     }
 
-    public function testShowTemplateDirectory(): void
+    public static function provideData(): Iterator
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/users/index.blade.php');
+        yield ['/var/www/resources/views/foo.blade.php', '/** file: foo.blade.php, line: 1 */{{ $foo }}'];
 
-        $this->assertSame(
+        yield ['/var/www/resources/views/bar.blade.php', '/** file: bar.blade.php, line: 1 */{{ $foo }}'];
+
+        yield [
+            '/var/www/resources/views/users/index.blade.php',
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
-        );
+        ];
     }
 
     public function testFindCorrectTemplatePath(): void
     {
         $configuration = new Configuration([
-            Configuration::TEMPLATE_PATHS => [
-                'resources/views',
-                'foo/bar',
-            ],
+            Configuration::TEMPLATE_PATHS => ['resources/views', 'foo/bar'],
         ]);
 
         $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler($configuration);
@@ -88,5 +76,10 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
             $fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
         );
+    }
+
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/../../../config/extension.neon'];
     }
 }

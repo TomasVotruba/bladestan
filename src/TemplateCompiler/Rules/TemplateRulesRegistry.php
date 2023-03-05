@@ -12,9 +12,6 @@ use PHPStan\Rules\Methods\CallMethodsRule;
 use PHPStan\Rules\Rule;
 use TomasVotruba\Bladestan\TemplateCompiler\Reflection\PrivatesAccessor;
 
-/**
- * @api
- */
 final class TemplateRulesRegistry extends DirectRegistry
 {
     /**
@@ -53,10 +50,7 @@ final class TemplateRulesRegistry extends DirectRegistry
                 }
 
                 /** @var FunctionCallParametersCheck $check */
-                $check = $privatesAccessor->getPrivateProperty(
-                    $activeRule,
-                    'parametersCheck'
-                );
+                $check = $privatesAccessor->getPrivateProperty($activeRule, 'parametersCheck');
 
                 $privatesAccessor->setPrivateProperty($check, 'checkArgumentTypes', true);
             }
