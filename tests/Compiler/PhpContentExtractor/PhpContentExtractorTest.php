@@ -36,8 +36,9 @@ final class PhpContentExtractorTest extends AbstractTestCase
     {
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
+        $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileName('/some-directory-name/resources/views/foo.blade.php');
         $fileContent = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileName('/some-directory-name/resources/views/foo.blade.php')
             ->compileString($inputBladeContents);
 
         $compiledPhpContents = $this->bladeCompiler->compileString($fileContent);
