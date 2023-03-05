@@ -17,7 +17,6 @@ use PhpParser\Node\Stmt;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PHPStan\ShouldNotHappenException;
 use Throwable;
@@ -26,6 +25,7 @@ use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
+use TomasVotruba\Bladestan\PHPParser\SimplePhpParser;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
@@ -72,15 +72,12 @@ STRING;
         private readonly Standard $printerStandard,
         private readonly VarDocNodeFactory $varDocNodeFactory,
         private readonly FileViewFinder $fileViewFinder,
-        private readonly FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler,
         private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private readonly PhpContentExtractor $phpContentExtractor,
         private readonly ConvertArrayStringToArray $convertArrayStringToArray,
+        private readonly SimplePhpParser $simplePhpParser,
         private readonly array $components = [],
     ) {
-        $parserFactory = new ParserFactory();
-        $this->parser = $parserFactory->create(ParserFactory::ONLY_PHP7);
-
         // Disable component rendering
         $this->bladeCompiler->withoutComponentTags();
 
@@ -154,23 +151,20 @@ STRING;
      */
     private function decoratePhpContent(string $phpContent, array $variablesAndTypes): string
     {
-        $stmts = $this->parser->parse($phpContent);
-        if ($stmts === null) {
-            // TODO create our own exception
-            throw new ShouldNotHappenException();
-        }
+        $stmts = $this->simplePhpParser->parse($phpContent);
 
         // Apply some visitors
         // - get rid of $__env variables
         // - get rid of e() function calls
-        $stmts = $this->traverseStmtsWithVisitors($stmts, [
+        $this->traverseStmtsWithVisitors($stmts, [
             new RemoveEnvVariableNodeVisitor(),
             new RemoveEscapeFunctionNodeVisitor(),
             new AddLoopVarTypeToForeachNodeVisitor(),
         ]);
 
         // Add @var docs to top of file
-        $stmts = array_merge($this->varDocNodeFactory->createDocNodes($variablesAndTypes), $stmts);
+        $docNodes = $this->varDocNodeFactory->createDocNodes($variablesAndTypes);
+        $stmts = array_merge($docNodes, $stmts);
 
         return $this->printerStandard->prettyPrintFile($stmts);
     }

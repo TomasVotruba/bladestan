@@ -40,6 +40,7 @@ final class BladeToPHPCompilerTest extends TestCase
 
         $templatePaths = [__DIR__ . '/Fixture/BladeToPHPCompiler'];
 
+        // @todo this should be handled by container
         $this->bladeToPHPCompiler = new BladeToPHPCompiler(
             $fileSystem = new Filesystem(),
             new BladeCompiler($fileSystem, sys_get_temp_dir()),
@@ -72,6 +73,6 @@ final class BladeToPHPCompilerTest extends TestCase
      */
     public static function fixtureProvider(): Iterator
     {
-        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/BladeToPHPCompiler', '*.blade.php');
+        return StaticFixtureFinder::yieldDirectory(__DIR__ . '/Fixture/BladeToPHPCompiler');
     }
 }
