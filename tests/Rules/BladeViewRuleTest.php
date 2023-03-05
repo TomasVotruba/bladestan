@@ -28,19 +28,19 @@ final class BladeViewRuleTest extends RuleTestCase
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                14,
+                16,
             ],
             [
                 'Binary operation "+" between string and \'bar\' results in an error.',
-                14,
+                16,
             ],
             [
                 'Binary operation "+" between string and 10 results in an error.',
-                15,
+                19,
             ],
             [
                 'Binary operation "+" between string and \'bar\' results in an error.',
-                15,
+                19,
             ],
         ]);
     }
