@@ -52,9 +52,6 @@ final class FileNameAndLineNumberAddingPreCompiler
         return implode(PHP_EOL, $lines);
     }
 
-    /**
-     * @todo remove fluent, make service method with fileName as argument to avoid miss-use
-     */
     public function setFileName(string $fileName): self
     {
         foreach ($this->configuration->getTemplatePaths() as $templatePath) {

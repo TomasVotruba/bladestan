@@ -56,7 +56,6 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
                 if ($rootViewNode->name instanceof Identifier) {
                     $methodName = $rootViewNode->name->toString();
                 } else {
-                    // @todo test
                     break;
                 }
 
@@ -67,7 +66,6 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
             if ($rootViewNode->name instanceof Identifier) {
                 $methodName = $rootViewNode->name->toString();
             } else {
-                // @todo test
                 throw new ShouldNotHappenException();
             }
 
