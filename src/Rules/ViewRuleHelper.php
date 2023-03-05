@@ -17,21 +17,17 @@ use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesRe
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 
-use function array_merge;
-use function file_get_contents;
-use function file_put_contents;
-use function md5;
-use function preg_match;
-use function sys_get_temp_dir;
-
 final class ViewRuleHelper
 {
     private Registry $registry;
 
-    private const ERRORS_TO_IGNORE = [
-        'Call to function unset\(\) contains undefined variable \$loop\.',
-        'Variable \$loop in PHPDoc tag @var does not exist\.',
-        'Anonymous function has an unused use \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*\.',
+    /**
+     * @var string[]
+     */
+    private const ERRORS_TO_IGNORE_REGEXES = [
+        '#Call to function unset\(\) contains undefined variable \$loop\.#',
+        '#Variable \$loop in PHPDoc tag @var does not exist\.#',
+        '#Anonymous function has an unused use \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*\.#',
     ];
 
     public function __construct(
@@ -113,8 +109,8 @@ final class ViewRuleHelper
         $ruleErrors = $fileAnalyserResult->getErrors();
 
         foreach ($ruleErrors as $key => $ruleError) {
-            foreach (self::ERRORS_TO_IGNORE as $item) {
-                if (! preg_match('#' . $item . '#', $ruleError->getMessage())) {
+            foreach (self::ERRORS_TO_IGNORE_REGEXES as $errorToIgnoreRegex) {
+                if (! preg_match('#' . $errorToIgnoreRegex . '#', $ruleError->getMessage())) {
                     continue;
                 }
 
