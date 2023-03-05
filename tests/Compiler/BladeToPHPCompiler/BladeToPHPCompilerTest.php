@@ -37,8 +37,6 @@ final class BladeToPHPCompilerTest extends AbstractTestCase
 
         $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputBladeContents, $this->variables);
 
-        //StaticFixtureUpdater::updateFixtureContent($inputAndExpected->getInput(), $phpFileContentsWithLineMap->getPhpFileContents(), $fileInfo);
-
         $this->assertSame($expectedPhpContents, $phpFileContentsWithLineMap->getPhpFileContents());
     }
 

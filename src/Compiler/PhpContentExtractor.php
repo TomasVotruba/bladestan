@@ -45,7 +45,7 @@ final class PhpContentExtractor
             array_unshift($phpContents, '<?php');
         }
 
-        return implode(PHP_EOL, $phpContents);
+        return implode(PHP_EOL, $phpContents) . PHP_EOL;
     }
 
     private function removeHtmlTags(string $input): string
