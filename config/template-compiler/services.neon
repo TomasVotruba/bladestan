@@ -3,7 +3,7 @@ services:
     - TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory
     - TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver
     - TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter
-    - TomasVotruba\Bladestan\PHPParser\SimplePhpParser
+    - TomasVotruba\Bladestan\PhpParser\SimplePhpParser
     - TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
 
     -

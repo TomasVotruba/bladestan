@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\PHPParser;
+namespace TomasVotruba\Bladestan\PhpParser;
 
 use PhpParser\Node\Stmt;
 use PhpParser\Parser;

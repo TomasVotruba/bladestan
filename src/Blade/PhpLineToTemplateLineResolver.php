@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Blade;
 
 use PhpParser\NodeTraverser;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
-use TomasVotruba\Bladestan\PHPParser\SimplePhpParser;
+use TomasVotruba\Bladestan\PhpParser\NodeVisitor\BladeLineNumberNodeVisitor;
+use TomasVotruba\Bladestan\PhpParser\SimplePhpParser;
 
 final class PhpLineToTemplateLineResolver
 {

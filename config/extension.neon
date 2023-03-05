@@ -48,11 +48,11 @@ services:
 
     - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
     - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
-    - TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
-    - TomasVotruba\Bladestan\PHPParser\ArrayStringToArrayConverter
+    - TomasVotruba\Bladestan\PhpParser\NodeVisitor\BladeLineNumberNodeVisitor
+    - TomasVotruba\Bladestan\PhpParser\ArrayStringToArrayConverter
     - TomasVotruba\Bladestan\Support\DirectoryHelper
 
     -
-        class: TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
+        class: TomasVotruba\Bladestan\PhpParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:
             - phpstan.parser.richParserNodeVisitor

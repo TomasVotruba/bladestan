@@ -6,7 +6,7 @@ use TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateEr
 use TomasVotruba\Bladestan\Laravel\View\BladeCompilerFactory;
 use TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory;
 
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor;
+use TomasVotruba\Bladestan\PhpParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor;
 
 return static function (EasyCIConfig $easyCIConfig): void {
     $easyCIConfig->typesToSkip([

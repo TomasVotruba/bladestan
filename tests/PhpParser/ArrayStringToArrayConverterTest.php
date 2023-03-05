@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\Tests\PHPParser;
+namespace TomasVotruba\Bladestan\Tests\PhpParser;
 
 use Iterator;
 use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use TomasVotruba\Bladestan\PHPParser\ArrayStringToArrayConverter;
+use TomasVotruba\Bladestan\PhpParser\ArrayStringToArrayConverter;
 
 final class ArrayStringToArrayConverterTest extends PHPStanTestCase
 {
