@@ -5,4 +5,4 @@
 <?php
 
 /** file: foo.blade.php, line: 2 */
-echo $foo;
+echo e($foo);

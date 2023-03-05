@@ -17,7 +17,6 @@ use PhpParser\Node\Stmt;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinter\Standard;
-use PHPStan\ShouldNotHappenException;
 use Throwable;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
@@ -165,7 +164,8 @@ STRING;
         $docNodes = $this->varDocNodeFactory->createDocNodes($variablesAndTypes);
         $stmts = array_merge($docNodes, $stmts);
 
-        return $this->printerStandard->prettyPrintFile($stmts);
+        $printedPhpContents = $this->printerStandard->prettyPrintFile($stmts);
+        return $printedPhpContents . PHP_EOL;
     }
 
     /**

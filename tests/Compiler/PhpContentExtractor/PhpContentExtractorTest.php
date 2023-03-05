@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\Tests\Compiler;
+namespace TomasVotruba\Bladestan\Tests\Compiler\PhpContentExtractor;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -49,7 +49,7 @@ final class PhpContentExtractorTest extends TestCase
 
     public static function fixtureProvider(): Iterator
     {
-        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture/PhpContentExtractor', '*.blade.php');
+        return StaticFixtureFinder::yieldDirectoryExclusively(__DIR__ . '/Fixture', '*.blade.php');
     }
 
     private function compile(string $bladeTemplate): string

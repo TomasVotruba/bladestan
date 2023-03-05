@@ -43,8 +43,8 @@ final class BladeToPHPCompilerTest extends TestCase
 
         $container->singleton(Configuration::class, function () use ($templatePaths) {
             return new Configuration([
-                Configuration::TEMPLATE_PATHS => $templatePaths
-             ]);
+                Configuration::TEMPLATE_PATHS => $templatePaths,
+            ]);
         });
 
         $this->bladeToPHPCompiler = $container->make(BladeToPHPCompiler::class);
@@ -54,7 +54,7 @@ final class BladeToPHPCompilerTest extends TestCase
     }
 
     #[DataProvider('fixtureProvider')]
-    public function test_it_can_compile_and_decorate_blade_template(string $filePath): void
+    public function testCompileAndDecorateTypes(string $filePath): void
     {
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
@@ -68,7 +68,7 @@ final class BladeToPHPCompilerTest extends TestCase
     public static function fixtureProvider(): Iterator
     {
         /** @var string[] $filePaths */
-        $filePaths = glob(__DIR__ . '/Fixture/BladeToPHPCompiler/*');
+        $filePaths = glob(__DIR__ . '/Fixture/*');
 
         foreach ($filePaths as $filePath) {
             yield [$filePath];

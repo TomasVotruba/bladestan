@@ -3,4 +3,4 @@
 <?php
 
 /** file: foo.blade.php, line: 1 */
-echo $foo;
+echo e($foo);
