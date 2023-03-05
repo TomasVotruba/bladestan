@@ -18,9 +18,9 @@ return function (ECSConfig $ecsConfig): void {
 
     // this way you can add sets - group of rules
     $ecsConfig->sets([
-        // run and fix, one by one
         SetList::SPACES,
         SetList::ARRAY,
+        SetList::STRICT,
         SetList::DOCBLOCK,
         SetList::NAMESPACES,
         SetList::COMMENTS,

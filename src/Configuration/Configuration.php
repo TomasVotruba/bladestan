@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace TomasVotruba\Bladestan\Configuration;
 
 use Webmozart\Assert\Assert;
