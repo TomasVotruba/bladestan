@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\Blade;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\Tests\AbstractTestCase;
@@ -28,7 +29,7 @@ final class PhpLineToTemplateLineResolverTest extends AbstractTestCase
         $this->assertSame($expected, $this->phpLineToTemplateLineResolver->resolve($phpContent));
     }
 
-    public static function phpContentAndLineNumberProvider(): \Iterator
+    public static function phpContentAndLineNumberProvider(): Iterator
     {
         yield 'File with no contents' => [
             '',
