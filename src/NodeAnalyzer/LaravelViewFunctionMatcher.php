@@ -10,8 +10,6 @@ use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-use function count;
-
 final class LaravelViewFunctionMatcher
 {
     public function __construct(

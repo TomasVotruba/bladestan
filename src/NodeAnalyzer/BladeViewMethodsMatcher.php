@@ -15,13 +15,16 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-use function count;
-use function in_array;
-
 final class BladeViewMethodsMatcher
 {
+    /**
+     * @var string
+     */
     private const MAKE = 'make';
 
+    /**
+     * @var string[]
+     */
     private const VIEW_FACTORY_METHOD_NAMES = ['make', 'renderWhen', 'renderUnless'];
 
     public function __construct(
@@ -57,7 +60,7 @@ final class BladeViewMethodsMatcher
 
         $templateNameArgument = $this->findTemplateNameArgument($methodName, $methodCall);
 
-        if ($templateNameArgument === null) {
+        if (! $templateNameArgument instanceof Arg) {
             return [];
         }
 
@@ -74,7 +77,7 @@ final class BladeViewMethodsMatcher
 
         $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
 
-        if ($templateDataArgument === null) {
+        if (! $templateDataArgument instanceof Arg) {
             $parametersArray = new Array_();
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);

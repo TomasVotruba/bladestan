@@ -10,13 +10,6 @@ use InvalidArgumentException;
 use PhpParser\Node\Expr;
 use PHPStan\Analyser\Scope;
 
-use function explode;
-use function file_exists;
-use function is_string;
-use function str_contains;
-use function str_replace;
-
-/** @see \TomasVotruba\Bladestan\TemplateCompiler\NodeAnalyzer\TemplateFilePathResolver */
 final class TemplateFilePathResolver
 {
     public function __construct(

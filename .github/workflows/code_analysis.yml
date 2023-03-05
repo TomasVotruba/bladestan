@@ -25,6 +25,14 @@ jobs:
                         name: 'Unit Tests'
                         run: 'vendor/bin/phpunit'
 
+                    -
+                        name: 'Check Commented Code'
+                        run: vendor/bin/easy-ci check-commented-code src tests --ansi
+
+                    -
+                        name: 'Check Active Classes'
+                        run: vendor/bin/easy-ci check-active-class src --ansi
+
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest
 

@@ -10,10 +10,9 @@ use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
-use function array_key_first;
-use function current;
-
-/** @see \TomasVotruba\Bladestan\TemplateCompiler\Reporting\TemplateErrorsFactory */
+/**
+ * @see \TomasVotruba\Bladestan\TemplateCompiler\Reporting\TemplateErrorsFactory
+ */
 final class TemplateErrorsFactory
 {
     /**

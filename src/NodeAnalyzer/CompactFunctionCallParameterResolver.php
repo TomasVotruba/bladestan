@@ -20,7 +20,11 @@ final class CompactFunctionCallParameterResolver
         $funcArgs = $compactCall->getArgs();
 
         foreach ($funcArgs as $arg) {
-            if ((! $arg instanceof Arg) || (! $arg->value instanceof String_)) {
+            if (! $arg instanceof Arg) {
+                continue;
+            }
+
+            if (! $arg->value instanceof String_) {
                 continue;
             }
 

@@ -13,11 +13,6 @@ use PhpParser\Node\Stmt\Unset_;
 use PhpParser\NodeVisitorAbstract;
 use TomasVotruba\Bladestan\ValueObject\Loop;
 
-use function array_pop;
-use function array_unshift;
-use function is_string;
-use function sprintf;
-
 final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
 {
     /**
