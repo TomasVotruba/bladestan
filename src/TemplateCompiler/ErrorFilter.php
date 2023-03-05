@@ -18,6 +18,7 @@ final class ErrorFilter
         '#Call to function unset\(\) contains undefined variable \$loop#',
         '#Variable \$loop in PHPDoc tag @var does not exist#',
         '#Anonymous function has an unused use (.*?)#',
+        '#Variable \$__env might not be defined#'
     ];
 
     /**
