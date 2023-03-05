@@ -4,7 +4,6 @@ services:
     - TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver
     - TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter
     - TomasVotruba\Bladestan\PHPParser\SimplePhpParser
-
     - TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
 
     -

@@ -36,8 +36,6 @@ final class ViewRuleHelper
      * @param RenderTemplateWithParameters[] $renderTemplatesWithParameters
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope, array $renderTemplatesWithParameters): array
     {
@@ -65,8 +63,6 @@ final class ViewRuleHelper
      * @param VariableAndType[] $variablesAndTypes
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     private function processTemplateFilePath(
         string $templateFilePath,

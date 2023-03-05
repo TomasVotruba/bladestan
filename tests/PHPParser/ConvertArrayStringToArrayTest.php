@@ -5,24 +5,30 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\PHPParser;
 
 use Iterator;
-use PhpParser\ConstExprEvaluator;
-use PhpParser\PrettyPrinter\Standard;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 
-final class ConvertArrayStringToArrayTest extends TestCase
+final class ConvertArrayStringToArrayTest extends PHPStanTestCase
 {
+    private ConvertArrayStringToArray $convertArrayStringToArray;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->convertArrayStringToArray = self::getContainer()->getByType(ConvertArrayStringToArray::class);
+    }
+
     /**
-     * @param array<string, mixed> $expected
+     * @param array<string, mixed> $expectedArray
      */
     #[DataProvider('greenProvider')]
     #[DataProvider('redProvider')]
-    public function testConvertArrayLikeStringToPhpArray(string $array, array $expected): void
+    public function testConvertArrayLikeStringToPhpArray(string $arrayString, array $expectedArray): void
     {
-        $convertArrayStringToArray = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
+        $convertedArray = $this->convertArrayStringToArray->convert($arrayString);
 
-        $this->assertSame($expected, $convertArrayStringToArray->convert($array));
+        $this->assertSame($expectedArray, $convertedArray);
     }
 
     public static function greenProvider(): Iterator
@@ -51,5 +57,15 @@ final class ConvertArrayStringToArrayTest extends TestCase
         yield ['[10]', []];
         yield ["['foo', 123]", []];
         yield ["[\$foo => 'bar']", []];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [
+            __DIR__ . '/../../config/extension.neon',
+        ];
     }
 }

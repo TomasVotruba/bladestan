@@ -19,8 +19,6 @@ final class TemplateErrorsFactory
      * @param Error[] $errors
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     public function createErrors(
         array $errors,

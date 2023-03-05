@@ -27,4 +27,14 @@ final class TestUtils
             $stringsCollection[1],
         ];
     }
+
+    public static function yieldDirectory(string $directory): \Iterator
+    {
+        /** @var string[] $filePaths */
+        $filePaths = glob($directory . '/*');
+
+        foreach ($filePaths as $filePath) {
+            yield [$filePath];
+        }
+    }
 }

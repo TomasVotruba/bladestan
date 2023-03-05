@@ -40,7 +40,6 @@ final class BladeViewRuleTest extends RuleTestCase
                 ['Binary operation "+" between string and \'bar\' results in an error.', 19],
             ],
         ];
-
     }
 
     /**
@@ -48,6 +47,6 @@ final class BladeViewRuleTest extends RuleTestCase
      */
     public static function getAdditionalConfigFiles(): array
     {
-        return [__DIR__ . '/config/configWithTemplatePaths.neon'];
+        return [__DIR__ . '/config/configured_extension.neon'];
     }
 }

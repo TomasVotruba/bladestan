@@ -6,6 +6,7 @@ namespace TomasVotruba\Bladestan\Tests\Rules;
 
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Rules\BladeRule;
 
 final class LaravelViewFunctionRuleTest extends RuleTestCase
@@ -15,7 +16,12 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         return self::getContainer()->getByType(BladeRule::class);
     }
 
-    public function testRule(): void
+    /**
+     * @param string[] $analysedFiles
+     * @param mixed[] $expectedErrorsWithLines
+     */
+    #[DataProvider('provideData')]
+    public function testRule(array $analysedFiles, array $expectedErrorsWithLines): void
     {
         $this->analyse([__DIR__ . '/data/laravel-view-function.php'], [
             [
@@ -81,11 +87,6 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         ]);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3aeabd2 (fixup! misc)
     public static function provideData(): \Iterator
     {
         // @todo instead of one huge file with 20 errors, there should be similar errors together, just 2-3 errors per file to make easier debugging and extending
@@ -106,10 +107,6 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
                 ['Binary operation "+" between string and 10 results in an error.', 28],
                 ['Binary operation "+" between \'10bar\' and 30 results in an error.', 28],
                 ['Undefined variable: $bar', 28],
-<<<<<<< HEAD
-
-=======
->>>>>>> 3aeabd2 (fixup! misc)
 
                 // this one is related somehow to "tests/Rules/templates/nested/directory", without it in paths fails; should work without it too
                 ['Binary operation "+" between string and 6 results in an error.', 15],
@@ -117,15 +114,11 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         ];
     }
 
-<<<<<<< HEAD
->>>>>>> eb1c8a4 (fixup! misc)
-=======
->>>>>>> 3aeabd2 (fixup! misc)
     /**
      * @return string[]
      */
     public static function getAdditionalConfigFiles(): array
     {
-        return [__DIR__ . '/config/configWithTemplatePaths.neon'];
+        return [__DIR__ . '/config/configured_extension.neon'];
     }
 }

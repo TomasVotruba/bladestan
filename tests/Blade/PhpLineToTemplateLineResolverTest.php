@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Blade;
 
 use Iterator;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
-use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 
-final class PhpLineToTemplateLineResolverTest extends AbstractTestCase
+final class PhpLineToTemplateLineResolverTest extends PHPStanTestCase
 {
     private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver;
 
@@ -17,7 +17,7 @@ final class PhpLineToTemplateLineResolverTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->phpLineToTemplateLineResolver = $this->getService(PhpLineToTemplateLineResolver::class);
+        $this->phpLineToTemplateLineResolver = self::getContainer()->getByType(PhpLineToTemplateLineResolver::class);
     }
 
     /**
@@ -107,5 +107,13 @@ PHP,
                 ],
             ],
         ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/../../config/extension.neon'];
     }
 }
