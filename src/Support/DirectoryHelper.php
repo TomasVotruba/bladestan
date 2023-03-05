@@ -6,9 +6,6 @@ namespace TomasVotruba\Bladestan\Support;
 
 use PHPStan\File\FileHelper;
 
-use function array_map;
-use function str_replace;
-
 final class DirectoryHelper
 {
     public function __construct(

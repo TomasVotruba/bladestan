@@ -10,9 +10,6 @@ use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Scalar\String_;
 
-use function str_starts_with;
-use function substr;
-
 final class MagicViewWithCallParameterResolver
 {
     /**

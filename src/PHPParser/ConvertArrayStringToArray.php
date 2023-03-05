@@ -14,10 +14,6 @@ use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-use function assert;
-use function count;
-use function is_string;
-
 /**
  * This class converts the string `['foo' => 'bar', 'bar' => 'baz']` to actual PHP array `['foo' => 'bar', 'bar' => 'baz']`
  */
@@ -41,8 +37,11 @@ final class ConvertArrayStringToArray
         $array = '<?php ' . $array . ';';
 
         $stmts = $this->parser->parse($array);
+        if ($stmts === null) {
+            return [];
+        }
 
-        if ($stmts === null || count($stmts) !== 1) {
+        if (count($stmts) !== 1) {
             return [];
         }
 
