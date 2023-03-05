@@ -21,13 +21,14 @@ services:
     -
         class: TomasVotruba\Bladestan\Rules\BladeRule
         tags: [phpstan.rules.rule]
+
     -
         class: Illuminate\View\FileViewFinder
         arguments:
             files: Illuminate\Filesystem\Filesystem()
 
             # @todo too complex to read, tidy up
-            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%template_paths%)
+            paths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%bladestan.template_paths%)
             extensions: ['blade.php', 'svg']
 
     - TomasVotruba\Bladestan\Rules\ViewRuleHelper
@@ -45,7 +46,7 @@ services:
         class: TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler
         arguments:
             # @todo too complex to read, tidy up
-            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%template_paths%)
+            templatePaths: @TomasVotruba\Bladestan\Support\DirectoryHelper::absolutizePaths(%bladestan.template_paths%)
 
     - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
     - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
@@ -57,3 +58,8 @@ services:
         class: TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:
             - phpstan.parser.richParserNodeVisitor
+
+    # template compiler
+    - TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver
+    - TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider
+    - TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory
