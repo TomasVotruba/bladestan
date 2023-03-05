@@ -35,5 +35,7 @@ return static function (RectorConfig $rectorConfig): void {
         \Rector\Set\ValueObject\SetList::DEAD_CODE,
         \Rector\Set\ValueObject\SetList::EARLY_RETURN,
         \Rector\Set\ValueObject\SetList::PRIVATIZATION,
+        \Rector\Set\ValueObject\SetList::NAMING,
+        \Rector\Set\ValueObject\SetList::TYPE_DECLARATION,
     ]);
 };

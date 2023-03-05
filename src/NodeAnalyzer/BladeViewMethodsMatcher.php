@@ -58,13 +58,13 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateNameArgument = $this->findTemplateNameArgument($methodName, $methodCall);
+        $templateNameArg = $this->findTemplateNameArg($methodName, $methodCall);
 
-        if (! $templateNameArgument instanceof Arg) {
+        if (! $templateNameArg instanceof Arg) {
             return [];
         }
 
-        $template = $templateNameArgument->value;
+        $template = $templateNameArg->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
             $template,
@@ -75,12 +75,12 @@ final class BladeViewMethodsMatcher
             return [];
         }
 
-        $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
+        $arg = $this->findTemplateDataArgument($methodName, $methodCall);
 
-        if (! $templateDataArgument instanceof Arg) {
+        if (! $arg instanceof Arg) {
             $parametersArray = new Array_();
         } else {
-            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);
+            $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($arg, $scope);
         }
 
         $result = [];
@@ -114,7 +114,7 @@ final class BladeViewMethodsMatcher
         return false;
     }
 
-    private function findTemplateNameArgument(string $methodName, MethodCall $methodCall): ?Arg
+    private function findTemplateNameArg(string $methodName, MethodCall $methodCall): ?Arg
     {
         if (count($methodCall->getArgs()) < 1) {
             return null;

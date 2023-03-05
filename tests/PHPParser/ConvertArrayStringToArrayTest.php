@@ -20,9 +20,9 @@ final class ConvertArrayStringToArrayTest extends TestCase
     #[DataProvider('redProvider')]
     public function test_it_can_convert_array_like_string_to_php_array(string $array, array $expected): void
     {
-        $converter = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
+        $convertArrayStringToArray = new ConvertArrayStringToArray(new Standard(), new ConstExprEvaluator());
 
-        $this->assertSame($expected, $converter->convert($array));
+        $this->assertSame($expected, $convertArrayStringToArray->convert($array));
     }
 
     public static function greenProvider(): Iterator
