@@ -17,6 +17,7 @@ services:
         arguments:
             showTipsOfTheDay: %tipsOfTheDay%
             editorUrl: %editorUrl%
+
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
 

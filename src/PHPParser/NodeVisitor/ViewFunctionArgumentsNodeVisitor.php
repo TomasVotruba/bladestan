@@ -20,9 +20,9 @@ use Webmozart\Assert\Assert;
 final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var array<string, mixed>>
+     * @var array<string, null|array<string, Node\Arg[]>>
      */
-    private array $stack = [];
+    private array $argsByMethodNameStack = [];
 
     /**
      * @param Stmt[] $nodes
@@ -30,7 +30,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
      */
     public function beforeTraverse(array $nodes): ?array
     {
-        $this->stack = [];
+        $this->argsByMethodNameStack = [];
 
         return null;
     }
@@ -38,17 +38,17 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node): ?Node
     {
         if ($node instanceof FuncCall && $node->name instanceof FullyQualified && $node->name->toCodeString() === '\view') {
-            if (count($this->stack) > 0) {
+            if (count($this->argsByMethodNameStack) > 0) {
                 $node->setAttribute(
                     'viewWithArgs',
-                    $this->stack[array_key_last($this->stack)],
+                    $this->argsByMethodNameStack[array_key_last($this->argsByMethodNameStack)],
                 );
             }
         }
 
         if ($node instanceof FunctionLike) {
             // is this necessary?
-            $this->stack['foo'] = null;
+            $this->argsByMethodNameStack['foo'] = null;
         }
 
         if ($node instanceof MethodCall && $node->name instanceof Identifier && str_starts_with($node->name->name, 'with')) {
@@ -62,7 +62,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
                     break;
                 }
 
-                $namesAndArgs[$methodName] = $rootViewNode->args;
+                $namesAndArgs[$methodName] = $rootViewNode->getArgs();
                 $rootViewNode = $rootViewNode->var;
             }
 
@@ -73,7 +73,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
                 throw new ShouldNotHappenException();
             }
 
-            $namesAndArgs[$methodName] = $rootViewNode->args;
+            $namesAndArgs[$methodName] = $rootViewNode->getArgs();
 
             if (
                 $rootViewNode->var instanceof FuncCall &&
@@ -87,8 +87,8 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 
                 //  = md5(json_encode($rootViewNode->var));
 
-                if (! array_key_exists($cacheKey, $this->stack)) {
-                    $this->stack[$cacheKey] = $namesAndArgs;
+                if (! array_key_exists($cacheKey, $this->argsByMethodNameStack)) {
+                    $this->argsByMethodNameStack[$cacheKey] = $namesAndArgs;
                 }
             }
         }
@@ -103,7 +103,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
         }
 
         if ($node->name instanceof Name && $node->name->toCodeString() === 'view') {
-            array_pop($this->stack);
+            array_pop($this->argsByMethodNameStack);
         }
 
         return null;
