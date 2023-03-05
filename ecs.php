@@ -1,11 +1,12 @@
 <?php
 
 declare(strict_types=1);
+use Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer;
 
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-return function (ECSConfig $ecsConfig): void {
+return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([
         __DIR__ . '/src',
         __DIR__ . '/tests',
@@ -14,9 +15,7 @@ return function (ECSConfig $ecsConfig): void {
         __DIR__ . '/rector.php',
         __DIR__ . '/easy-ci.php',
     ]);
-
     $ecsConfig->skip(['*/Fixture/*']);
-
     // this way you can add sets - group of rules
     $ecsConfig->sets([
         SetList::SPACES,
@@ -27,6 +26,5 @@ return function (ECSConfig $ecsConfig): void {
         SetList::COMMENTS,
         SetList::PSR_12,
     ]);
-
-    $ecsConfig->rules([\Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer::class]);
+    $ecsConfig->rules([LineLengthFixer::class]);
 };

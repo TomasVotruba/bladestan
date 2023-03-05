@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests\Rules;
 
+use Iterator;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -42,7 +43,7 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         ]);
     }
 
-    public static function provideData(): \Iterator
+    public static function provideData(): Iterator
     {
         // @todo instead of one huge file with 20 errors, there should be similar errors together, just 2-3 errors per file to make easier debugging and extending
         yield [

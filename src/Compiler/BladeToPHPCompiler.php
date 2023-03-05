@@ -71,7 +71,7 @@ STRING;
         private readonly FileViewFinder $fileViewFinder,
         private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
         private readonly PhpContentExtractor $phpContentExtractor,
-        private readonly ArrayStringToArrayConverter $convertArrayStringToArray,
+        private readonly ArrayStringToArrayConverter $arrayStringToArrayConverter,
         private readonly FileNameAndLineNumberAddingPreCompiler $fileNameAndLineNumberAddingPreCompiler,
         private readonly SimplePhpParser $simplePhpParser,
         private readonly array $components = [],
@@ -217,7 +217,7 @@ STRING;
         foreach ($includes[1] as $i => $include) {
             $arrayString = trim((string) $includes[2][$i], ' ,');
 
-            $array = $this->convertArrayStringToArray->convert($arrayString);
+            $array = $this->arrayStringToArrayConverter->convert($arrayString);
 
             $return[] = new IncludedViewAndVariables($include, $array);
         }

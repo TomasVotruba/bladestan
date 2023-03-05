@@ -11,13 +11,13 @@ use TomasVotruba\Bladestan\PHPParser\ArrayStringToArrayConverter;
 
 final class ArrayStringToArrayConverterTest extends PHPStanTestCase
 {
-    private ArrayStringToArrayConverter $convertArrayStringToArray;
+    private ArrayStringToArrayConverter $arrayStringToArrayConverter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->convertArrayStringToArray = self::getContainer()->getByType(ArrayStringToArrayConverter::class);
+        $this->arrayStringToArrayConverter = self::getContainer()->getByType(ArrayStringToArrayConverter::class);
     }
 
     /**
@@ -26,7 +26,7 @@ final class ArrayStringToArrayConverterTest extends PHPStanTestCase
     #[DataProvider('provideData')]
     public function testConvertArrayLikeStringToPhpArray(string $arrayString, array $expectedArray): void
     {
-        $convertedArray = $this->convertArrayStringToArray->convert($arrayString);
+        $convertedArray = $this->arrayStringToArrayConverter->convert($arrayString);
 
         $this->assertSame($expectedArray, $convertedArray);
     }
