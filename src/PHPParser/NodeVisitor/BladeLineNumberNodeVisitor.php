@@ -20,6 +20,7 @@ final class BladeLineNumberNodeVisitor extends NodeVisitorAbstract
 
     /**
      * @see https://regex101.com/r/GqrJOW/1
+     * @var string
      */
     private const TEMPLATE_FILE_NAME_AND_LINE_NUMBER_REGEX = '#/\*\* file: (.*?), line: (\d+) \*/#';
 
@@ -52,7 +53,7 @@ final class BladeLineNumberNodeVisitor extends NodeVisitorAbstract
         }
 
         /** @var string[] $matches */ //@phpcs:ignore
-        $this->phpLineToBladeTemplateLineMap[$node->getStartLine()][$matches[1]] = intval($matches[2]);
+        $this->phpLineToBladeTemplateLineMap[$node->getStartLine()][$matches[1]] = (int) $matches[2];
 
         return null;
     }

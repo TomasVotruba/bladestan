@@ -75,7 +75,7 @@ final class TemplateRulesRegistry extends DirectRegistry
 
         foreach ($rules as $rule) {
             foreach (self::EXCLUDED_RULES as $excludedRule) {
-                if (is_a($rule, $excludedRule, true)) {
+                if ($rule instanceof $excludedRule) {
                     continue 2;
                 }
             }

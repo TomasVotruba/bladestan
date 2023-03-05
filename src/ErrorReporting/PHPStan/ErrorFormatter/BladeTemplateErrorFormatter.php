@@ -35,16 +35,14 @@ final class BladeTemplateErrorFormatter
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
             $style->success('No errors');
-            if ($this->showTipsOfTheDay) {
-                if ($analysisResult->isDefaultLevelUsed()) {
-                    $output->writeLineFormatted('💡 Tip of the Day:');
-                    $output->writeLineFormatted(sprintf(
-                        "PHPStan is performing only the most basic checks.\nYou can pass a higher rule level through the <fg=cyan>--%s</> option\n(the default and current level is %d) to analyse code more thoroughly.",
-                        AnalyseCommand::OPTION_LEVEL,
-                        AnalyseCommand::DEFAULT_LEVEL,
-                    ));
-                    $output->writeLineFormatted('');
-                }
+            if ($this->showTipsOfTheDay && $analysisResult->isDefaultLevelUsed()) {
+                $output->writeLineFormatted('💡 Tip of the Day:');
+                $output->writeLineFormatted(sprintf(
+                    "PHPStan is performing only the most basic checks.\nYou can pass a higher rule level through the <fg=cyan>--%s</> option\n(the default and current level is %d) to analyse code more thoroughly.",
+                    AnalyseCommand::OPTION_LEVEL,
+                    AnalyseCommand::DEFAULT_LEVEL,
+                ));
+                $output->writeLineFormatted('');
             }
 
             return 0;
@@ -92,7 +90,7 @@ final class BladeTemplateErrorFormatter
             $style->table(['Line', $relativeFilePath], $rows);
         }
 
-        if (count($analysisResult->getNotFileSpecificErrors()) > 0) {
+        if ($analysisResult->getNotFileSpecificErrors() !== []) {
             $style->table(['', 'Error'], array_map(static fn (string $error): array => ['', $error], $analysisResult->getNotFileSpecificErrors()));
         }
 

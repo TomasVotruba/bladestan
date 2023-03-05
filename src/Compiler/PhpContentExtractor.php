@@ -8,9 +8,13 @@ final class PhpContentExtractor
 {
     /**
      * @see https://regex101.com/r/WomL6O/1
+     * @var string
      */
     private const PHP_OPEN_CLOSE_TAGS_REGEX = '#^(/\*\* file: .*?, line: \d+ \*/)(?!\s?/\*\* file: ).*?<\?php(.*?)\?>$#ms';
 
+    /**
+     * @var string
+     */
     private const TEMPLATE_FILE_NAME_AND_LINE_NUMBER_STRICT_REGEX = '#^(/\*\* file: .*?, line: \d+ \*/)$#m';
 
     /**
@@ -24,10 +28,12 @@ final class PhpContentExtractor
         preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $bladeCompiledContent, $matches);
 
         foreach ($matches[1] as $key => $match) {
-            if ($match !== '' || str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
+            if ($match !== '') {
                 continue;
             }
-
+            if (str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
+                continue;
+            }
             $matches[1][$key] = $matches[1][$key - 1];
         }
 

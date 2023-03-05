@@ -35,15 +35,30 @@ final class BladeToPHPCompiler
 {
     /**
      * @see https://regex101.com/r/BGw7Lf/1
+     * @var string
      */
     private const VIEW_INCLUDE_REGEX = '#\$__env->make\(\'(.*?)\',( \[(.*?)?],)? \\\Illuminate\\\Support\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\)#s';
 
     /**
      * @see https://regex101.com/r/BGw7Lf/1
+     * @var string
      */
     private const VIEW_INCLUDE_REPLACE_REGEX = '#echo \$__env->make\(\'%s\',( \[(.*?)?],)? \\\Illuminate\\\Support\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\);#s';
 
     private readonly Parser $parser;
+    /**
+     * @var string
+     */
+    private const USE_PLACEHOLDER = 'use(%s)';
+    /**
+     * @var string
+     */
+    private const INCLUDED_CONTENT_PLACE_HOLDER = <<<STRING
+(function () %s {
+%s
+%s
+});
+STRING;
 
     /**
      * @param string[] $components
@@ -104,26 +119,17 @@ final class BladeToPHPCompiler
                     $includedContent = '';
                 }
 
-                $usePlaceholder = 'use(%s)';
-
-                $includedContentPlaceHolder = <<<STRING
-(function () %s {
-%s
-%s
-});
-STRING;
-
                 $includedViewVariables = implode(PHP_EOL, array_map(static fn (string $key, string $value) => '$' . $key . ' = ' . $value . ';', array_keys($include->getVariablesAndValues()), $include->getVariablesAndValues()));
 
                 $usedVariablesString = implode(', ', array_map(static fn (string $variable) => '$' . $variable, $allVariablesList));
                 $rawPhpContent = preg_replace(sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())), sprintf(
-                    $includedContentPlaceHolder,
-                    $usedVariablesString !== '' ? sprintf($usePlaceholder, $usedVariablesString) : '',
+                    self::INCLUDED_CONTENT_PLACE_HOLDER,
+                    $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',
                     $includedViewVariables,
                     $includedContent
                 ), $rawPhpContent) ?? $rawPhpContent;
 
-                foreach ($include->getVariablesAndValues() as $variable => $value) {
+                foreach (array_keys($include->getVariablesAndValues()) as $variable) {
                     if (in_array($variable, $allVariablesList, true)) {
                         continue;
                     }

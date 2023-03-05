@@ -30,7 +30,7 @@ final class BladeToPHPCompilerTest extends TestCase
     /**
      * @var VariableAndType[]
      */
-    private array $variables;
+    private array $variables = [];
 
     private BladeToPHPCompiler $compiler;
 

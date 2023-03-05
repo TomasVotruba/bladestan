@@ -37,8 +37,10 @@ final class ConvertArrayStringToArray
         $array = '<?php ' . $array . ';';
 
         $stmts = $this->parser->parse($array);
-
-        if ($stmts === null || count($stmts) !== 1) {
+        if ($stmts === null) {
+            return [];
+        }
+        if (count($stmts) !== 1) {
             return [];
         }
 
