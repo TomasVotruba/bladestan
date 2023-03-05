@@ -30,7 +30,8 @@ An example:
 
 ![](./assets/example.png "Custom error formatter output example")
 
-To use this custom error formatter you need to run PHPStan with `--error-format blade` option. For example:
+How to use custom error formatter?
+
 ```shell
 vendor/bin/phpstan --error-format blade
 ```
