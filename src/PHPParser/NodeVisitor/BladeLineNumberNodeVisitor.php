@@ -9,9 +9,6 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
 
-use function intval;
-use function preg_match;
-
 final class BladeLineNumberNodeVisitor extends NodeVisitorAbstract
 {
     /**

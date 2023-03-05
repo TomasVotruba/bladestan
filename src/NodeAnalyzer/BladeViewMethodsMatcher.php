@@ -15,9 +15,6 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-use function count;
-use function in_array;
-
 final class BladeViewMethodsMatcher
 {
     private const MAKE = 'make';

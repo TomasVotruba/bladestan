@@ -10,16 +10,10 @@ use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\Output;
 use PHPStan\File\RelativePathHelper;
 
-use function array_map;
-use function count;
-use function is_string;
-use function sprintf;
-use function str_replace;
-
 /**
  * @see https://github.com/phpstan/phpstan-src/blob/master/src/Command/ErrorFormatter/TableErrorFormatter.php
  */
-class BladeTemplateErrorFormatter
+final class BladeTemplateErrorFormatter
 {
     public function __construct(
         private readonly RelativePathHelper $relativePathHelper,

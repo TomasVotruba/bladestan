@@ -31,20 +31,6 @@ use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
-use function array_keys;
-use function array_map;
-use function array_merge;
-use function getcwd;
-use function implode;
-use function in_array;
-use function preg_match_all;
-use function preg_quote;
-use function preg_replace;
-use function sprintf;
-use function trim;
-
-use const PHP_EOL;
-
 final class BladeToPHPCompiler
 {
     /**

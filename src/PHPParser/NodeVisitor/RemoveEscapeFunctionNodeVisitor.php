@@ -11,8 +11,6 @@ use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Nop;
 use PhpParser\NodeVisitorAbstract;
 
-use function count;
-
 final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
 {
     /**

@@ -6,17 +6,6 @@ namespace TomasVotruba\Bladestan\Compiler;
 
 use Illuminate\Support\Str;
 
-use function explode;
-use function implode;
-use function in_array;
-use function preg_match;
-use function rtrim;
-use function sprintf;
-use function str_contains;
-use function trim;
-
-use const PHP_EOL;
-
 final class FileNameAndLineNumberAddingPreCompiler
 {
     private const PHP_SINGLE_LINE_COMMENT_REGEX = '#^/\*\*.*?\*/$#';
