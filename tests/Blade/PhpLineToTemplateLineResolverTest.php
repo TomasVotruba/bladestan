@@ -20,15 +20,17 @@ final class PhpLineToTemplateLineResolverTest extends AbstractTestCase
     }
 
     /**
-     * @param array<int, array<string, int>> $expected
+     * @param mixed[] $expectedPhpToTemplateLineMapping
      */
-    #[DataProvider('phpContentAndLineNumberProvider')]
-    public function testExtractFileLines(string $phpContent, array $expected): void
+    #[DataProvider('provideData')]
+    public function test(string $phpContent, array $expectedPhpToTemplateLineMapping): void
     {
-        $this->assertSame($expected, $this->phpLineToTemplateLineResolver->resolve($phpContent));
+        $phpToTemplateLineMapping = $this->phpLineToTemplateLineResolver->resolve($phpContent);
+
+        $this->assertSame($expectedPhpToTemplateLineMapping, $phpToTemplateLineMapping);
     }
 
-    public static function phpContentAndLineNumberProvider(): \Iterator
+    public static function provideData(): \Iterator
     {
         yield 'File with no contents' => [
             '',
