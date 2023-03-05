@@ -13,7 +13,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
-use TomasVotruba\Bladestan\TemplateCompiler\ErrorSkipper;
+use TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter;
 use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
 use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
@@ -28,7 +28,7 @@ final class ViewRuleHelper
         private readonly FileAnalyserProvider $fileAnalyserProvider,
         private readonly TemplateErrorsFactory $templateErrorsFactory,
         private readonly BladeToPHPCompiler $bladeToPhpCompiler,
-        private readonly ErrorSkipper $errorSkipper,
+        private readonly ErrorFilter $errorSkipper,
     ) {
     }
 

@@ -7,9 +7,9 @@ namespace TomasVotruba\Bladestan\TemplateCompiler;
 use PHPStan\Analyser\Error;
 
 /**
- * @see \TomasVotruba\Bladestan\Tests\TemplateCompiler\ErrorSkipperTest
+ * @see \TomasVotruba\Bladestan\Tests\TemplateCompiler\ErrorFilterTest
  */
-final class ErrorSkipper
+final class ErrorFilter
 {
     /**
      * @var string[]
@@ -19,29 +19,6 @@ final class ErrorSkipper
         '#Variable \$loop in PHPDoc tag @var does not exist#',
         '#Anonymous function has an unused use (.*?)#',
     ];
-
-    /**
-     * @param Error[] $errors
-     * @param string[] $errorIgnores
-     * @return Error[]
-     */
-    public function skipErrors(array $errors, array $errorIgnores): array
-    {
-        $filteredErrors = [];
-
-        foreach ($errors as $error) {
-            foreach ($errorIgnores as $errorIgnore) {
-                $result = preg_match($errorIgnore, $error->getMessage());
-                if ($result !== false) {
-                    continue 2;
-                }
-            }
-
-            $filteredErrors[] = $error;
-        }
-
-        return $filteredErrors;
-    }
 
     /**
      * @param Error[] $ruleErrors
@@ -58,5 +35,7 @@ final class ErrorSkipper
                 unset($ruleErrors[$key]);
             }
         }
+
+        return $ruleErrors;
     }
 }

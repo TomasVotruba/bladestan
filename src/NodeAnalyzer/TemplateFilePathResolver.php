@@ -10,9 +10,6 @@ use InvalidArgumentException;
 use PhpParser\Node\Expr;
 use PHPStan\Analyser\Scope;
 
-/**
- * @see \TomasVotruba\Bladestan\TemplateCompiler\NodeAnalyzer\TemplateFilePathResolver
- */
 final class TemplateFilePathResolver
 {
     public function __construct(
