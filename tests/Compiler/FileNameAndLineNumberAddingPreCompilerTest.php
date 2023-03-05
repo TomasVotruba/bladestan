@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Compiler;
 
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
@@ -12,10 +13,7 @@ use Symplify\EasyTesting\StaticFixtureSplitter;
 use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 
-use function trim;
-
-#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler::class)]
-class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
+final class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
 {
     private FileNameAndLineNumberAddingPreCompiler $compiler;
 
@@ -26,7 +24,7 @@ class FileNameAndLineNumberAddingPreCompilerTest extends TestCase
         $this->compiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
+    #[DataProvider('fixtureProvider')]
     public function test_it_can_add_line_numbers_to_blade_content(SmartFileInfo $fileInfo): void
     {
         $this->compiler->setFileName('/var/www/resources/views/foo.blade.php');

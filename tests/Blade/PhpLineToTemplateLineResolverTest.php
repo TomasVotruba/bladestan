@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Blade;
 
 use Generator;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
-#[CoversClass(PhpLineToTemplateLineResolver::class)]
-#[CoversClass(BladeLineNumberNodeVisitor::class)]
-class PhpLineToTemplateLineResolverTest extends TestCase
+final class PhpLineToTemplateLineResolverTest extends TestCase
 {
     private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver;
 

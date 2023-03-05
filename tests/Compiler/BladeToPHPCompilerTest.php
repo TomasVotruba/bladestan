@@ -10,6 +10,7 @@ use Illuminate\View\FileViewFinder;
 use Iterator;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\PrettyPrinter\Standard;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
@@ -22,15 +23,12 @@ use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 use TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 
-use function sys_get_temp_dir;
-use function trim;
-
-#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler::class)]
-class BladeToPHPCompilerTest extends TestCase
+final class BladeToPHPCompilerTest extends TestCase
 {
     /**
-     * @var \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[]
+     * @var VariableAndType[]
      */
     private array $variables;
 
@@ -58,7 +56,7 @@ class BladeToPHPCompilerTest extends TestCase
         $this->variables = [];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
+    #[DataProvider('fixtureProvider')]
     public function test_it_can_compile_and_decorate_blade_template(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);

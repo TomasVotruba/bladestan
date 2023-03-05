@@ -7,6 +7,7 @@ namespace TomasVotruba\Bladestan\Tests\Compiler;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symplify\EasyTesting\DataProvider\StaticFixtureFinder;
 use Symplify\EasyTesting\DataProvider\StaticFixtureUpdater;
@@ -15,11 +16,7 @@ use Symplify\SmartFileSystem\SmartFileInfo;
 use TomasVotruba\Bladestan\Compiler\FileNameAndLineNumberAddingPreCompiler;
 use TomasVotruba\Bladestan\Compiler\PhpContentExtractor;
 
-use function sys_get_temp_dir;
-use function trim;
-
-#[\PHPUnit\Framework\Attributes\CoversClass(\TomasVotruba\Bladestan\Compiler\PhpContentExtractor::class)]
-class PhpContentExtractorTest extends TestCase
+final class PhpContentExtractorTest extends TestCase
 {
     private PhpContentExtractor $extractor;
 
@@ -36,7 +33,7 @@ class PhpContentExtractorTest extends TestCase
         $this->preCompiler = new FileNameAndLineNumberAddingPreCompiler(['resources/views']);
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('fixtureProvider')]
+    #[DataProvider('fixtureProvider')]
     public function test_it_can_extract_php_contents_from_compiled_blade_template_string(SmartFileInfo $fileInfo): void
     {
         $inputAndExpected = StaticFixtureSplitter::splitFileInfoToInputAndExpected($fileInfo);
