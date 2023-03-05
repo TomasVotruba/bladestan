@@ -29,6 +29,7 @@ final class PhpLineToTemplateLineResolver
         if ($stmts === []) {
             return [];
         }
+
         if ($stmts === null) {
             return [];
         }

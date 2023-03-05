@@ -40,6 +40,7 @@ final class ConvertArrayStringToArray
         if ($stmts === null) {
             return [];
         }
+
         if (count($stmts) !== 1) {
             return [];
         }

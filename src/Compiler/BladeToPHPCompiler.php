@@ -46,10 +46,12 @@ final class BladeToPHPCompiler
     private const VIEW_INCLUDE_REPLACE_REGEX = '#echo \$__env->make\(\'%s\',( \[(.*?)?],)? \\\Illuminate\\\Support\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\);#s';
 
     private readonly Parser $parser;
+
     /**
      * @var string
      */
     private const USE_PLACEHOLDER = 'use(%s)';
+
     /**
      * @var string
      */

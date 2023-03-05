@@ -31,9 +31,11 @@ final class PhpContentExtractor
             if ($match !== '') {
                 continue;
             }
+
             if (str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
                 continue;
             }
+
             $matches[1][$key] = $matches[1][$key - 1];
         }
 

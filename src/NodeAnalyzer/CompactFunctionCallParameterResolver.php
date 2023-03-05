@@ -23,9 +23,11 @@ final class CompactFunctionCallParameterResolver
             if (! $arg instanceof Arg) {
                 continue;
             }
+
             if (! $arg->value instanceof String_) {
                 continue;
             }
+
             $variableName = $arg->value->value;
 
             $resultArray->items[] = new ArrayItem(new Variable($variableName), new String_($variableName));
