@@ -13,10 +13,13 @@ final class TestUtils
      */
     public static function splitFixture(string $filePath): array
     {
-        Assert::file($filePath);
+        Assert::fileExists($filePath);
+
+        /** @var string $fileContents */
         $fileContents = file_get_contents($filePath);
 
-        $stringsCollection = str($fileContents)->split('#-----\n#')
+        $stringsCollection = str($fileContents)
+            ->split("#-----\n#")
             ->values();
 
         return [

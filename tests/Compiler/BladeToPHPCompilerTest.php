@@ -80,7 +80,10 @@ final class BladeToPHPCompilerTest extends TestCase
 
     public static function fixtureProvider(): Iterator
     {
-        foreach (glob(__DIR__ . '/Fixture/BladeToPHPCompiler/*') as $filePath) {
+        /** @var string[] $filePaths */
+        $filePaths = glob(__DIR__ . '/Fixture/BladeToPHPCompiler/*');
+
+        foreach ($filePaths as $filePath) {
             yield [$filePath];
         }
     }

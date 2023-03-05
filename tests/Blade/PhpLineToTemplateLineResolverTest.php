@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Blade;
 
 use Generator;
+use Illuminate\Container\Container;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
-use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
 final class PhpLineToTemplateLineResolverTest extends TestCase
 {
@@ -18,7 +18,10 @@ final class PhpLineToTemplateLineResolverTest extends TestCase
     {
         parent::setUp();
 
-        $this->phpLineToTemplateLineResolver = new PhpLineToTemplateLineResolver(new BladeLineNumberNodeVisitor());
+        // @todo use container here
+        $container = new Container();
+
+        $this->phpLineToTemplateLineResolver = $container->make(PhpLineToTemplateLineResolver::class);
     }
 
     /**
