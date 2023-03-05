@@ -10,8 +10,8 @@ final class IncludedViewAndVariables
      * @param array<string, string> $variablesAndValues
      */
     public function __construct(
-        private string $includedViewName,
-        private array $variablesAndValues
+        private readonly string $includedViewName,
+        private readonly array $variablesAndValues
     ) {
     }
 

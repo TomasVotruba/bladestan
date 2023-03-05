@@ -15,6 +15,7 @@ use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
 use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 
 use function array_merge;
 use function file_get_contents;
@@ -34,10 +35,10 @@ final class ViewRuleHelper
     ];
 
     public function __construct(
-        private TemplateVariableTypesResolver $templateVariableTypesResolver,
-        private FileAnalyserProvider $fileAnalyserProvider,
-        private TemplateErrorsFactory $templateErrorsFactory,
-        private BladeToPHPCompiler $bladeToPhpCompiler,
+        private readonly TemplateVariableTypesResolver $templateVariableTypesResolver,
+        private readonly FileAnalyserProvider $fileAnalyserProvider,
+        private readonly TemplateErrorsFactory $templateErrorsFactory,
+        private readonly BladeToPHPCompiler $bladeToPhpCompiler,
     ) {
     }
 
@@ -71,7 +72,7 @@ final class ViewRuleHelper
     }
 
     /**
-     * @param \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[] $variablesAndTypes
+     * @param VariableAndType[] $variablesAndTypes
      *
      * @return RuleError[]
      *

@@ -12,8 +12,8 @@ use PhpParser\Node\Expr\Array_;
 final class RenderTemplateWithParameters
 {
     public function __construct(
-        private string $templateFilePath,
-        private Array_ $parametersArray
+        private readonly string $templateFilePath,
+        private readonly Array_ $parametersArray
     ) {
     }
 

@@ -19,7 +19,7 @@ final class FileAnalyserProvider
     private FileAnalyser|null $fileAnalyser = null;
 
     public function __construct(
-        private DerivativeContainerFactory $derivativeContainerFactory
+        private readonly DerivativeContainerFactory $derivativeContainerFactory
     ) {
     }
 

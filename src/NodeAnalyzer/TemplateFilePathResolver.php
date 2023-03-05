@@ -20,8 +20,8 @@ use function str_replace;
 final class TemplateFilePathResolver
 {
     public function __construct(
-        private FileViewFinder $fileViewFinder,
-        private ValueResolver $valueResolver,
+        private readonly FileViewFinder $fileViewFinder,
+        private readonly ValueResolver $valueResolver,
     ) {
     }
 

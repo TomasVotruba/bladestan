@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
-use PhpParser\Node;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 
 final class ViewDataParametersAnalyzer
 {
     public function __construct(
-        private CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver
+        private readonly CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver
     ) {
     }
 
-    public function resolveParametersArray(Node\Arg $arg, Scope $scope): Node\Expr\Array_
+    public function resolveParametersArray(Arg $arg, Scope $scope): Array_
     {
         $secondArgValue = $arg->value;
 
-        if ($secondArgValue instanceof Node\Expr\Array_) {
+        if ($secondArgValue instanceof Array_) {
             return $secondArgValue;
         }
 
-        if ($secondArgValue instanceof Node\Expr\FuncCall && $secondArgValue->name instanceof Node\Name) {
+        if ($secondArgValue instanceof FuncCall && $secondArgValue->name instanceof Name) {
             $funcName = $scope->resolveName($secondArgValue->name);
 
             if ($funcName === 'compact') {
@@ -30,6 +33,6 @@ final class ViewDataParametersAnalyzer
             }
         }
 
-        return new Node\Expr\Array_();
+        return new Array_();
     }
 }

@@ -14,7 +14,6 @@ use function rtrim;
 use function str_replace;
 use function str_starts_with;
 use function strip_tags;
-use function token_get_all;
 use function token_name;
 use function trim;
 
@@ -40,14 +39,14 @@ final class PhpContentExtractor
         preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $bladeCompiledContent, $matches);
 
         foreach ($matches[1] as $key => $match) {
-            if ($match !== '' || str_starts_with(trim($matches[2][$key]), 'echo $__env->make')) {
+            if ($match !== '' || str_starts_with(trim((string) $matches[2][$key]), 'echo $__env->make')) {
                 continue;
             }
 
             $matches[1][$key] = $matches[1][$key - 1];
         }
 
-        $phpContents = array_map(static fn ($a, $b) => $a . rtrim($b), $matches[1], $matches[2]);
+        $phpContents = array_map(static fn ($a, $b) => $a . rtrim((string) $b), $matches[1], $matches[2]);
 
         if ($phpContents !== [] && $addPHPOpeningTag) {
             array_unshift($phpContents, '<?php');

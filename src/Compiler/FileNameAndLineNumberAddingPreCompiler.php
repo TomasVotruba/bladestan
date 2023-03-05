@@ -32,7 +32,7 @@ final class FileNameAndLineNumberAddingPreCompiler
      * @param string[] $templatePaths
      */
     public function __construct(
-        private array $templatePaths,
+        private readonly array $templatePaths,
     ) {
     }
 

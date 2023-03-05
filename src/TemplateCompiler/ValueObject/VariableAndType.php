@@ -10,8 +10,8 @@ use PHPStan\Type\VerbosityLevel;
 final class VariableAndType
 {
     public function __construct(
-        private string $variable,
-        private Type $type
+        private readonly string $variable,
+        private readonly Type $type
     ) {
     }
 

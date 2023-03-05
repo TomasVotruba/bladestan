@@ -15,7 +15,7 @@ use PHPStan\Analyser\Scope;
 final class MethodCallArrayResolver
 {
     public function __construct(
-        private ParametersArrayAnalyzer $parametersArrayAnalyzer
+        private readonly ParametersArrayAnalyzer $parametersArrayAnalyzer
     ) {
     }
 

@@ -8,7 +8,10 @@ use Nette\Utils\Json;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
 use PHPStan\ShouldNotHappenException;
@@ -34,7 +37,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 
     public function enterNode(Node $node): ?Node
     {
-        if ($node instanceof FuncCall && $node->name instanceof Node\Name\FullyQualified && $node->name->toCodeString() === '\view') {
+        if ($node instanceof FuncCall && $node->name instanceof FullyQualified && $node->name->toCodeString() === '\view') {
             if (count($this->stack) > 0) {
                 $node->setAttribute(
                     'viewWithArgs',
@@ -43,7 +46,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
             }
         }
 
-        if ($node instanceof Node\FunctionLike) {
+        if ($node instanceof FunctionLike) {
             // is this necessary?
             $this->stack['foo'] = null;
         }
@@ -74,7 +77,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 
             if (
                 $rootViewNode->var instanceof FuncCall &&
-                $rootViewNode->var->name instanceof Node\Name &&
+                $rootViewNode->var->name instanceof Name &&
                 $rootViewNode->var->name->toCodeString() === 'view' &&
                 count($rootViewNode->var->getArgs()) > 0
             ) {
@@ -99,7 +102,7 @@ final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($node->name instanceof Node\Name && $node->name->toCodeString() === 'view') {
+        if ($node->name instanceof Name && $node->name->toCodeString() === 'view') {
             array_pop($this->stack);
         }
 

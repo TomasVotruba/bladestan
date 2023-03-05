@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Stmt\Echo_;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
@@ -15,16 +19,16 @@ final class RemoveEnvVariableNodeVisitor extends NodeVisitorAbstract
     {
         // Remove `$__env->...(...)`
         if (
-            ($node instanceof Node\Stmt\Expression) && $this->isEnvCall($node->expr) ||
-            (($node instanceof Node\Stmt\Echo_) && $this->isEnvCall($node->exprs[0]))
+            ($node instanceof Expression) && $this->isEnvCall($node->expr) ||
+            (($node instanceof Echo_) && $this->isEnvCall($node->exprs[0]))
         ) {
             return NodeTraverser::REMOVE_NODE;
         }
 
         if (
-            $node instanceof Node\Stmt\Expression &&
-            $node->expr instanceof Node\Expr\Assign &&
-            $node->expr->var instanceof Node\Expr\Variable &&
+            $node instanceof Expression &&
+            $node->expr instanceof Assign &&
+            $node->expr->var instanceof Variable &&
             $node->expr->var->name === 'loop'
         ) {
             return NodeTraverser::REMOVE_NODE;
@@ -36,7 +40,7 @@ final class RemoveEnvVariableNodeVisitor extends NodeVisitorAbstract
     private function isEnvCall(Node $node): bool
     {
         return $node instanceof MethodCall &&
-            $node->var instanceof Node\Expr\Variable &&
+            $node->var instanceof Variable &&
             $node->var->name === '__env';
     }
 }

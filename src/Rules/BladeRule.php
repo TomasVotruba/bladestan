@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\DirectRegistry;
 use PHPStan\Rules\Rule;
@@ -22,9 +24,9 @@ final class BladeRule implements Rule
      */
     public function __construct(
         array $rules,
-        private BladeViewMethodsMatcher $bladeViewMethodsMatcher,
-        private LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
-        private ViewRuleHelper $ruleHelper
+        private readonly BladeViewMethodsMatcher $bladeViewMethodsMatcher,
+        private readonly LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
+        private readonly ViewRuleHelper $ruleHelper
     ) {
         $this->ruleHelper->setRegistry(new DirectRegistry($rules));
     }
@@ -36,11 +38,11 @@ final class BladeRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if ($node instanceof Node\Expr\FuncCall) {
+        if ($node instanceof FuncCall) {
             return $this->processLaravelViewFunction($node, $scope);
         }
 
-        if ($node instanceof Node\Expr\MethodCall) {
+        if ($node instanceof MethodCall) {
             return $this->processBladeView($node, $scope);
         }
 
@@ -50,7 +52,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(Node\Expr\FuncCall $node, Scope $scope): array
+    private function processLaravelViewFunction(FuncCall $node, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($node, $scope);
 
@@ -60,7 +62,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processBladeView(Node\Expr\MethodCall $node, Scope $scope): array
+    private function processBladeView(MethodCall $node, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->bladeViewMethodsMatcher->match($node, $scope);
 

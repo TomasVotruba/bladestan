@@ -33,9 +33,9 @@ final class TemplateVariableCollectingNodeVisitor extends NodeVisitorAbstract
      * @param array<string> $renderMethodNames
      */
     public function __construct(
-        private array $defaultVariableNames,
-        private array $renderMethodNames,
-        private NodeFinder $nodeFinder,
+        private readonly array $defaultVariableNames,
+        private readonly array $renderMethodNames,
+        private readonly NodeFinder $nodeFinder,
     ) {
     }
 

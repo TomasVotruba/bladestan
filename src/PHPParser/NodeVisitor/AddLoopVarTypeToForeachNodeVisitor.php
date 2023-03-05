@@ -7,7 +7,9 @@ namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Nop;
+use PhpParser\Node\Stmt\Unset_;
 use PhpParser\NodeVisitorAbstract;
 use TomasVotruba\Bladestan\ValueObject\Loop;
 
@@ -23,7 +25,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node): ?array
     {
-        if (! $node instanceof Node\Stmt\Foreach_) {
+        if (! $node instanceof Foreach_) {
             return null;
         }
 
@@ -56,7 +58,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
 
         // Add `unset($loop)` at the end of the loop
         // to prevent accessing this variable outside of loop
-        $node->stmts[] = new Node\Stmt\Unset_([new Variable('loop')]);
+        $node->stmts[] = new Unset_([new Variable('loop')]);
 
         return null;
     }

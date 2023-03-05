@@ -13,7 +13,7 @@ use PHPStan\Type\ConstantScalarType;
 final class ValueResolver
 {
     public function __construct(
-        private ConstExprEvaluator $constExprEvaluator
+        private readonly ConstExprEvaluator $constExprEvaluator
     ) {
     }
 

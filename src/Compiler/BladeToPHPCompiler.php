@@ -27,6 +27,7 @@ use TomasVotruba\Bladestan\PHPParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisi
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
 use TomasVotruba\Bladestan\PHPParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
+use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 use TomasVotruba\Bladestan\ValueObject\IncludedViewAndVariables;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
@@ -56,23 +57,23 @@ final class BladeToPHPCompiler
      */
     private const VIEW_INCLUDE_REPLACE_REGEX = '#echo \$__env->make\(\'%s\',( \[(.*?)?],)? \\\Illuminate\\\Support\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\);#s';
 
-    private Parser $parser;
+    private readonly Parser $parser;
 
     /**
      * @param string[] $components
      * @phpstan-param array<int, array{class: string, alias: string, prefix: string}> $components
      */
     public function __construct(
-        private Filesystem $fileSystem,
-        private BladeCompiler $compiler,
-        private Standard $printerStandard,
-        private VarDocNodeFactory $varDocNodeFactory,
-        private FileViewFinder $fileViewFinder,
-        private FileNameAndLineNumberAddingPreCompiler $preCompiler,
-        private PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
-        private PhpContentExtractor $phpContentExtractor,
-        private ConvertArrayStringToArray $convertArrayStringToArray,
-        private array $components = [],
+        private readonly Filesystem $fileSystem,
+        private readonly BladeCompiler $compiler,
+        private readonly Standard $printerStandard,
+        private readonly VarDocNodeFactory $varDocNodeFactory,
+        private readonly FileViewFinder $fileViewFinder,
+        private readonly FileNameAndLineNumberAddingPreCompiler $preCompiler,
+        private readonly PhpLineToTemplateLineResolver $phpLineToTemplateLineResolver,
+        private readonly PhpContentExtractor $phpContentExtractor,
+        private readonly ConvertArrayStringToArray $convertArrayStringToArray,
+        private readonly array $components = [],
     ) {
         $parserFactory = new ParserFactory();
         $this->parser = $parserFactory->create(ParserFactory::ONLY_PHP7);
@@ -84,7 +85,7 @@ final class BladeToPHPCompiler
     }
 
     /**
-     * @param array<\TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType> $variablesAndTypes
+     * @param array<VariableAndType> $variablesAndTypes
      *
      * @throws ShouldNotHappenException
      */
@@ -98,7 +99,7 @@ final class BladeToPHPCompiler
 
         $includes = $this->getIncludes($rawPhpContent);
 
-        $allVariablesList = array_map(static fn (\TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
+        $allVariablesList = array_map(static fn (VariableAndType $variableAndType) => $variableAndType->getVariable(), $variablesAndTypes);
 
         // Recursively fetch and compile includes
         while ($includes !== []) {
@@ -155,7 +156,7 @@ STRING;
     }
 
     /**
-     * @param \TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType[] $variablesAndTypes
+     * @param VariableAndType[] $variablesAndTypes
      */
     private function decoratePhpContent(string $phpContent, array $variablesAndTypes): string
     {
@@ -206,7 +207,7 @@ STRING;
         $return = [];
 
         foreach ($includes[1] as $i => $include) {
-            $arrayString = trim($includes[2][$i], ' ,');
+            $arrayString = trim((string) $includes[2][$i], ' ,');
 
             $array = $this->convertArrayStringToArray->convert($arrayString);
 

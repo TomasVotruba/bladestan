@@ -7,6 +7,8 @@ namespace TomasVotruba\Bladestan\PHPParser;
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
@@ -21,11 +23,11 @@ use function is_string;
  */
 final class ConvertArrayStringToArray
 {
-    private Parser $parser;
+    private readonly Parser $parser;
 
     public function __construct(
-        private Standard $printer,
-        private ConstExprEvaluator $constExprEvaluator
+        private readonly Standard $printer,
+        private readonly ConstExprEvaluator $constExprEvaluator
     ) {
         $parserFactory = new ParserFactory();
         $this->parser = $parserFactory->create(ParserFactory::ONLY_PHP7);
@@ -48,17 +50,17 @@ final class ConvertArrayStringToArray
             return [];
         }
 
-        if (! $stmts[0]->expr instanceof Expr\Array_) {
+        if (! $stmts[0]->expr instanceof Array_) {
             return [];
         }
 
         $array = $stmts[0]->expr;
-        assert($array instanceof Expr\Array_);
+        assert($array instanceof Array_);
 
         $result = [];
 
         foreach ($array->items as $item) {
-            assert($item instanceof Expr\ArrayItem);
+            assert($item instanceof ArrayItem);
 
             if ($item->key === null) {
                 continue;

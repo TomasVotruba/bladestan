@@ -6,7 +6,10 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\View\Factory;
-use PhpParser\Node;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
@@ -22,15 +25,15 @@ final class BladeViewMethodsMatcher
     private const VIEW_FACTORY_METHOD_NAMES = ['make', 'renderWhen', 'renderUnless'];
 
     public function __construct(
-        private TemplateFilePathResolver $templateFilePathResolver,
-        private ViewDataParametersAnalyzer $viewDataParametersAnalyzer
+        private readonly TemplateFilePathResolver $templateFilePathResolver,
+        private readonly ViewDataParametersAnalyzer $viewDataParametersAnalyzer
     ) {
     }
 
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(Node\Expr\MethodCall $methodCall, Scope $scope): array
+    public function match(MethodCall $methodCall, Scope $scope): array
     {
         $methodName = $this->resolveName($methodCall);
 
@@ -72,7 +75,7 @@ final class BladeViewMethodsMatcher
         $templateDataArgument = $this->findTemplateDataArgument($methodName, $methodCall);
 
         if ($templateDataArgument === null) {
-            $parametersArray = new Node\Expr\Array_();
+            $parametersArray = new Array_();
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($templateDataArgument, $scope);
         }
@@ -86,9 +89,9 @@ final class BladeViewMethodsMatcher
         return $result;
     }
 
-    private function resolveName(Node\Expr\MethodCall $methodCall): ?string
+    private function resolveName(MethodCall $methodCall): ?string
     {
-        if (! $methodCall->name instanceof Node\Identifier) {
+        if (! $methodCall->name instanceof Identifier) {
             return null;
         }
 
@@ -108,7 +111,7 @@ final class BladeViewMethodsMatcher
         return false;
     }
 
-    private function findTemplateNameArgument(string $methodName, Node\Expr\MethodCall $methodCall): ?Node\Arg
+    private function findTemplateNameArgument(string $methodName, MethodCall $methodCall): ?Arg
     {
         if (count($methodCall->getArgs()) < 1) {
             return null;
@@ -128,7 +131,7 @@ final class BladeViewMethodsMatcher
         return $methodCall->getArgs()[1];
     }
 
-    private function findTemplateDataArgument(string $methodName, Node\Expr\MethodCall $methodCall): ?Node\Arg
+    private function findTemplateDataArgument(string $methodName, MethodCall $methodCall): ?Arg
     {
         if (count($methodCall->getArgs()) < 2) {
             return null;

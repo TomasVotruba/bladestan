@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
-use PhpParser\Node;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
@@ -13,20 +15,20 @@ use function count;
 final class LaravelViewFunctionMatcher
 {
     public function __construct(
-        private TemplateFilePathResolver $templateFilePathResolver,
-        private ViewDataParametersAnalyzer $viewDataParametersAnalyzer,
-        private MagicViewWithCallParameterResolver $magicViewWithCallParameterResolver
+        private readonly TemplateFilePathResolver $templateFilePathResolver,
+        private readonly ViewDataParametersAnalyzer $viewDataParametersAnalyzer,
+        private readonly MagicViewWithCallParameterResolver $magicViewWithCallParameterResolver
     ) {
     }
 
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(Node\Expr\FuncCall $funcCall, Scope $scope): array
+    public function match(FuncCall $funcCall, Scope $scope): array
     {
         $funcName = $funcCall->name;
 
-        if (! $funcName instanceof Node\Name) {
+        if (! $funcName instanceof Name) {
             return [];
         }
 
@@ -56,7 +58,7 @@ final class LaravelViewFunctionMatcher
         $args = $funcCall->getArgs();
 
         if (count($args) !== 2) {
-            $parametersArray = new Node\Expr\Array_();
+            $parametersArray = new Array_();
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($args[1], $scope);
         }

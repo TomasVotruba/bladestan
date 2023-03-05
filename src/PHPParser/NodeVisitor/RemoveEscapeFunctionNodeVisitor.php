@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Echo_;
 use PhpParser\Node\Stmt\Nop;
 use PhpParser\NodeVisitorAbstract;
 
@@ -17,17 +20,17 @@ final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
      */
     public function leaveNode(Node $node): null|Node|array
     {
-        if (! $node instanceof Node\Stmt\Echo_) {
+        if (! $node instanceof Echo_) {
             return null;
         }
 
         $funcCallExp = $node->exprs[0];
 
-        if (! $funcCallExp instanceof Node\Expr\FuncCall) {
+        if (! $funcCallExp instanceof FuncCall) {
             return null;
         }
 
-        if (! $funcCallExp->name instanceof Node\Name) {
+        if (! $funcCallExp->name instanceof Name) {
             return null;
         }
 
@@ -39,16 +42,16 @@ final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
             $docNop = new Nop();
             $docNop->setDocComment($funcCallExp->getArgs()[0]->getDocComment());
 
-            return [$docNop, new Node\Stmt\Echo_([$funcCallExp->getArgs()[0]->value])];
+            return [$docNop, new Echo_([$funcCallExp->getArgs()[0]->value])];
         }
 
         if ($node->getDocComment() !== null) {
             $docNop = new Nop();
             $docNop->setDocComment($node->getDocComment());
 
-            return [$docNop, new Node\Stmt\Echo_([$funcCallExp->getArgs()[0]->value])];
+            return [$docNop, new Echo_([$funcCallExp->getArgs()[0]->value])];
         }
 
-        return new Node\Stmt\Echo_([$funcCallExp->getArgs()[0]->value]);
+        return new Echo_([$funcCallExp->getArgs()[0]->value]);
     }
 }

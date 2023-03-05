@@ -6,6 +6,9 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Support\Str;
 use PhpParser\Node;
+use PhpParser\Node\Expr\ArrayItem;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Scalar\String_;
 
 use function str_starts_with;
 use function substr;
@@ -15,7 +18,7 @@ final class MagicViewWithCallParameterResolver
     /**
      * @return Node\Expr\ArrayItem[]
      */
-    public function resolve(Node\Expr\FuncCall $funcCall): array
+    public function resolve(FuncCall $funcCall): array
     {
         $result = [];
 
@@ -28,9 +31,9 @@ final class MagicViewWithCallParameterResolver
 
         foreach ($viewWithArgs as $variableName => $args) {
             if ($variableName === 'with') {
-                $result[] = new Node\Expr\ArrayItem($args[1]->value, $args[0]->value);
+                $result[] = new ArrayItem($args[1]->value, $args[0]->value);
             } elseif (str_starts_with($variableName, 'with')) {
-                $result[] = new Node\Expr\ArrayItem($args[0]->value, new Node\Scalar\String_(Str::camel(substr($variableName, 4))));
+                $result[] = new ArrayItem($args[0]->value, new String_(Str::camel(substr($variableName, 4))));
             }
         }
 

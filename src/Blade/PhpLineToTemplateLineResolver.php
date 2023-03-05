@@ -11,10 +11,10 @@ use TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor;
 
 final class PhpLineToTemplateLineResolver
 {
-    private Parser $parser;
+    private readonly Parser $parser;
 
     public function __construct(
-        private BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor
+        private readonly BladeLineNumberNodeVisitor $bladeLineNumberNodeVisitor
     ) {
         $parserFactory = new ParserFactory();
         $this->parser = $parserFactory->create(ParserFactory::PREFER_PHP7);

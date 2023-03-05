@@ -22,9 +22,9 @@ use function str_replace;
 class BladeTemplateErrorFormatter
 {
     public function __construct(
-        private RelativePathHelper $relativePathHelper,
-        private bool $showTipsOfTheDay,
-        private ?string $editorUrl,
+        private readonly RelativePathHelper $relativePathHelper,
+        private readonly bool $showTipsOfTheDay,
+        private readonly ?string $editorUrl,
     ) {
     }
 

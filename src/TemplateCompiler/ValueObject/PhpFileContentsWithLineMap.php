@@ -12,8 +12,8 @@ final class PhpFileContentsWithLineMap
      * @param array<int, int> $phpToTemplateLines
      */
     public function __construct(
-        private string $phpFileContents,
-        private array $phpToTemplateLines
+        private readonly string $phpFileContents,
+        private readonly array $phpToTemplateLines
     ) {
         Assert::allInteger(array_keys($phpToTemplateLines));
         Assert::allInteger($phpToTemplateLines);

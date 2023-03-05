@@ -40,5 +40,5 @@ final class Loop
     public int $depth;
 
     /** @var __benevolent<Loop|null> */
-    public Loop|null $parent;
+    public Loop|null $parent = null;
 }

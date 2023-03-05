@@ -12,7 +12,7 @@ use function str_replace;
 final class DirectoryHelper
 {
     public function __construct(
-        private FileHelper $fileHelper
+        private readonly FileHelper $fileHelper
     ) {
     }
 
