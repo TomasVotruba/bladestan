@@ -31,7 +31,8 @@
         "phpstan": {
             "includes": [
                 "config/extension.neon",
-                "config/template-compiler/php-parser.neon"
+                "config/template-compiler/config.neon",
+                "config/template-compiler/services.neon"
             ]
         }
     },

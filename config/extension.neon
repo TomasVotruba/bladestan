@@ -58,8 +58,3 @@ services:
         class: TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:
             - phpstan.parser.richParserNodeVisitor
-
-    # template compiler
-    - TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver
-    - TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider
-    - TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory
