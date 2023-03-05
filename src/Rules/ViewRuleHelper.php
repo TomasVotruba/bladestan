@@ -25,9 +25,9 @@ final class ViewRuleHelper
      * @var string[]
      */
     private const ERRORS_TO_IGNORE_REGEXES = [
-        '#Call to function unset\(\) contains undefined variable \$loop\.#',
-        '#Variable \$loop in PHPDoc tag @var does not exist\.#',
-        '#Anonymous function has an unused use \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*\.#',
+        '#Call to function unset\(\) contains undefined variable \$loop#',
+        '#Variable \$loop in PHPDoc tag @var does not exist#',
+        '#Anonymous function has an unused use (.*?)#',
     ];
 
     public function __construct(
@@ -110,7 +110,7 @@ final class ViewRuleHelper
 
         foreach ($ruleErrors as $key => $ruleError) {
             foreach (self::ERRORS_TO_IGNORE_REGEXES as $errorToIgnoreRegex) {
-                if (! preg_match('#' . $errorToIgnoreRegex . '#', $ruleError->getMessage())) {
+                if (! preg_match($errorToIgnoreRegex, $ruleError->getMessage())) {
                     continue;
                 }
 
