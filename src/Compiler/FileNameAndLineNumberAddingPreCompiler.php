@@ -34,9 +34,11 @@ final class FileNameAndLineNumberAddingPreCompiler
         if ($this->fileName === '') {
             return '';
         }
+
         if ($this->fileName === '0') {
             return '';
         }
+
         $lines = explode(PHP_EOL, $value);
 
         $lineNumber = 1;
