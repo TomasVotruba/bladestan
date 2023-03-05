@@ -1,3 +1,7 @@
+includes:
+    - template-compiler/services.neon
+    - template-compiler/config.neon
+
 parameters:
     bladestan:
         template_paths: []
