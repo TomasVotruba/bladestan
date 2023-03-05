@@ -36,8 +36,6 @@ final class LaravelViewFunctionMatcher
             return [];
         }
 
-        // TODO: maybe make sure this function is coming from Laravel
-
         if (count($funcCall->getArgs()) < 1) {
             return [];
         }
