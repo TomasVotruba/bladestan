@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Tests;
 
+use Iterator;
 use Webmozart\Assert\Assert;
 
 final class TestUtils
@@ -22,9 +23,16 @@ final class TestUtils
             ->split("#-----\n#")
             ->values();
 
-        return [
-            $stringsCollection[0],
-            $stringsCollection[1],
-        ];
+        return [$stringsCollection[0], $stringsCollection[1]];
+    }
+
+    public static function yieldDirectory(string $directory): Iterator
+    {
+        /** @var string[] $filePaths */
+        $filePaths = glob($directory . '/*');
+
+        foreach ($filePaths as $filePath) {
+            yield [$filePath];
+        }
     }
 }

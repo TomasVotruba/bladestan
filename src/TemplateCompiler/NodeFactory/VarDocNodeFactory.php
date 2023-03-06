@@ -8,9 +8,6 @@ use PhpParser\Comment\Doc;
 use PhpParser\Node\Stmt\Nop;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 
-/**
- * @api
- */
 final class VarDocNodeFactory
 {
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TomasVotruba\Bladestan\PHPParser\NodeVisitor;
+namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;

@@ -66,10 +66,7 @@ final class BladeViewMethodsMatcher
 
         $template = $templateNameArg->value;
 
-        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
-            $template,
-            $scope,
-        );
+        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
 
         if ($resolvedTemplateFilePaths === []) {
             return [];

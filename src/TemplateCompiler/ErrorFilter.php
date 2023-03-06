@@ -18,6 +18,9 @@ final class ErrorFilter
         '#Call to function unset\(\) contains undefined variable \$loop#',
         '#Variable \$loop in PHPDoc tag @var does not exist#',
         '#Anonymous function has an unused use (.*?)#',
+        '#Variable \$__env might not be defined#',
+        // e() function for render can accept more values than strings
+        '#Parameter \#1 \$value of function e expects BackedEnum\|Illuminate(.*?)\|string\|null, (int|float) given#',
     ];
 
     /**
@@ -27,15 +30,24 @@ final class ErrorFilter
     public function filterErrors(array $ruleErrors): array
     {
         foreach ($ruleErrors as $key => $ruleError) {
-            foreach (self::ERRORS_TO_IGNORE_REGEXES as $errorToIgnoreRegex) {
-                if (! preg_match($errorToIgnoreRegex, $ruleError->getMessage())) {
-                    continue;
-                }
-
-                unset($ruleErrors[$key]);
+            if (! $this->isAllowedErrorMessage($ruleError->getMessage())) {
+                continue;
             }
+
+            unset($ruleErrors[$key]);
         }
 
         return $ruleErrors;
+    }
+
+    private function isAllowedErrorMessage(string $errorMessage): bool
+    {
+        foreach (self::ERRORS_TO_IGNORE_REGEXES as $errorToIgnoreRegex) {
+            if (preg_match($errorToIgnoreRegex, $errorMessage)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

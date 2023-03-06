@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Compiler\BladeToPHPCompiler;
 
 use Iterator;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
-use TomasVotruba\Bladestan\Tests\AbstractTestCase;
 use TomasVotruba\Bladestan\Tests\TestUtils;
 
-final class BladeToPHPCompilerTest extends AbstractTestCase
+final class BladeToPHPCompilerTest extends PHPStanTestCase
 {
     /**
      * @var VariableAndType[]
@@ -24,29 +24,36 @@ final class BladeToPHPCompilerTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->bladeToPHPCompiler = $this->getService(BladeToPHPCompiler::class);
+        $this->bladeToPHPCompiler = self::getContainer()->getByType(BladeToPHPCompiler::class);
 
         // Setup the variable names and types that'll be available to all templates
         $this->variables = [];
     }
 
-    #[DataProvider('fixtureProvider')]
+    #[DataProvider('provideData')]
     public function testCompileAndDecorateTypes(string $filePath): void
     {
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
-        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent('foo.blade.php', $inputBladeContents, $this->variables);
+        $phpFileContentsWithLineMap = $this->bladeToPHPCompiler->compileContent(
+            'foo.blade.php',
+            $inputBladeContents,
+            $this->variables
+        );
 
         $this->assertSame($expectedPhpContents, $phpFileContentsWithLineMap->getPhpFileContents());
     }
 
-    public static function fixtureProvider(): Iterator
+    public static function provideData(): Iterator
     {
-        /** @var string[] $filePaths */
-        $filePaths = glob(__DIR__ . '/Fixture/*');
+        return TestUtils::yieldDirectory(__DIR__ . '/Fixture');
+    }
 
-        foreach ($filePaths as $filePath) {
-            yield [$filePath];
-        }
+    /**
+     * @return string[]
+     */
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/../../../config/extension.neon'];
     }
 }

@@ -7,7 +7,6 @@ namespace TomasVotruba\Bladestan\ErrorReporting\Blade;
 use PHPStan\Analyser\Error;
 use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\ValueObject\PhpFileContentsWithLineMap;
 
 /**
@@ -19,8 +18,6 @@ final class TemplateErrorsFactory
      * @param Error[] $errors
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     public function createErrors(
         array $errors,

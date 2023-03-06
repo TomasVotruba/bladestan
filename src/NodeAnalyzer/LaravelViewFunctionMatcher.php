@@ -44,10 +44,7 @@ final class LaravelViewFunctionMatcher
 
         $template = $funcCall->getArgs()[0]->value;
 
-        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
-            $template,
-            $scope,
-        );
+        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
 
         if ($resolvedTemplateFilePaths === []) {
             return [];
@@ -61,7 +58,9 @@ final class LaravelViewFunctionMatcher
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($args[1], $scope);
         }
 
-        $parametersArray->items = $this->magicViewWithCallParameterResolver->resolve($funcCall) + $parametersArray->items;
+        $parametersArray->items = $this->magicViewWithCallParameterResolver->resolve(
+            $funcCall
+        ) + $parametersArray->items;
 
         $result = [];
         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {

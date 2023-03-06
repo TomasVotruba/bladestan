@@ -8,11 +8,11 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
-use PHPStan\Rules\DirectRegistry;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
 use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
+use TomasVotruba\Bladestan\TemplateCompiler\Rules\TemplateRulesRegistry;
 
 /**
  * @implements Rule<Node>
@@ -28,7 +28,7 @@ final class BladeRule implements Rule
         private readonly LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
         private readonly ViewRuleHelper $viewRuleHelper
     ) {
-        $this->viewRuleHelper->setRegistry(new DirectRegistry($rules));
+        $this->viewRuleHelper->setRegistry(new TemplateRulesRegistry($rules));
     }
 
     public function getNodeType(): string

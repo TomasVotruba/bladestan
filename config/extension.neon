@@ -25,10 +25,10 @@ services:
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
 
+    - TomasVotruba\Bladestan\Laravel\View\BladeCompilerFactory
     -
         class: Illuminate\View\Compilers\BladeCompiler
-        arguments:
-            cachePath: ::sys_get_temp_dir()
+        factory: ['@TomasVotruba\Bladestan\Laravel\View\BladeCompilerFactory', 'create']
 
     - TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory
     -
@@ -48,11 +48,11 @@ services:
 
     - TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler
     - TomasVotruba\Bladestan\Compiler\PhpContentExtractor
-    - TomasVotruba\Bladestan\PHPParser\NodeVisitor\BladeLineNumberNodeVisitor
-    - TomasVotruba\Bladestan\PHPParser\ConvertArrayStringToArray
+    - TomasVotruba\Bladestan\PhpParser\NodeVisitor\BladeLineNumberNodeVisitor
+    - TomasVotruba\Bladestan\PhpParser\ArrayStringToArrayConverter
     - TomasVotruba\Bladestan\Support\DirectoryHelper
 
     -
-        class: TomasVotruba\Bladestan\PHPParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
+        class: TomasVotruba\Bladestan\PhpParser\NodeVisitor\ViewFunctionArgumentsNodeVisitor
         tags:
             - phpstan.parser.richParserNodeVisitor

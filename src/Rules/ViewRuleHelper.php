@@ -6,11 +6,9 @@ namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Error;
-use PHPStan\Analyser\FileAnalyser;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
-use PHPStan\ShouldNotHappenException;
 use TomasVotruba\Bladestan\Compiler\BladeToPHPCompiler;
 use TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ErrorFilter;
@@ -36,8 +34,6 @@ final class ViewRuleHelper
      * @param RenderTemplateWithParameters[] $renderTemplatesWithParameters
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     public function processNode(Node $node, Scope $scope, array $renderTemplatesWithParameters): array
     {
@@ -65,8 +61,6 @@ final class ViewRuleHelper
      * @param VariableAndType[] $variablesAndTypes
      *
      * @return RuleError[]
-     *
-     * @throws ShouldNotHappenException
      */
     private function processTemplateFilePath(
         string $templateFilePath,
@@ -75,19 +69,21 @@ final class ViewRuleHelper
         int $phpLine
     ): array {
         $fileContents = file_get_contents($templateFilePath);
-
         if ($fileContents === false) {
             return [];
         }
 
-        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent($templateFilePath, $fileContents, $variablesAndTypes);
+        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent(
+            $templateFilePath,
+            $fileContents,
+            $variablesAndTypes
+        );
 
         $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
 
         $tmpFilePath = sys_get_temp_dir() . '/' . md5($scope->getFile()) . '-blade-compiled.php';
         file_put_contents($tmpFilePath, $phpFileContents);
 
-        /** @var FileAnalyser $fileAnalyser */
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
