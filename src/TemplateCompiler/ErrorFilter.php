@@ -18,7 +18,9 @@ final class ErrorFilter
         '#Call to function unset\(\) contains undefined variable \$loop#',
         '#Variable \$loop in PHPDoc tag @var does not exist#',
         '#Anonymous function has an unused use (.*?)#',
-        '#Variable \$__env might not be defined#'
+        '#Variable \$__env might not be defined#',
+        // e() function for render can accept more values than strings
+        '#Parameter \#1 \$value of function e expects BackedEnum\|Illuminate\\Contracts\\Support\\DeferringDisplayableValue\|Illuminate\\Contracts\\Support\\Htmlable\|string\|null, (int|float) given#',
     ];
 
     /**
