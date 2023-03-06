@@ -90,8 +90,8 @@ STRING;
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
         // Precompile contents to add template file name and line numbers
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath);
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->compileString($fileContents);
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString($filePath, $fileContents);
 
         // Extract PHP content from HTML and PHP mixed content
         $rawPhpContent = $this->phpContentExtractor->extract($this->bladeCompiler->compileString($fileContents));
@@ -107,8 +107,8 @@ STRING;
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $this->fileNameAndLineNumberAddingPreCompiler->setFileName($includedFilePath);
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->compileString($includedFileContents);
+                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler
+                        ->setFileNameAndCompileString($includedFilePath, $includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
                     $includedContent = $this->phpContentExtractor->extract(
                         $compiledContent,
@@ -214,14 +214,14 @@ STRING;
             return;
         }
 
-        //Hack to make the compiler work
+        // Hack to make the compiler work
         $application = new Application($currentWorkingDirectory);
         $application->bind(\Illuminate\Contracts\Foundation\Application::class, static fn (): Application => $application);
         $application->bind(Factory::class, fn (): \Illuminate\View\Factory => new \Illuminate\View\Factory(new EngineResolver(), $this->fileViewFinder, new NullDispatcher(new Dispatcher())));
 
         $application->alias('view', 'foo');
 
-        //Register components
+        // Register components
         foreach ($this->components as $component) {
             $this->bladeCompiler->component($component['class'], $component['alias'], $component['prefix']);
         }

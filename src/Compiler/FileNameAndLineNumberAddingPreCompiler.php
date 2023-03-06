@@ -27,12 +27,20 @@ final class FileNameAndLineNumberAddingPreCompiler
     ) {
     }
 
-    public function compileString(string $value): string
+    public function setFileNameAndCompileString(string $fileName, string $value): string
     {
-        if ($this->fileName === '') {
-            return '';
+        foreach ($this->configuration->getTemplatePaths() as $templatePath) {
+            $templatePath = rtrim($templatePath, '/') . '/';
+
+            if (str_contains($fileName, $templatePath)) {
+                $fileName = Str::after($fileName, $templatePath);
+                break;
+            }
         }
 
+        $this->fileName = $fileName;
+
+        // @note when is file name "0"?
         if ($this->fileName === '0') {
             return '';
         }
@@ -50,23 +58,6 @@ final class FileNameAndLineNumberAddingPreCompiler
         }
 
         return implode(PHP_EOL, $lines);
-    }
-
-    /**
-     * @todo remove fluent, make service method with fileName as argument to avoid miss-use
-     */
-    public function setFileName(string $fileName): void
-    {
-        foreach ($this->configuration->getTemplatePaths() as $templatePath) {
-            $templatePath = rtrim($templatePath, '/') . '/';
-
-            if (str_contains($fileName, $templatePath)) {
-                $fileName = Str::after($fileName, $templatePath);
-                break;
-            }
-        }
-
-        $this->fileName = $fileName;
     }
 
     private function shouldSkip(string $line): bool

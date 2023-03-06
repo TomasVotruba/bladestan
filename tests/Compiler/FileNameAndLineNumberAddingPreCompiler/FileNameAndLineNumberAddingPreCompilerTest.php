@@ -27,11 +27,10 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
     #[DataProvider('fixtureProvider')]
     public function testUpdateLineNumbers(string $filePath): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
-
         [$inputBladeContents, $expectedPhpCompiledContent] = TestUtils::splitFixture($filePath);
 
-        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler->compileString($inputBladeContents);
+        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString('/var/www/resources/views/foo.blade.php', $inputBladeContents);
         $this->assertSame($expectedPhpCompiledContent, $phpFileContent);
     }
 
@@ -47,28 +46,25 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
 
     public function testChangeFileForSameTemplate(): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
-
         $this->assertSame(
             '/** file: foo.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
+            $this->fileNameAndLineNumberAddingPreCompiler
+                ->setFileNameAndCompileString('/var/www/resources/views/foo.blade.php', '{{ $foo }}')
         );
-
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/bar.blade.php');
 
         $this->assertSame(
             '/** file: bar.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
+            $this->fileNameAndLineNumberAddingPreCompiler
+                ->setFileNameAndCompileString('/var/www/resources/views/bar.blade.php', '{{ $foo }}')
         );
     }
 
     public function testShowTemplateDirectory(): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/users/index.blade.php');
-
         $this->assertSame(
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
-            $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
+            $this->fileNameAndLineNumberAddingPreCompiler
+                ->setFileNameAndCompileString('/var/www/resources/views/users/index.blade.php', '{{ $foo }}')
         );
     }
 
@@ -82,11 +78,11 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends AbstractTestCase
         ]);
 
         $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler($configuration);
-        $fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/foo/bar/users/index.blade.php');
 
         $this->assertSame(
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
-            $fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
+            $fileNameAndLineNumberAddingPreCompiler
+                ->setFileNameAndCompileString('/var/www/foo/bar/users/index.blade.php', '{{ $foo }}')
         );
     }
 }
