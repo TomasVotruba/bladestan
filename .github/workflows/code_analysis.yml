@@ -45,6 +45,8 @@ jobs:
                     php-version: 8.1
                     # needed by phpunit
                     extensions: mbstring
+                    # to disable xdebug
+                    coverage: none
 
             # composer install cache - https://github.com/ramsey/composer-install
             -   uses: "ramsey/composer-install@v2"
