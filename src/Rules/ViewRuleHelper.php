@@ -6,7 +6,6 @@ namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Error;
-use PHPStan\Analyser\FileAnalyser;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
 use PHPStan\Rules\RuleError;
@@ -70,7 +69,6 @@ final class ViewRuleHelper
         int $phpLine
     ): array {
         $fileContents = file_get_contents($templateFilePath);
-
         if ($fileContents === false) {
             return [];
         }
@@ -86,7 +84,6 @@ final class ViewRuleHelper
         $tmpFilePath = sys_get_temp_dir() . '/' . md5($scope->getFile()) . '-blade-compiled.php';
         file_put_contents($tmpFilePath, $phpFileContents);
 
-        /** @var FileAnalyser $fileAnalyser */
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);

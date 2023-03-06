@@ -18,19 +18,18 @@ final class BladeViewRuleTest extends RuleTestCase
     }
 
     /**
-     * @param string[] $analysedFiles
      * @param mixed[] $expectedErrorsWithLines
      */
     #[DataProvider('provideData')]
-    public function testRule(array $analysedFiles, array $expectedErrorsWithLines): void
+    public function testRule(string $analysedFile, array $expectedErrorsWithLines): void
     {
-        $this->analyse($analysedFiles, $expectedErrorsWithLines);
+        $this->analyse([$analysedFile], $expectedErrorsWithLines);
     }
 
     public static function provideData(): Iterator
     {
         yield [
-            [__DIR__ . '/data/view-factory.php'],
+            __DIR__ . '/data/view-factory.php',
             [
                 ['Binary operation "+" between string and 10 results in an error.', 13],
                 ['Binary operation "+" between string and \'bar\' results in an error.', 13],
