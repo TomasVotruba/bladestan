@@ -27,6 +27,7 @@ final class ErrorFilter
         '#Undefined variable\: \$__messageOriginal#',
         '#Variable \$__messageOriginal in isset\(\) is never defined#',
         '#Variable \$message in isset\(\) is never defined#',
+        '#Undefined variable\: \$message#',
     ];
 
     /**
