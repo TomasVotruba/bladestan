@@ -24,6 +24,7 @@ final class ErrorFilter
         // forms errors, given optinally
         '#Variable \$errors might not be defined#',
         '#Offset 1 on array{\'(.*?)\'} on left side of \?\? does not exist#',
+        '#Undefined variable\: \$__messageOriginal#',
     ];
 
     /**
