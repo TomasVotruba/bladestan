@@ -29,7 +29,7 @@ final class BladeViewRuleTest extends RuleTestCase
     public static function provideData(): Iterator
     {
         yield [
-            __DIR__ . '/data/view-factory.php',
+            __DIR__ . '/Fixture/view-factory.php',
             [
                 ['Binary operation "+" between string and 10 results in an error.', 13],
                 ['Binary operation "+" between string and \'bar\' results in an error.', 13],

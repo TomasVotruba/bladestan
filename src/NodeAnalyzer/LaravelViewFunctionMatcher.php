@@ -25,13 +25,11 @@ final class LaravelViewFunctionMatcher
     public function match(FuncCall $funcCall, Scope $scope): array
     {
         $funcName = $funcCall->name;
-
         if (! $funcName instanceof Name) {
             return [];
         }
 
         $funcName = $scope->resolveName($funcName);
-
         if ($funcName !== 'view') {
             return [];
         }
@@ -45,7 +43,6 @@ final class LaravelViewFunctionMatcher
         $template = $funcCall->getArgs()[0]->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
-
         if ($resolvedTemplateFilePaths === []) {
             return [];
         }

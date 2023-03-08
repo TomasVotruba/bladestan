@@ -30,7 +30,7 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
     {
         // @todo instead of one huge file with 20 errors, there should be similar errors together, just 2-3 errors per file to make easier debugging and extending
         yield [
-            __DIR__ . '/data/laravel-view-function.php',
+            __DIR__ . '/Fixture/laravel-view-function.php',
             [
                 ['Binary operation "+" between string and 10 results in an error.', 9],
                 ['Binary operation "+" between string and \'bar\' results in an error.', 9],
@@ -51,7 +51,9 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
             ],
         ];
 
-        yield [__DIR__ . '/data/view-render-int.php', []];
+        yield [__DIR__ . '/Fixture/view-render-int.php', []];
+
+        yield [__DIR__ . '/Fixture/skip-form-errors.php', []];
     }
 
     /**

@@ -23,6 +23,7 @@ final class ErrorFilter
         '#Parameter \#1 \$value of function e expects BackedEnum\|Illuminate(.*?)\|string\|null, (int|float) given#',
         // forms errors, given optinally
         '#Variable \$errors might not be defined#',
+        '#Offset 1 on array{\'(.*?)\'} on left side of \?\? does not exist#',
     ];
 
     /**

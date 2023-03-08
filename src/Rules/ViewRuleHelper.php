@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\Rules;
 
-use PhpParser\Node;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Error;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
@@ -35,8 +36,11 @@ final class ViewRuleHelper
      *
      * @return RuleError[]
      */
-    public function processNode(Node $node, Scope $scope, array $renderTemplatesWithParameters): array
-    {
+    public function processNode(
+        FuncCall|MethodCall $call,
+        Scope $scope,
+        array $renderTemplatesWithParameters
+    ): array {
         $ruleErrors = [];
         foreach ($renderTemplatesWithParameters as $renderTemplateWithParameter) {
             $variablesAndTypes = $this->templateVariableTypesResolver->resolveArray(
@@ -48,7 +52,7 @@ final class ViewRuleHelper
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
                 $scope,
-                $node->getLine()
+                $call->getLine()
             );
 
             $ruleErrors = array_merge($ruleErrors, $currentRuleErrors);
