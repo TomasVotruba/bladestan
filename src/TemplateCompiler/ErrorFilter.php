@@ -25,6 +25,7 @@ final class ErrorFilter
         '#Variable \$errors might not be defined#',
         '#Offset 1 on array{\'(.*?)\'} on left side of \?\? does not exist#',
         '#Undefined variable\: \$__messageOriginal#',
+        '#Variable \$__messageOriginal in isset\(\) is never defined#',
         '#Variable \$message in isset\(\) is never defined#',
     ];
 
