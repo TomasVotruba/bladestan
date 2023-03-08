@@ -61,7 +61,7 @@ STRING;
 
     /**
      * @param string[] $components
-     * @phpstan-param array<int, array{class: string, alias: string, prefix: string}> $components
+     * @param array<int, array{class: string, alias: string, prefix: string}> $components
      */
     public function __construct(
         private readonly Filesystem $fileSystem,
@@ -98,7 +98,8 @@ STRING;
         );
 
         // Extract PHP content from HTML and PHP mixed content
-        $rawPhpContent = $this->phpContentExtractor->extract($this->bladeCompiler->compileString($fileContents));
+        $compiledBlade = $this->bladeCompiler->compileString($fileContents);
+        $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade);
 
         $includes = $this->getIncludes($rawPhpContent);
 
@@ -161,7 +162,6 @@ STRING;
 
         $decoratedPhpContent = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
         $phpLinesToTemplateLines = $this->phpLineToTemplateLineResolver->resolve($decoratedPhpContent);
-
         return new PhpFileContentsWithLineMap($decoratedPhpContent, $phpLinesToTemplateLines);
     }
 
@@ -172,11 +172,10 @@ STRING;
     {
         $stmts = $this->simplePhpParser->parse($phpContent);
 
-        // Apply some visitors
-        // - get rid of $__env variables
-        // - get rid of e() function calls
         $this->traverseStmtsWithVisitors($stmts, [
+            // get rid of $__env variables
             new RemoveEnvVariableNodeVisitor(),
+            // get rid of e() function calls
             new RemoveEscapeFunctionNodeVisitor(),
             new AddLoopVarTypeToForeachNodeVisitor(),
         ]);
@@ -185,14 +184,12 @@ STRING;
         $docNodes = $this->varDocNodeFactory->createDocNodes($variablesAndTypes);
         $stmts = array_merge($docNodes, $stmts);
 
-        $printedPhpContents = $this->printerStandard->prettyPrintFile($stmts);
-        return $printedPhpContents . PHP_EOL;
+        return $this->printerStandard->prettyPrintFile($stmts) . PHP_EOL;
     }
 
     /**
-     * @param Stmt[]                $stmts
+     * @param Stmt[] $stmts
      * @param NodeVisitorAbstract[] $nodeVisitors
-     *
      * @return Node[]
      */
     private function traverseStmtsWithVisitors(array $stmts, array $nodeVisitors): array
