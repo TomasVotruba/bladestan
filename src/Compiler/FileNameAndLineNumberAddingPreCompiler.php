@@ -20,8 +20,6 @@ final class FileNameAndLineNumberAddingPreCompiler
      */
     private const PHP_PARTIAL_COMMENT = '#^(\* )?@(var|param|method|extends|implements|template) +(.*?) \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*#';
 
-    private string $fileName;
-
     public function __construct(
         private readonly Configuration $configuration
     ) {
@@ -38,10 +36,8 @@ final class FileNameAndLineNumberAddingPreCompiler
             }
         }
 
-        $this->fileName = $fileName;
-
         // @note when is file name "0"?
-        if ($this->fileName === '0') {
+        if ($fileName === '0') {
             return '';
         }
 
@@ -51,7 +47,7 @@ final class FileNameAndLineNumberAddingPreCompiler
 
         foreach ($lines as $key => $line) {
             if (! $this->shouldSkip($line)) {
-                $lines[$key] = sprintf('/** file: %s, line: %d */', $this->fileName, $lineNumber) . $line;
+                $lines[$key] = sprintf('/** file: %s, line: %d */', $fileName, $lineNumber) . $line;
             }
 
             ++$lineNumber;
