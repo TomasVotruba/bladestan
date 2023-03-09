@@ -37,8 +37,7 @@ final class PhpContentExtractorTest extends PHPStanTestCase
         [$inputBladeContents, $expectedPhpContents] = TestUtils::splitFixture($filePath);
 
         $fileContent = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileName('/some-directory-name/resources/views/foo.blade.php')
-            ->compileString($inputBladeContents);
+            ->setFileNameAndCompileString('/some-directory-name/resources/views/foo.blade.php', $inputBladeContents);
 
         $compiledPhpContents = $this->bladeCompiler->compileString($fileContent);
         $phpFileContent = $this->phpContentExtractor->extract($compiledPhpContents);

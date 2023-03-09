@@ -29,11 +29,10 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
     #[DataProvider('fixtureProvider')]
     public function testUpdateLineNumbers(string $filePath): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/resources/views/foo.blade.php');
-
         [$inputBladeContents, $expectedPhpCompiledContent] = TestUtils::splitFixture($filePath);
 
-        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler->compileString($inputBladeContents);
+        $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString('/var/www/resources/views/foo.blade.php', $inputBladeContents);
         $this->assertSame($expectedPhpCompiledContent, $phpFileContent);
     }
 
@@ -45,9 +44,8 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
     #[DataProvider('provideData')]
     public function testChangeFileForSameTemplate(string $fileName, string $expectedCompiledComments): void
     {
-        $this->fileNameAndLineNumberAddingPreCompiler->setFileName($fileName);
-
-        $compiledComments = $this->fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}');
+        $compiledComments = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString($fileName, '{{ $foo }}');
         $this->assertSame($expectedCompiledComments, $compiledComments);
     }
 
@@ -70,11 +68,11 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
         ]);
 
         $fileNameAndLineNumberAddingPreCompiler = new FileNameAndLineNumberAddingPreCompiler($configuration);
-        $fileNameAndLineNumberAddingPreCompiler->setFileName('/var/www/foo/bar/users/index.blade.php');
 
         $this->assertSame(
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
-            $fileNameAndLineNumberAddingPreCompiler->compileString('{{ $foo }}')
+            $fileNameAndLineNumberAddingPreCompiler
+                ->setFileNameAndCompileString('/var/www/foo/bar/users/index.blade.php', '{{ $foo }}')
         );
     }
 

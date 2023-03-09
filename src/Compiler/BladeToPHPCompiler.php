@@ -93,9 +93,8 @@ STRING;
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
         // Precompile contents to add template file name and line numbers
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString(
-            $fileContents
-        );
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString($filePath, $fileContents);
 
         // Extract PHP content from HTML and PHP mixed content
         $compiledBlade = $this->bladeCompiler->compileString($fileContents);
@@ -115,9 +114,8 @@ STRING;
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName(
-                        $includedFilePath
-                    )->compileString($includedFileContents);
+                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler
+                        ->setFileNameAndCompileString($includedFilePath, $includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
                     $includedContent = $this->phpContentExtractor->extract($compiledContent, false);
                 } catch (Throwable) {
@@ -230,7 +228,7 @@ STRING;
             return;
         }
 
-        //Hack to make the compiler work
+        // Hack to make the compiler work
         $application = new Application($currentWorkingDirectory);
         $application->bind(
             \Illuminate\Contracts\Foundation\Application::class,
@@ -247,7 +245,7 @@ STRING;
 
         $application->alias('view', 'foo');
 
-        //Register components
+        // Register components
         foreach ($this->components as $component) {
             $this->bladeCompiler->component($component['class'], $component['alias'], $component['prefix']);
         }

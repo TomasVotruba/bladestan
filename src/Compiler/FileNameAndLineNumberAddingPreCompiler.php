@@ -20,42 +20,12 @@ final class FileNameAndLineNumberAddingPreCompiler
      */
     private const PHP_PARTIAL_COMMENT = '#^(\* )?@(var|param|method|extends|implements|template) +(.*?) \$[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*#';
 
-    private string $fileName;
-
     public function __construct(
         private readonly Configuration $configuration
     ) {
     }
 
-    public function compileString(string $value): string
-    {
-        if ($this->fileName === '') {
-            return '';
-        }
-
-        if ($this->fileName === '0') {
-            return '';
-        }
-
-        $lines = explode(PHP_EOL, $value);
-
-        $lineNumber = 1;
-
-        foreach ($lines as $key => $line) {
-            if (! $this->shouldSkip($line)) {
-                $lines[$key] = sprintf('/** file: %s, line: %d */', $this->fileName, $lineNumber) . $line;
-            }
-
-            ++$lineNumber;
-        }
-
-        return implode(PHP_EOL, $lines);
-    }
-
-    /**
-     * @todo remove fluent, make service method with fileName as argument to avoid miss-use
-     */
-    public function setFileName(string $fileName): self
+    public function setFileNameAndCompileString(string $fileName, string $value): string
     {
         foreach ($this->configuration->getTemplatePaths() as $templatePath) {
             $templatePath = rtrim($templatePath, '/') . '/';
@@ -66,9 +36,24 @@ final class FileNameAndLineNumberAddingPreCompiler
             }
         }
 
-        $this->fileName = $fileName;
+        // @note when is file name "0"?
+        if ($fileName === '0') {
+            return '';
+        }
 
-        return $this;
+        $lines = explode(PHP_EOL, $value);
+
+        $lineNumber = 1;
+
+        foreach ($lines as $key => $line) {
+            if (! $this->shouldSkip($line)) {
+                $lines[$key] = sprintf('/** file: %s, line: %d */', $fileName, $lineNumber) . $line;
+            }
+
+            ++$lineNumber;
+        }
+
+        return implode(PHP_EOL, $lines);
     }
 
     private function shouldSkip(string $line): bool
