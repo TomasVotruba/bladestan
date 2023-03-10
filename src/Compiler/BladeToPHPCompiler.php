@@ -60,7 +60,6 @@ final class BladeToPHPCompiler
 STRING;
 
     /**
-     * @param string[] $components
      * @param array<int, array{class: string, alias: string, prefix: string}> $components
      */
     public function __construct(
