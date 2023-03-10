@@ -21,7 +21,7 @@ final class ErrorFilter
         '#Variable \$__env might not be defined#',
         // e() function for render can accept more values than strings
         '#Parameter \#1 \$value of function e expects BackedEnum\|Illuminate(.*?)\|string\|null, (int|float) given#',
-        // forms errors, given optinally
+        // forms errors, given optionally
         '#Variable \$errors might not be defined#',
         '#Offset 1 on array{\'(.*?)\'} on left side of \?\? does not exist#',
         '#Undefined variable\: \$__messageOriginal#',
