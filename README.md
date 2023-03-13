@@ -32,8 +32,8 @@ An example:
 
 How to use custom error formatter?
 
-```shell
-vendor/bin/phpstan --error-format blade
+```bash
+vendor/bin/phpstan analyze --error-format blade
 ```
 
 ## Credits
