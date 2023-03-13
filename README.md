@@ -1,6 +1,6 @@
 # Bladestan
 
-Laravel running on compiled Blade templates and extra static-analysis for Blade
+Static analysis for Blade templates in Laravel projects.
 
 ## Install
 
