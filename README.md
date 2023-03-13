@@ -41,4 +41,4 @@ vendor/bin/phpstan --error-format blade
 People:
 
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
-- [All Contributors](https://github.com/tomasvotruba/bladestane)
+- [All Contributors](https://github.com/TomasVotruba/bladestan/graphs/contributors)
