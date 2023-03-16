@@ -2,6 +2,7 @@
     "name": "tomasvotruba/bladestan",
     "description": "PHPStan rule for static analysis of Blade templates",
     "license": "MIT",
+    "type": "phpstan-extension",
     "keywords": ["static analysis", "phpstan-extension"],
     "require": {
         "php": "^8.1",
