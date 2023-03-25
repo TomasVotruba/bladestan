@@ -10,7 +10,7 @@ use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Rules\BladeRule;
 
-final class LaravelViewFunctionRuleTest extends RuleTestCase
+final class BladeRuleTest extends RuleTestCase
 {
     protected function getRule(): Rule
     {
@@ -28,6 +28,18 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
 
     public static function provideData(): Iterator
     {
+        yield [
+            __DIR__ . '/Fixture/view-factory.php',
+            [
+                ['Binary operation "+" between string and 10 results in an error.', 13],
+                ['Binary operation "+" between string and \'bar\' results in an error.', 13],
+                ['Binary operation "+" between string and 10 results in an error.', 16],
+                ['Binary operation "+" between string and \'bar\' results in an error.', 16],
+                ['Binary operation "+" between string and 10 results in an error.', 19],
+                ['Binary operation "+" between string and \'bar\' results in an error.', 19],
+            ],
+        ];
+
         // @todo instead of one huge file with 20 errors, there should be similar errors together, just 2-3 errors per file to make easier debugging and extending
         yield [
             __DIR__ . '/Fixture/laravel-view-function.php',
@@ -54,6 +66,11 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         yield [__DIR__ . '/Fixture/view-render-int.php', []];
 
         yield [__DIR__ . '/Fixture/skip-form-errors.php', []];
+
+        yield [__DIR__ . '/Fixture/laravel-response-function.php', [
+            ['Binary operation "+" between string and 10 results in an error.', 9],
+            ['Binary operation "+" between string and \'bar\' results in an error.', 9],
+        ]];
     }
 
     /**
