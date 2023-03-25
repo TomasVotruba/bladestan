@@ -13,6 +13,7 @@ use PHPStan\Rules\RuleError;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
 use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
 use TomasVotruba\Bladestan\TemplateCompiler\Rules\TemplateRulesRegistry;
+use TomasVotruba\Bladestan\ViewRuleHelper;
 
 /**
  * @implements Rule<Node>

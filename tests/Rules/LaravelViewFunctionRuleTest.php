@@ -55,7 +55,10 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
 
         yield [__DIR__ . '/Fixture/skip-form-errors.php', []];
 
-        yield [__DIR__ . '/Fixture/laravel-response-function.php', []];
+        yield [__DIR__ . '/Fixture/laravel-response-function.php', [
+            ['Binary operation "+" between string and 10 results in an error.', 9],
+            ['Binary operation "+" between string and \'bar\' results in an error.', 9],
+        ]];
     }
 
     /**
