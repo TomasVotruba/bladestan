@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\View\Factory;
 use PhpParser\Node\Arg;
@@ -13,6 +14,7 @@ use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
+use PHPStan\Type\Type;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
 final class BladeViewMethodsMatcher
@@ -39,19 +41,15 @@ final class BladeViewMethodsMatcher
     public function match(MethodCall $methodCall, Scope $scope): array
     {
         $methodName = $this->resolveName($methodCall);
-
         if ($methodName === null) {
             return [];
         }
 
         $calledOnType = $scope->getType($methodCall->var);
 
+        // narrow response
         if ($calledOnType instanceof ThisType) {
             $calledOnType = new ObjectType($calledOnType->getClassName());
-        }
-
-        if (! $calledOnType instanceof ObjectType) {
-            return [];
         }
 
         if (! $this->isCalledOnTypeABladeView($calledOnType, $methodName)) {
@@ -59,7 +57,6 @@ final class BladeViewMethodsMatcher
         }
 
         $templateNameArg = $this->findTemplateNameArg($methodName, $methodCall);
-
         if (! $templateNameArg instanceof Arg) {
             return [];
         }
@@ -67,7 +64,6 @@ final class BladeViewMethodsMatcher
         $template = $templateNameArg->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
-
         if ($resolvedTemplateFilePaths === []) {
             return [];
         }
@@ -98,14 +94,18 @@ final class BladeViewMethodsMatcher
         return $methodCall->name->name;
     }
 
-    private function isCalledOnTypeABladeView(ObjectType $objectType, string $methodName): bool
+    private function isCalledOnTypeABladeView(Type $objectType, string $methodName): bool
     {
-        if ($objectType->isInstanceOf(Factory::class)->yes()) {
+        if ($objectType->isSuperTypeOf(new ObjectType(Factory::class))->yes()) {
             return in_array($methodName, self::VIEW_FACTORY_METHOD_NAMES, true);
         }
 
-        if ($objectType->isInstanceOf(ViewFactoryContract::class)->yes()) {
+        if ($objectType->isSuperTypeOf(new ObjectType(ViewFactoryContract::class))->yes()) {
             return $methodName === self::MAKE;
+        }
+
+        if ($objectType->isSuperTypeOf(new ObjectType(ResponseFactory::class))->yes()) {
+            return $methodName === 'view';
         }
 
         return false;
@@ -127,6 +127,10 @@ final class BladeViewMethodsMatcher
             return null;
         }
 
+        if ($methodName === 'view') {
+            return $methodCall->getArgs()[0];
+        }
+
         // Second argument is the template name
         return $methodCall->getArgs()[1];
     }
@@ -135,6 +139,11 @@ final class BladeViewMethodsMatcher
     {
         if (count($methodCall->getArgs()) < 2) {
             return null;
+        }
+
+        if ($methodName === 'view') {
+            $args = $methodCall->getArgs();
+            return $args[1];
         }
 
         // `make` just takes view name and data as arguments
