@@ -54,6 +54,8 @@ final class LaravelViewFunctionRuleTest extends RuleTestCase
         yield [__DIR__ . '/Fixture/view-render-int.php', []];
 
         yield [__DIR__ . '/Fixture/skip-form-errors.php', []];
+
+        yield [__DIR__ . '/Fixture/laravel-response-function.php', []];
     }
 
     /**
