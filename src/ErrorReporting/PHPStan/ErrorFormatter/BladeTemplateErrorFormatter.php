@@ -18,7 +18,7 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
     public function __construct()
     {
         /** @var string $currentWorkingDirectory */
-        $currentWorkingDirectory  = getcwd();
+        $currentWorkingDirectory = getcwd();
         $this->relativePathHelper = new SimpleRelativePathHelper($currentWorkingDirectory);
     }
 
