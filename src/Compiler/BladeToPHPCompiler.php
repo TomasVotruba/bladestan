@@ -93,7 +93,7 @@ STRING;
 
         // Precompile contents to add template file name and line numbers
         $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileNameAndCompileString($filePath, $fileContents);
+            ->completeLineCommentsToBladeContents($filePath, $fileContents);
 
         // Extract PHP content from HTML and PHP mixed content
         $compiledBlade = $this->bladeCompiler->compileString($fileContents);
@@ -114,7 +114,7 @@ STRING;
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
                     $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler
-                        ->setFileNameAndCompileString($includedFilePath, $includedFileContents);
+                        ->completeLineCommentsToBladeContents($includedFilePath, $includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
                     $includedContent = $this->phpContentExtractor->extract($compiledContent, false);
                 } catch (Throwable) {

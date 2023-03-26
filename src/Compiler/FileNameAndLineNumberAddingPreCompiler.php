@@ -25,7 +25,7 @@ final class FileNameAndLineNumberAddingPreCompiler
     ) {
     }
 
-    public function setFileNameAndCompileString(string $fileName, string $value): string
+    public function completeLineCommentsToBladeContents(string $fileName, string $fileContents): string
     {
         foreach ($this->configuration->getTemplatePaths() as $templatePath) {
             $templatePath = rtrim($templatePath, '/') . '/';
@@ -41,7 +41,7 @@ final class FileNameAndLineNumberAddingPreCompiler
             return '';
         }
 
-        $lines = explode(PHP_EOL, $value);
+        $lines = explode(PHP_EOL, $fileContents);
 
         $lineNumber = 1;
 

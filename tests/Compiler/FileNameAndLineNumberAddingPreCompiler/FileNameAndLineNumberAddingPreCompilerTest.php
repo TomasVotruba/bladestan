@@ -32,7 +32,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
         [$inputBladeContents, $expectedPhpCompiledContent] = TestUtils::splitFixture($filePath);
 
         $phpFileContent = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileNameAndCompileString('/var/www/resources/views/foo.blade.php', $inputBladeContents);
+            ->completeLineCommentsToBladeContents('/var/www/resources/views/foo.blade.php', $inputBladeContents);
         $this->assertSame($expectedPhpCompiledContent, $phpFileContent);
     }
 
@@ -45,7 +45,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
     public function testChangeFileForSameTemplate(string $fileName, string $expectedCompiledComments): void
     {
         $compiledComments = $this->fileNameAndLineNumberAddingPreCompiler
-            ->setFileNameAndCompileString($fileName, '{{ $foo }}');
+            ->completeLineCommentsToBladeContents($fileName, '{{ $foo }}');
         $this->assertSame($expectedCompiledComments, $compiledComments);
     }
 
@@ -72,7 +72,7 @@ final class FileNameAndLineNumberAddingPreCompilerTest extends PHPStanTestCase
         $this->assertSame(
             '/** file: users/index.blade.php, line: 1 */{{ $foo }}',
             $fileNameAndLineNumberAddingPreCompiler
-                ->setFileNameAndCompileString('/var/www/foo/bar/users/index.blade.php', '{{ $foo }}')
+                ->completeLineCommentsToBladeContents('/var/www/foo/bar/users/index.blade.php', '{{ $foo }}')
         );
     }
 
