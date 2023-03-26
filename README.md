@@ -27,7 +27,6 @@ parameters:
 We provide custom PHPStan error formatter to better display the template errors:
 
 * clickable template file path link to the error in blade template
-* clickable controller file path to source `view()` call
 
 ```bash
  ------ -----------------------------------------------------------
