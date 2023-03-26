@@ -19,8 +19,6 @@ rules:
 services:
     errorFormatter.blade:
         class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
-        arguments:
-            editorUrl: %editorUrl%
 
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
