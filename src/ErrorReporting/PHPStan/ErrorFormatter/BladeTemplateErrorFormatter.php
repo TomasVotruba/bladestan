@@ -6,28 +6,25 @@ namespace TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter;
 
 use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
+use PHPStan\Command\ErrorFormatter\ErrorFormatter;
 use PHPStan\Command\Output;
-use PHPStan\File\RelativePathHelper;
+use PHPStan\File\SimpleRelativePathHelper;
 use Symfony\Component\Console\Command\Command;
 
-/**
- * @see https://github.com/phpstan/phpstan-src/blob/master/src/Command/ErrorFormatter/TableErrorFormatter.php
- */
-final class BladeTemplateErrorFormatter
+final class BladeTemplateErrorFormatter implements ErrorFormatter
 {
-    public function __construct(
-        private readonly RelativePathHelper $relativePathHelper,
-        private readonly ?string $editorUrl,
-    ) {
+    private SimpleRelativePathHelper $relativePathHelper;
+
+    public function __construct()
+    {
+        $this->relativePathHelper = new SimpleRelativePathHelper(getcwd());
     }
 
+    /**
+     * @return Command::*
+     */
     public function formatErrors(AnalysisResult $analysisResult, Output $output): int
     {
-        $projectConfigFile = 'phpstan.neon.dist';
-        if ($analysisResult->getProjectConfigFile() !== null) {
-            $projectConfigFile = $this->relativePathHelper->getRelativePath($analysisResult->getProjectConfigFile());
-        }
-
         $outputStyle = $output->getStyle();
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
@@ -47,34 +44,27 @@ final class BladeTemplateErrorFormatter
 
         foreach ($fileErrors as $file => $errors) {
             $rows = [];
+
+            /** @var Error $error */
             foreach ($errors as $error) {
                 $message = $error->getMessage();
-                if ($error->getTip() !== null) {
-                    $tip = $error->getTip();
-                    $tip = str_replace('%configurationFile%', $projectConfigFile, $tip);
-                    $message .= "\n💡 " . $tip;
-                }
-
-                if (is_string($this->editorUrl)) {
-                    $message .= "\n✏️  " . str_replace(
-                        ['%file%', '%line%'],
-                        [$error->getTraitFilePath() ?? $error->getFilePath(), (string) $error->getLine()],
-                        $this->editorUrl
-                    );
-                }
-
-                $templateFilePath = $error->getMetadata()['template_file_path'] ?? null;
-                $templateLine = $error->getMetadata()['template_line'] ?? null;
-
-                if ($templateFilePath && $templateLine) {
-                    $message .= ' <fg=magenta;options=bold>(template: ' . $templateFilePath . ', line: ' . $templateLine . ')</>';
-                }
 
                 $rows[] = [(string) $error->getLine(), $message];
+
+                $errorMetadata = $error->getMetadata();
+                $templateFilePath = $errorMetadata['template_file_path'] ?? null;
+                $templateLine = $errorMetadata['template_line'] ?? null;
+
+                if ($templateFilePath && $templateLine) {
+                    $relativeTemplateFileLine = $this->relativePathHelper->getRelativePath(
+                        $templateFilePath
+                    ) . ':' . $templateLine;
+
+                    $rows[] = ['', 'rendered in: ' . $relativeTemplateFileLine];
+                }
             }
 
             $relativeFilePath = $this->relativePathHelper->getRelativePath($file);
-
             $outputStyle->table(['Line', $relativeFilePath], $rows);
         }
 
@@ -85,28 +75,23 @@ final class BladeTemplateErrorFormatter
             );
         }
 
-        $warningsCount = count($analysisResult->getWarnings());
-        if ($warningsCount > 0) {
-            $outputStyle->table(
-                ['', 'Warning'],
-                array_map(static fn (string $warning): array => ['', $warning], $analysisResult->getWarnings())
-            );
+        foreach ($analysisResult->getWarnings() as $warning) {
+            $outputStyle->warning($warning);
         }
 
         $finalMessage = sprintf(
             $analysisResult->getTotalErrorsCount() === 1 ? 'Found %d error' : 'Found %d errors',
             $analysisResult->getTotalErrorsCount()
         );
-        if ($warningsCount > 0) {
-            $finalMessage .= sprintf($warningsCount === 1 ? ' and %d warning' : ' and %d warnings', $warningsCount);
-        }
 
         if ($analysisResult->getTotalErrorsCount() > 0) {
             $outputStyle->error($finalMessage);
+
             return Command::FAILURE;
         }
 
         $outputStyle->warning($finalMessage);
+
         return Command::SUCCESS;
     }
 }

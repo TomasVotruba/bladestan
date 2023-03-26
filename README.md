@@ -24,11 +24,19 @@ parameters:
 
 ### Custom Error Formatter
 
-We provide custom PHPStan error formatter to better display the template errors. The custom error formatter extends the PHPStan's table error formatter and just adds additional information about template errors to the message.
+We provide custom PHPStan error formatter to better display the template errors:
 
-An example:
+* clickable template file path link to the error in blade template
+* clickable controller file path to source `view()` call
 
-![](./assets/example.png "Custom error formatter output example")
+```bash
+ ------ -----------------------------------------------------------
+  Line   app/Http/Controllers/PostCodexController.php
+ ------ -----------------------------------------------------------
+  20     Call to an undefined method App\Entity\Post::getConten().
+         rendered in: post_codex.blade.php:15
+ ------ -----------------------------------------------------------
+```
 
 How to use custom error formatter?
 
@@ -37,8 +45,6 @@ vendor/bin/phpstan analyze --error-format blade
 ```
 
 ## Credits
-
-People:
 
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
 - [All Contributors](https://github.com/TomasVotruba/bladestan/graphs/contributors)
