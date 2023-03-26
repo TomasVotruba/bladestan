@@ -20,6 +20,8 @@ parameters:
             - resources/views
 ```
 
+<br>
+
 ## Features
 
 ### Custom Error Formatter
@@ -42,6 +44,8 @@ How to use custom error formatter?
 ```bash
 vendor/bin/phpstan analyze --error-format blade
 ```
+
+<br>
 
 ## Credits
 
