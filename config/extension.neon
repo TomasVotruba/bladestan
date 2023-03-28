@@ -11,6 +11,7 @@ parameters:
 parametersSchema:
     bladestan: structure([
         template_paths: listOf(string())
+        ?namespaced_paths: arrayOf(string())
     ])
 
 rules:
