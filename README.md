@@ -19,6 +19,15 @@ parameters:
             # default
             - resources/views
 ```
+<br>
+
+If you run PHPStan with its [extension installer](https://phpstan.org/user-guide/extension-library#installing-extensions), Bladestan will just work, if not you need to include it in the `phpstan.neon` configuration file:
+
+```neon
+includes:
+    - ./vendor/tomasvotruba/bladestan/config/extension.neon
+```
+
 
 <br>
 
