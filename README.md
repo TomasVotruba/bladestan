@@ -51,7 +51,7 @@ We provide custom PHPStan error formatter to better display the template errors:
 How to use custom error formatter?
 
 ```bash
-vendor/bin/phpstan analyze --error-format blade
+vendor/bin/phpstan analyze --error-format=blade
 ```
 
 <br>
