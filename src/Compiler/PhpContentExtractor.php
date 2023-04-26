@@ -41,7 +41,7 @@ final class PhpContentExtractor
 
         $phpContents = array_map(static fn ($a, $b): string => $a . rtrim((string) $b), $matches[1], $matches[2]);
 
-        if ($phpContents !== [] && $addPHPOpeningTag) {
+        if ($addPHPOpeningTag) {
             array_unshift($phpContents, '<?php');
         }
 
