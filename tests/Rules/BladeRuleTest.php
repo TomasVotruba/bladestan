@@ -60,6 +60,8 @@ final class BladeRuleTest extends RuleTestCase
                 ['Binary operation "+" between string and 10 results in an error.', 28],
                 ['Binary operation "+" between \'10bar\' and 30 results in an error.', 28],
                 ['Undefined variable: $bar', 28],
+                ['Binary operation "+" between string and 10 results in an error.', 33],
+                ['Variable $bar might not be defined.', 33],
             ],
         ];
 
