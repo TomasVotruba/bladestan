@@ -28,3 +28,6 @@ view('file_with_include', [
 view('file_with_recursive_include', [
     'foo' => 'foo',
 ]);
+
+$foo = 'foo';
+view('simple_variable', compact('foo'));
