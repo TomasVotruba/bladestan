@@ -31,3 +31,7 @@ view('file_with_recursive_include', [
 
 $foo = 'foo';
 view('simple_variable', compact('foo'));
+
+view('include_with_parameters', [
+    'includeData' => [],
+]);
