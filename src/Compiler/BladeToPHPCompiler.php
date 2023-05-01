@@ -99,15 +99,13 @@ STRING;
         $compiledBlade = $this->bladeCompiler->compileString($fileContents);
         $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade);
 
-        $includes = $this->getIncludes($rawPhpContent);
-
         $allVariablesList = array_map(
             static fn (VariableAndType $variableAndType): string => $variableAndType->getVariable(),
             $variablesAndTypes
         );
 
         // Recursively fetch and compile includes
-        while ($includes !== []) {
+        while ($includes = $this->getIncludes($rawPhpContent)) {
             foreach ($includes as $include) {
                 try {
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
@@ -130,9 +128,15 @@ STRING;
                     )
                 );
 
+                $includeVariables = $allVariablesList;
+                foreach ($include->getVariablesAndValues() as $expresion) {
+                    preg_match_all('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)/s', $expresion, $variableNames);
+                    $includeVariables = [...$includeVariables, ...$variableNames[1]];
+                }
+
                 $usedVariablesString = implode(
                     ', ',
-                    array_map(static fn (string $variable): string => '$' . $variable, $allVariablesList)
+                    array_map(static fn (string $variable): string => '$' . $variable, array_unique($includeVariables))
                 );
                 $rawPhpContent = preg_replace(
                     sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())),
@@ -153,8 +157,6 @@ STRING;
                     $allVariablesList[] = $variable;
                 }
             }
-
-            $includes = $this->getIncludes($rawPhpContent);
         }
 
         $decoratedPhpContent = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
