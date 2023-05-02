@@ -19,7 +19,7 @@ if (isset($errors)) {
         /** file: foo.blade.php, line: 5 */
         $__currentLoopData = $errors->all();
         foreach ($__currentLoopData as $error) {
-            /** @var \TomasVotruba\Bladestan\ValueObject\Loop $loop */
+            $loop = new \TomasVotruba\Bladestan\ValueObject\Loop();
             /** file: foo.blade.php, line: 6 */
             echo $error;
             unset($loop);
