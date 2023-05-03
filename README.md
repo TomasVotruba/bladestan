@@ -73,6 +73,22 @@ To sovle this you can first store the value in a variable:
 @include('partial', ['content' => $template])
 ```
 
+Similarly there might be situations where a variables are not automatically detected and alialized.:
+
+```php
+@foreach($values as $value)
+    @include('partial')
+@endforeach
+```
+
+These can simplyl be solved by explicity aliasing the variable under the same name:
+
+```php
+@foreach($values as $value)
+    @include('partial', ['value' => $value])
+@endforeach
+```
+
 ## Credits
 
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
