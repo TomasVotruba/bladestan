@@ -19,11 +19,30 @@ use TomasVotruba\Bladestan\ValueObject\Loop;
 final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
 {
     /**
+     * @var array<bool>
+     */
+    private array $loopStack = [];
+
+    public function enterNode(Node $node): ?Node
+    {
+        if ($node instanceof Foreach_) {
+            array_push($this->loopStack, true);
+        }
+
+        return $node;
+    }
+
+    /**
      * @return Node[]|null
      */
     public function leaveNode(Node $node): ?array
     {
         if (! $node instanceof Foreach_) {
+            return null;
+        }
+
+        array_pop($this->loopStack);
+        if (count($this->loopStack) !== 0) {
             return null;
         }
 
