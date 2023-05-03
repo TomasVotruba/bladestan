@@ -6,9 +6,12 @@ namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Foreach_;
-use PhpParser\Node\Stmt\Nop;
 use PhpParser\Node\Stmt\Unset_;
 use PhpParser\NodeVisitorAbstract;
 use TomasVotruba\Bladestan\ValueObject\Loop;
@@ -38,11 +41,10 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $docNop = new Nop();
-        $docNop->setDocComment(new Doc('$loop = new \\' . Loop::class . '();'));
+        $assing = new Expression(new Assign(new Variable('loop'), new New_(new FullyQualified(Loop::class))));
 
-        // Add `$loop` var doc type as the first statement
-        array_unshift($node->stmts, $docNop);
+        // Add `$loop` var as the first statement
+        array_unshift($node->stmts, $assing);
 
         // `endforeach` also has a doc comment. Remove that before adding our unset.
         array_pop($node->stmts);
