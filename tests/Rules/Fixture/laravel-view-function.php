@@ -35,3 +35,5 @@ view('simple_variable', compact('foo'));
 view('include_with_parameters', [
     'includeData' => [],
 ]);
+
+view('static_content');
