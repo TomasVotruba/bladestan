@@ -56,6 +56,23 @@ vendor/bin/phpstan analyze --error-format=blade
 
 <br>
 
+## Limitations
+
+Blade allows for abetery PHP expresion in many places. Bladestan is a bit more constricted in what it can process.
+
+On example is the `@import()` directive. You might get errors regarding undefined variables if you aliase array elemnts directly:
+
+```php
+@include('partial', ['content' => $array['template']])
+```
+
+To sovle this you can first store the value in a variable:
+
+```php
+@php $template = $array['template']; @endphp
+@include('partial', ['content' => $template])
+```
+
 ## Credits
 
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
