@@ -82,6 +82,71 @@ STRING;
     }
 
     /**
+     * @param array<string> $allVariablesList
+     */
+    public function inlineInclude(
+        string $filePath,
+        string $fileContents,
+        array $allVariablesList,
+        bool $addPHPOpeningTag
+    ): string {
+        // Precompile contents to add template file name and line numbers
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
+            ->completeLineCommentsToBladeContents($filePath, $fileContents);
+
+        // Extract PHP content from HTML and PHP mixed content
+        $compiledBlade = $this->bladeCompiler->compileString($fileContents);
+        $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade, $addPHPOpeningTag);
+
+        // Recursively fetch and compile includes
+        foreach ($this->getIncludes($rawPhpContent) as $include) {
+            try {
+                $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
+                $includedContent = $this->inlineInclude(
+                    $includedFilePath,
+                    $this->fileSystem->get($includedFilePath),
+                    array_unique([...$allVariablesList, ...array_keys($include->getVariablesAndValues())]),
+                    false
+                );
+            } catch (Throwable) {
+                $includedContent = '';
+            }
+
+            $includedViewVariables = implode(
+                PHP_EOL,
+                array_map(
+                    static fn (string $key, string $value): string => '$' . $key . ' = ' . $value . ';',
+                    array_keys($include->getVariablesAndValues()),
+                    $include->getVariablesAndValues()
+                )
+            );
+
+            $includeVariables = $allVariablesList;
+            foreach ($include->getVariablesAndValues() as $expresion) {
+                preg_match_all('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)/s', $expresion, $variableNames);
+                $includeVariables = [...$includeVariables, ...$variableNames[1]];
+            }
+
+            $usedVariablesString = implode(
+                ', ',
+                array_map(static fn (string $variable): string => '$' . $variable, array_unique($includeVariables))
+            );
+            $rawPhpContent = preg_replace(
+                sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())),
+                sprintf(
+                    self::INCLUDED_CONTENT_PLACE_HOLDER,
+                    $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',
+                    $includedViewVariables,
+                    $includedContent
+                ),
+                $rawPhpContent
+            ) ?? $rawPhpContent;
+        }
+
+        return $rawPhpContent;
+    }
+
+    /**
      * @param array<VariableAndType> $variablesAndTypes
      */
     public function compileContent(
@@ -91,73 +156,12 @@ STRING;
     ): PhpFileContentsWithLineMap {
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
-        // Precompile contents to add template file name and line numbers
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
-            ->completeLineCommentsToBladeContents($filePath, $fileContents);
-
-        // Extract PHP content from HTML and PHP mixed content
-        $compiledBlade = $this->bladeCompiler->compileString($fileContents);
-        $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade);
-
         $allVariablesList = array_map(
             static fn (VariableAndType $variableAndType): string => $variableAndType->getVariable(),
             $variablesAndTypes
         );
 
-        // Recursively fetch and compile includes
-        while ($includes = $this->getIncludes($rawPhpContent)) {
-            foreach ($includes as $include) {
-                try {
-                    $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
-                    $includedFileContents = $this->fileSystem->get($includedFilePath);
-
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler
-                        ->completeLineCommentsToBladeContents($includedFilePath, $includedFileContents);
-                    $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
-                    $includedContent = $this->phpContentExtractor->extract($compiledContent, false);
-                } catch (Throwable) {
-                    $includedContent = '';
-                }
-
-                $includedViewVariables = implode(
-                    PHP_EOL,
-                    array_map(
-                        static fn (string $key, string $value): string => '$' . $key . ' = ' . $value . ';',
-                        array_keys($include->getVariablesAndValues()),
-                        $include->getVariablesAndValues()
-                    )
-                );
-
-                $includeVariables = $allVariablesList;
-                foreach ($include->getVariablesAndValues() as $expresion) {
-                    preg_match_all('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)/s', $expresion, $variableNames);
-                    $includeVariables = [...$includeVariables, ...$variableNames[1]];
-                }
-
-                $usedVariablesString = implode(
-                    ', ',
-                    array_map(static fn (string $variable): string => '$' . $variable, array_unique($includeVariables))
-                );
-                $rawPhpContent = preg_replace(
-                    sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())),
-                    sprintf(
-                        self::INCLUDED_CONTENT_PLACE_HOLDER,
-                        $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',
-                        $includedViewVariables,
-                        $includedContent
-                    ),
-                    $rawPhpContent
-                ) ?? $rawPhpContent;
-
-                foreach (array_keys($include->getVariablesAndValues()) as $variable) {
-                    if (in_array($variable, $allVariablesList, true)) {
-                        continue;
-                    }
-
-                    $allVariablesList[] = $variable;
-                }
-            }
-        }
+        $rawPhpContent = $this->inlineInclude($filePath, $fileContents, $allVariablesList, true);
 
         $decoratedPhpContent = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
         $phpLinesToTemplateLines = $this->phpLineToTemplateLineResolver->resolve($decoratedPhpContent);
