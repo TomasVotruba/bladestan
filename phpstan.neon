@@ -23,3 +23,8 @@ parameters:
 
         # most likely exists in every laravel project
         - '#class Illuminate\\Foundation\\Application#'
+
+        # test fixture where this is expected
+        -
+            message: '#File ends with a trailing whitespace#'
+            path: tests/Rules/templates/empty.blade.php

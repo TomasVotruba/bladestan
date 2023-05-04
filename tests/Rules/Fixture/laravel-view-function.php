@@ -38,4 +38,6 @@ view('include_with_parameters', [
 
 view('static_content');
 
+view('empty');
+
 view('nested-foreach');
