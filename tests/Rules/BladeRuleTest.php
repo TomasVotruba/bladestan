@@ -65,7 +65,7 @@ final class BladeRuleTest extends RuleTestCase
                 ['Binary operation "+" between string and \'bar\' results in an error.', 35],
                 ['If condition is always true.', 35],
                 ['Binary operation "+" between string and \'bar\' results in an error.', 35],
-                ['Variable $foos might not be defined.', 41],
+                ['Variable $foos might not be defined.', 43],
             ],
         ];
 
