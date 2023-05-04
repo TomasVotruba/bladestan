@@ -41,3 +41,5 @@ view('static_content');
 view('empty');
 
 view('nested-foreach');
+
+view('foreach-include-loop');
