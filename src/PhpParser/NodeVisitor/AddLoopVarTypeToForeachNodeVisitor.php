@@ -60,10 +60,10 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $assing = new Expression(new Assign(new Variable('loop'), new New_(new FullyQualified(Loop::class))));
+        $assign = new Expression(new Assign(new Variable('loop'), new New_(new FullyQualified(Loop::class))));
 
         // Add `$loop` var as the first statement
-        array_unshift($node->stmts, $assing);
+        array_unshift($node->stmts, $assign);
 
         // `endforeach` also has a doc comment. Remove that before adding our unset.
         array_pop($node->stmts);
