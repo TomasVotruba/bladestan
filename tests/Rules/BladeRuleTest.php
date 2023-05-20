@@ -78,6 +78,14 @@ final class BladeRuleTest extends RuleTestCase
             ['Binary operation "+" between string and \'bar\' results in an error.', 9],
         ]];
 
+        yield [__DIR__ . '/Fixture/laravel-component-method.php', [
+            ['Binary operation "+" between string and 10 results in an error.', 18],
+        ]];
+
+        yield [__DIR__ . '/Fixture/laravel-component-function.php', [
+            ['Binary operation "+" between string and 10 results in an error.', 18],
+        ]];
+
         yield [
             __DIR__ . '/Fixture/laravel-view-include.php',
             [['Binary operation "+" between string and \'bar\' results in an error.', 9]],

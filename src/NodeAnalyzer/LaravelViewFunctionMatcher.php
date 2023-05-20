@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Support\HtmlString;
+use Illuminate\View\Component;
+use Illuminate\View\ComponentAttributeBag;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
@@ -58,6 +65,13 @@ final class LaravelViewFunctionMatcher
         $parametersArray->items = $this->magicViewWithCallParameterResolver->resolve(
             $funcCall
         ) + $parametersArray->items;
+
+        if ($scope->isInClass() && $scope->getClassReflection()->is(Component::class)) {
+            $type = new New_(new FullyQualified(HtmlString::class));
+            $parametersArray->items[] = new ArrayItem($type, new String_('slot'));
+            $type = new New_(new FullyQualified(ComponentAttributeBag::class));
+            $parametersArray->items[] = new ArrayItem($type, new String_('attributes'));
+        }
 
         $result = [];
         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
