@@ -6,11 +6,18 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
+use Illuminate\Support\HtmlString;
+use Illuminate\View\Component;
+use Illuminate\View\ComponentAttributeBag;
 use Illuminate\View\Factory;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ThisType;
@@ -49,7 +56,11 @@ final class BladeViewMethodsMatcher
 
         // narrow response
         if ($calledOnType instanceof ThisType) {
-            $calledOnType = new ObjectType($calledOnType->getClassName());
+            $calledOnType = $calledOnType->getStaticObjectType();
+        }
+
+        if ($calledOnType instanceof ThisType) {
+            $calledOnType = $calledOnType->getStaticObjectType();
         }
 
         if (! $this->isCalledOnTypeABladeView($calledOnType, $methodName)) {
@@ -74,6 +85,13 @@ final class BladeViewMethodsMatcher
             $parametersArray = new Array_();
         } else {
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($arg, $scope);
+        }
+
+        if ($calledOnType instanceof ObjectType && $calledOnType->isInstanceOf(Component::class)->yes()) {
+            $type = new New_(new FullyQualified(HtmlString::class));
+            $parametersArray->items[] = new ArrayItem($type, new String_('slot'));
+            $type = new New_(new FullyQualified(ComponentAttributeBag::class));
+            $parametersArray->items[] = new ArrayItem($type, new String_('attributes'));
         }
 
         $result = [];
@@ -105,6 +123,10 @@ final class BladeViewMethodsMatcher
         }
 
         if ($objectType->isSuperTypeOf(new ObjectType(ResponseFactory::class))->yes()) {
+            return $methodName === 'view';
+        }
+
+        if ($objectType instanceof ObjectType && $objectType->isInstanceOf(Component::class)->yes()) {
             return $methodName === 'view';
         }
 
