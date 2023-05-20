@@ -6,6 +6,7 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
@@ -112,6 +113,24 @@ final class BladeViewMethodsMatcher
         return $methodCall->name->name;
     }
 
+    private function isClassWithViewMethod(Type $objectType): bool
+    {
+        if ($objectType->isSuperTypeOf(new ObjectType(ResponseFactory::class))->yes()) {
+            return true;
+        }
+
+        if ($objectType instanceof ObjectType) {
+            if ($objectType->isInstanceOf(Component::class)->yes()) {
+                return true;
+            }
+            if ($objectType->isInstanceOf(Mailable::class)->yes()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function isCalledOnTypeABladeView(Type $objectType, string $methodName): bool
     {
         if ($objectType->isSuperTypeOf(new ObjectType(Factory::class))->yes()) {
@@ -122,11 +141,7 @@ final class BladeViewMethodsMatcher
             return $methodName === self::MAKE;
         }
 
-        if ($objectType->isSuperTypeOf(new ObjectType(ResponseFactory::class))->yes()) {
-            return $methodName === 'view';
-        }
-
-        if ($objectType instanceof ObjectType && $objectType->isInstanceOf(Component::class)->yes()) {
+        if ($this->isClassWithViewMethod($objectType)) {
             return $methodName === 'view';
         }
 
