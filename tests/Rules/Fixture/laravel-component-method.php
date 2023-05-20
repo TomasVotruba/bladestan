@@ -6,7 +6,6 @@ namespace LaravelComponentMethod;
 
 use Closure;
 use Illuminate\View\Component;
-use Luxplus\Core\Database\Model\Languages\Language;
 
 class MyComponent extends Component
 {
