@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaravelMailableMethod;
 
-use Closure;
 use Illuminate\Mail\Mailable;
 
 class MyMailable extends Mailable

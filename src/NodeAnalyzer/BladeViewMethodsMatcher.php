@@ -60,10 +60,6 @@ final class BladeViewMethodsMatcher
             $calledOnType = $calledOnType->getStaticObjectType();
         }
 
-        if ($calledOnType instanceof ThisType) {
-            $calledOnType = $calledOnType->getStaticObjectType();
-        }
-
         if (! $this->isCalledOnTypeABladeView($calledOnType, $methodName)) {
             return [];
         }

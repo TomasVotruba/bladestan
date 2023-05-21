@@ -15,8 +15,6 @@ final class ErrorFilter
      * @var string[]
      */
     private const ERRORS_TO_IGNORE_REGEXES = [
-        '#Call to function unset\(\) contains undefined variable \$loop#',
-        '#Variable \$loop in PHPDoc tag @var does not exist#',
         '#Anonymous function has an unused use (.*?)#',
         '#Variable \$__env might not be defined#',
         // e() function for render can accept more values than strings
