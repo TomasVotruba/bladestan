@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
-use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\New_;

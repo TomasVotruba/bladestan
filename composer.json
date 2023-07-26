@@ -17,7 +17,8 @@
         "rector/rector": "^0.15.20",
         "laravel/framework": "^10.2",
         "symplify/easy-ci": "^11.2",
-        "tracy/tracy": "^2.9"
+        "tracy/tracy": "^2.9",
+        "tomasvotruba/class-leak": "*"
     },
     "autoload": {
         "psr-4": {

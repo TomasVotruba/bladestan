@@ -16,7 +16,6 @@ return static function (RectorConfig $rectorConfig): void {
         // configs
         __DIR__ . '/ecs.php',
         __DIR__ . '/rector.php',
-        __DIR__ . '/easy-ci.php',
     ]);
 
     $rectorConfig->rules([FinalizeClassesWithoutChildrenRector::class]);
