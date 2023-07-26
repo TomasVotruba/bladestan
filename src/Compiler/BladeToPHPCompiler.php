@@ -33,16 +33,16 @@ use Webmozart\Assert\Assert;
 final class BladeToPHPCompiler
 {
     /**
-     * @see https://regex101.com/r/8wK28k/1
+     * @see https://regex101.com/r/2GrCYu/1
      * @var string
      */
-    private const VIEW_INCLUDE_REGEX = '/\$__env->make\(\'(.*?)\',( \[(.*?)?\],| \$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*?,)? \\\\Illuminate\\\\Support\\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\)/s';
+    private const VIEW_INCLUDE_REGEX = '/\$__env->make\( *\'(.*?)\' *, *(\[(.*?)?\] *,|\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*? *,)? *\\\\Illuminate\\\\Support\\\\Arr::except\( *get_defined_vars\(\) *, *\[ *\'__data\' *, *\'__path\' *] *\) *\)->render\(\)/s';
 
     /**
-     * @see https://regex101.com/r/8wK28k/1
+     * @see https://regex101.com/r/2GrCYu/1
      * @var string
      */
-    private const VIEW_INCLUDE_REPLACE_REGEX = '/echo \$__env->make\(\'%s\',( \[(.*?)?\],| \$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*?,)? \\\\Illuminate\\\\Support\\\\Arr::except\(get_defined_vars\(\), \[\'__data\', \'__path\']\)\)->render\(\);/s';
+    private const VIEW_INCLUDE_REPLACE_REGEX = '/echo \$__env->make\( *\'%s\' *, *(\[(.*?)?\] *,|\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*? *,)? *\\\\Illuminate\\\\Support\\\\Arr::except\( *get_defined_vars\(\) *, *\[ *\'__data\' *, *\'__path\' *] *\) *\)->render\(\);/s';
 
     /**
      * @var string
