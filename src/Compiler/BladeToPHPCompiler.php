@@ -99,13 +99,15 @@ STRING;
         $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade, $addPHPOpeningTag);
 
         // Recursively fetch and compile includes
-        foreach ($this->getIncludes($rawPhpContent) as $include) {
+        foreach ($this->getIncludes($rawPhpContent) as $includedViewAndVariable) {
             try {
-                $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
+                $includedFilePath = $this->fileViewFinder->find($includedViewAndVariable->getIncludedViewName());
                 $includedContent = $this->inlineInclude(
                     $includedFilePath,
                     $this->fileSystem->get($includedFilePath),
-                    array_unique([...$allVariablesList, ...array_keys($include->getVariablesAndValues())]),
+                    array_unique(
+                        [...$allVariablesList, ...array_keys($includedViewAndVariable->getVariablesAndValues())]
+                    ),
                     false
                 );
             } catch (Throwable) {
@@ -116,14 +118,14 @@ STRING;
                 PHP_EOL,
                 array_map(
                     static fn (string $key, string $value): string => '$' . $key . ' = ' . $value . ';',
-                    array_keys($include->getVariablesAndValues()),
-                    $include->getVariablesAndValues()
+                    array_keys($includedViewAndVariable->getVariablesAndValues()),
+                    $includedViewAndVariable->getVariablesAndValues()
                 )
             );
 
             $includeVariables = $allVariablesList;
-            foreach ($include->getVariablesAndValues() as $expresion) {
-                preg_match_all('/\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)/s', $expresion, $variableNames);
+            foreach ($includedViewAndVariable->getVariablesAndValues() as $expresion) {
+                preg_match_all('#\$([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]+)#s', $expresion, $variableNames);
                 $includeVariables = [...$includeVariables, ...$variableNames[1]];
             }
 
@@ -132,7 +134,7 @@ STRING;
                 array_map(static fn (string $variable): string => '$' . $variable, array_unique($includeVariables))
             );
             $rawPhpContent = preg_replace(
-                sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($include->getIncludedViewName())),
+                sprintf(self::VIEW_INCLUDE_REPLACE_REGEX, preg_quote($includedViewAndVariable->getIncludedViewName())),
                 sprintf(
                     self::INCLUDED_CONTENT_PLACE_HOLDER,
                     $usedVariablesString !== '' ? sprintf(self::USE_PLACEHOLDER, $usedVariablesString) : '',

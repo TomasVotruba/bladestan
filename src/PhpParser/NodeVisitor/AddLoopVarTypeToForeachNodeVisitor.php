@@ -25,7 +25,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node): ?Node
     {
         if ($node instanceof Foreach_) {
-            array_push($this->loopStack, true);
+            $this->loopStack[] = true;
         }
 
         return $node;
@@ -41,7 +41,7 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
         }
 
         array_pop($this->loopStack);
-        if (count($this->loopStack) !== 0) {
+        if ($this->loopStack !== []) {
             return null;
         }
 
@@ -59,10 +59,10 @@ final class AddLoopVarTypeToForeachNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $assign = new Expression(new Assign(new Variable('loop'), new New_(new FullyQualified(Loop::class))));
+        $expression = new Expression(new Assign(new Variable('loop'), new New_(new FullyQualified(Loop::class))));
 
         // Add `$loop` var as the first statement
-        array_unshift($node->stmts, $assign);
+        array_unshift($node->stmts, $expression);
 
         // `endforeach` also has a doc comment. Remove that before adding our unset.
         array_pop($node->stmts);

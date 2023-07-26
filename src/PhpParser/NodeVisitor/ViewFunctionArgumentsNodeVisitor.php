@@ -14,9 +14,12 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt;
 use PhpParser\NodeVisitorAbstract;
-use PHPStan\ShouldNotHappenException;
+use TomasVotruba\Bladestan\Exception\ShouldNotHappenException;
 use Webmozart\Assert\Assert;
 
+/**
+ * @api part of phpstan node visitors
+ */
 final class ViewFunctionArgumentsNodeVisitor extends NodeVisitorAbstract
 {
     /**

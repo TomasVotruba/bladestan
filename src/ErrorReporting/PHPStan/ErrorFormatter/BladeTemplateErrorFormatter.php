@@ -13,13 +13,13 @@ use Symfony\Component\Console\Command\Command;
 
 final class BladeTemplateErrorFormatter implements ErrorFormatter
 {
-    private SimpleRelativePathHelper $relativePathHelper;
+    private readonly SimpleRelativePathHelper $simpleRelativePathHelper;
 
     public function __construct()
     {
         /** @var string $currentWorkingDirectory */
         $currentWorkingDirectory = getcwd();
-        $this->relativePathHelper = new SimpleRelativePathHelper($currentWorkingDirectory);
+        $this->simpleRelativePathHelper = new SimpleRelativePathHelper($currentWorkingDirectory);
     }
 
     /**
@@ -58,7 +58,7 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
                 $templateLine = $errorMetadata['template_line'] ?? null;
 
                 if ($templateFilePath && $templateLine) {
-                    $relativeTemplateFileLine = $this->relativePathHelper->getRelativePath(
+                    $relativeTemplateFileLine = $this->simpleRelativePathHelper->getRelativePath(
                         $templateFilePath
                     ) . ':' . $templateLine;
 
@@ -66,7 +66,7 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
                 }
             }
 
-            $relativeFilePath = $this->relativePathHelper->getRelativePath($file);
+            $relativeFilePath = $this->simpleRelativePathHelper->getRelativePath($file);
             $outputStyle->table(['Line', $relativeFilePath], $rows);
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\PhpParser\NodeVisitor;
 
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
@@ -36,14 +37,14 @@ final class RemoveEscapeFunctionNodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($funcCallExp->getArgs()[0]->getDocComment() !== null) {
+        if ($funcCallExp->getArgs()[0]->getDocComment() instanceof Doc) {
             $docNop = new Nop();
             $docNop->setDocComment($funcCallExp->getArgs()[0]->getDocComment());
 
             return [$docNop, new Echo_([$funcCallExp->getArgs()[0]->value])];
         }
 
-        if ($node->getDocComment() !== null) {
+        if ($node->getDocComment() instanceof Doc) {
             $docNop = new Nop();
             $docNop->setDocComment($node->getDocComment());
 
