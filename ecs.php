@@ -13,7 +13,6 @@ return static function (ECSConfig $ecsConfig): void {
         // configs
         __DIR__ . '/ecs.php',
         __DIR__ . '/rector.php',
-        __DIR__ . '/easy-ci.php',
     ]);
     $ecsConfig->skip(['*/Fixture/*']);
     // this way you can add sets - group of rules

@@ -9,6 +9,9 @@ use Illuminate\View\FileViewFinder;
 use TomasVotruba\Bladestan\Configuration\Configuration;
 use TomasVotruba\Bladestan\Support\DirectoryHelper;
 
+/**
+ * @api factory service in config
+ */
 final class FileViewFinderFactory
 {
     public function __construct(

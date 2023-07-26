@@ -7,6 +7,9 @@ namespace TomasVotruba\Bladestan\Laravel\View;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 
+/**
+ * @api factory service in config
+ */
 final class BladeCompilerFactory
 {
     public function create(): BladeCompiler

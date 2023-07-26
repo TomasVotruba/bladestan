@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer;
 
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PHPStan\Analyser\Scope;
@@ -26,7 +27,7 @@ final class TemplateVariableTypesResolver
                 continue;
             }
 
-            if ($arrayItem->key === null) {
+            if (! $arrayItem->key instanceof Expr) {
                 continue;
             }
 

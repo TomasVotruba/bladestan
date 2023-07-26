@@ -63,7 +63,7 @@ final class ArrayStringToArrayConverter
         foreach ($array->items as $item) {
             assert($item instanceof ArrayItem);
 
-            if ($item->key === null) {
+            if (! $item->key instanceof Expr) {
                 continue;
             }
 
