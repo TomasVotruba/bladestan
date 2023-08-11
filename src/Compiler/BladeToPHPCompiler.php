@@ -235,12 +235,7 @@ STRING;
             return;
         }
 
-        // Hack to make the compiler work
-        $application = new Application($currentWorkingDirectory);
-        $application->bind(
-            \Illuminate\Contracts\Foundation\Application::class,
-            static fn (): Application => $application
-        );
+        $application = Application::getInstance();
         $application->bind(
             Factory::class,
             fn (): \Illuminate\View\Factory => new \Illuminate\View\Factory(
