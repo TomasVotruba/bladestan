@@ -7,6 +7,7 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
@@ -115,17 +116,13 @@ final class BladeViewMethodsMatcher
             return true;
         }
 
-        if ($objectType instanceof ObjectType) {
-            if ($objectType->isInstanceOf(Component::class)->yes()) {
-                return true;
-            }
-
-            if ($objectType->isInstanceOf(Mailable::class)->yes()) {
-                return true;
-            }
+        if (! $objectType instanceof ObjectType) {
+            return false;
         }
 
-        return false;
+        return $objectType->isInstanceOf(Component::class)->yes()
+            || $objectType->isInstanceOf(Mailable::class)->yes()
+            || $objectType->isInstanceOf(MailMessage::class)->yes();
     }
 
     private function isCalledOnTypeABladeView(Type $objectType, string $methodName): bool
