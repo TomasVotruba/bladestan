@@ -38,8 +38,9 @@
         }
     },
     "scripts": {
-        "check-cs": "vendor/bin/ecs",
-        "fix-cs": "vendor/bin/ecs --fix",
-        "phpstan": "vendor/bin/phpstan"
+        "check-cs": "ecs",
+        "fix-cs": "ecs --fix",
+        "phpstan": "phpstan",
+        "test": "phpunit"
     }
 }

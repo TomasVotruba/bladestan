@@ -34,6 +34,11 @@ final class BladeViewMethodsMatcher
     private const MAKE = 'make';
 
     /**
+     * @var string
+     */
+    public const VIEW = 'view';
+
+    /**
      * @var string[]
      */
     private const VIEW_FACTORY_METHOD_NAMES = ['make', 'renderWhen', 'renderUnless'];
@@ -136,7 +141,7 @@ final class BladeViewMethodsMatcher
         }
 
         if ($this->isClassWithViewMethod($objectType)) {
-            return $methodName === 'view';
+            return $methodName === self::VIEW;
         }
 
         return false;
@@ -144,50 +149,49 @@ final class BladeViewMethodsMatcher
 
     private function findTemplateNameArg(string $methodName, MethodCall $methodCall): ?Arg
     {
-        if (count($methodCall->getArgs()) < 1) {
+        $args = $methodCall->getArgs();
+
+        if (count($args) === 0) {
             return null;
         }
 
-        // `make` just takes view name and data as arguments
-        if ($methodName === self::MAKE) {
-            return $methodCall->getArgs()[0];
+        // Those methods take the view name as the first argument
+        if ($methodName === self::MAKE || $methodName === self::VIEW) {
+            return $args[0];
         }
 
         // Here it can just be `renderWhen` or `renderUnless`
-        if (count($methodCall->getArgs()) < 2) {
+        if (count($args) < 2) {
             return null;
         }
 
-        if ($methodName === 'view') {
-            return $methodCall->getArgs()[0];
-        }
-
         // Second argument is the template name
-        return $methodCall->getArgs()[1];
+        return $args[1];
     }
 
     private function findTemplateDataArgument(string $methodName, MethodCall $methodCall): ?Arg
     {
-        if (count($methodCall->getArgs()) < 2) {
+        $args = $methodCall->getArgs();
+
+        if (count($args) < 2) {
             return null;
         }
 
-        if ($methodName === 'view') {
-            $args = $methodCall->getArgs();
+        if ($methodName === self::VIEW) {
             return $args[1];
         }
 
         // `make` just takes view name and data as arguments
         if ($methodName === self::MAKE) {
-            return $methodCall->getArgs()[1];
+            return $args[1];
         }
 
         // Here it can just be `renderWhen` or `renderUnless`
-        if (count($methodCall->getArgs()) < 3) {
+        if (count($args) < 3) {
             return null;
         }
 
         // Second argument is the template data
-        return $methodCall->getArgs()[2];
+        return $args[2];
     }
 }

@@ -76,6 +76,8 @@ final class BladeRuleTest extends RuleTestCase
         yield [__DIR__ . '/Fixture/laravel-response-function.php', [
             ['Binary operation "+" between string and 10 results in an error.', 9],
             ['Binary operation "+" between string and \'bar\' results in an error.', 9],
+            ['Variable $foo might not be defined.', 13],
+            ['Undefined variable: $foo', 13],
         ]];
 
         yield [__DIR__ . '/Fixture/laravel-component-method.php', [
