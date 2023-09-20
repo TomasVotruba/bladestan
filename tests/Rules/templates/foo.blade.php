@@ -1,6 +1,6 @@
 <html>
 <body>
-@if (1 ===1 )
+@if (1 === 1)
     {{ $foo + 10 }}
 @endif
 
