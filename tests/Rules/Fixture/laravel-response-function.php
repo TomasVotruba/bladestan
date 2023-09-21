@@ -9,3 +9,5 @@ use function response;
 response()->view('foo', [
     'foo' => 'bar',
 ]);
+
+response()->view('foo');
