@@ -35,7 +35,7 @@ final class BladeRule implements Rule
 
     public function getNodeType(): string
     {
-        return Node\Expr\CallLike::class;
+        return Node::class;
     }
 
     public function processNode(Node $node, Scope $scope): array
