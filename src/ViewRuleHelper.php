@@ -17,6 +17,7 @@ use TomasVotruba\Bladestan\TemplateCompiler\PHPStan\FileAnalyserProvider;
 use TomasVotruba\Bladestan\TemplateCompiler\TypeAnalyzer\TemplateVariableTypesResolver;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
+use TomasVotruba\Bladestan\ValueObject\CompiledTemplate;
 
 final class ViewRuleHelper
 {
@@ -48,9 +49,18 @@ final class ViewRuleHelper
                 $scope
             );
 
-            $currentRuleErrors = $this->processTemplateFilePath(
+            $compiledTemplate = $this->compileToPhp(
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
+                $scope->getFile(),
+            );
+
+            if ($compiledTemplate === null) {
+                continue;
+            }
+
+            $currentRuleErrors = $this->processTemplateFilePath(
+                $compiledTemplate,
                 $scope->getFile(),
                 $call->getLine()
             );
@@ -62,38 +72,20 @@ final class ViewRuleHelper
     }
 
     /**
-     * @param VariableAndType[] $variablesAndTypes
-     *
      * @return RuleError[]
      */
     private function processTemplateFilePath(
-        string $templateFilePath,
-        array $variablesAndTypes,
+        CompiledTemplate $compiledTemplate,
         string $filePath,
         int $phpLine
     ): array {
-        $fileContents = file_get_contents($templateFilePath);
-        if ($fileContents === false) {
-            return [];
-        }
-
-        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent(
-            $templateFilePath,
-            $fileContents,
-            $variablesAndTypes
-        );
-
-        $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
-
-        $tmpFilePath = sys_get_temp_dir() . '/' . md5($filePath) . '-blade-compiled.php';
-        file_put_contents($tmpFilePath, $phpFileContents);
 
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
 
         $fileAnalyserResult = $fileAnalyser->analyseFile(
-            $tmpFilePath,
+            $compiledTemplate->getFilePath(),
             [],
             $this->registry,
             $collectorsRegistry,
@@ -109,8 +101,35 @@ final class ViewRuleHelper
             $usefulRuleErrors,
             $phpLine,
             $filePath,
-            $phpFileContentsWithLineMap,
+            $compiledTemplate->getLineMap(),
         );
+    }
+
+    /**
+     * @param VariableAndType[] $variablesAndTypes
+     */
+    private function compileToPhp(
+        string $templateFilePath,
+        array $variablesAndTypes,
+        string $filePath,
+    ): ?CompiledTemplate {
+        $fileContents = file_get_contents($templateFilePath);
+        if ($fileContents === false) {
+            return null;
+        }
+
+        $phpFileContentsWithLineMap = $this->bladeToPhpCompiler->compileContent(
+            $templateFilePath,
+            $fileContents,
+            $variablesAndTypes
+        );
+
+        $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
+
+        $tmpFilePath = sys_get_temp_dir() . '/' . md5($filePath) . '-blade-compiled.php';
+        file_put_contents($tmpFilePath, $phpFileContents);
+
+        return new CompiledTemplate($tmpFilePath, $phpFileContentsWithLineMap);
     }
 
     public function setRegistry(Registry $registry): void
