@@ -53,6 +53,7 @@ final class ViewRuleHelper
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
                 $scope->getFile(),
+                $call->getLine()
             );
 
             if ($compiledTemplate === null) {
@@ -61,8 +62,6 @@ final class ViewRuleHelper
 
             $currentRuleErrors = $this->processTemplateFilePath(
                 $compiledTemplate,
-                $scope->getFile(),
-                $call->getLine()
             );
 
             $ruleErrors = array_merge($ruleErrors, $currentRuleErrors);
@@ -75,16 +74,14 @@ final class ViewRuleHelper
      * @return RuleError[]
      */
     private function processTemplateFilePath(
-        CompiledTemplate $compiledTemplate,
-        string           $bladeFilePath,
-        int              $phpLine
+        CompiledTemplate $compiledTemplate
     ): array {
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
 
         $fileAnalyserResult = $fileAnalyser->analyseFile(
-            $compiledTemplate->getFilePath(),
+            $compiledTemplate->getPhpFilePath(),
             [],
             $this->registry,
             $collectorsRegistry,
@@ -98,8 +95,8 @@ final class ViewRuleHelper
 
         return $this->templateErrorsFactory->createErrors(
             $usefulRuleErrors,
-            $phpLine,
-            $bladeFilePath,
+            $compiledTemplate->getPhpLine(),
+            $compiledTemplate->getBladeFilePath(),
             $compiledTemplate->getLineMap(),
         );
     }
@@ -111,6 +108,7 @@ final class ViewRuleHelper
         string $templateFilePath,
         array $variablesAndTypes,
         string $filePath,
+        int              $phpLine
     ): ?CompiledTemplate {
         $fileContents = file_get_contents($templateFilePath);
         if ($fileContents === false) {
@@ -128,7 +126,7 @@ final class ViewRuleHelper
         $tmpFilePath = sys_get_temp_dir() . '/' . md5($filePath) . '-blade-compiled.php';
         file_put_contents($tmpFilePath, $phpFileContents);
 
-        return new CompiledTemplate($tmpFilePath, $phpFileContentsWithLineMap);
+        return new CompiledTemplate($filePath, $tmpFilePath, $phpFileContentsWithLineMap, $phpLine);
     }
 
     public function setRegistry(Registry $registry): void
