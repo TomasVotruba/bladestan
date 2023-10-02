@@ -31,7 +31,7 @@ final class TemplateFilePathResolver
 
         $resolvedValue = $this->normalizeName($resolvedValue);
 
-        if (file_exists($resolvedValue)) {
+        if (is_file($resolvedValue)) {
             return [$resolvedValue];
         }
 
