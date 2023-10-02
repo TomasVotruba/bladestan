@@ -79,7 +79,6 @@ final class ViewRuleHelper
         string           $bladeFilePath,
         int              $phpLine
     ): array {
-
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);

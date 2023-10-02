@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\ValueObject;
 
-final class CompiledTemplate {
+final class CompiledTemplate
+{
     public function __construct(
         private readonly string $filePath,
         private readonly PhpFileContentsWithLineMap $lineMap
-    ) {}
+    ) {
+    }
 
     public function getFilePath(): string
     {
@@ -19,5 +21,4 @@ final class CompiledTemplate {
     {
         return $this->lineMap;
     }
-
 }
