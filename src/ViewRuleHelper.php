@@ -60,9 +60,7 @@ final class ViewRuleHelper
                 continue;
             }
 
-            $currentRuleErrors = $this->processTemplateFilePath(
-                $compiledTemplate,
-            );
+            $currentRuleErrors = $this->processTemplateFilePath($compiledTemplate);
 
             $ruleErrors = array_merge($ruleErrors, $currentRuleErrors);
         }
@@ -73,9 +71,8 @@ final class ViewRuleHelper
     /**
      * @return RuleError[]
      */
-    private function processTemplateFilePath(
-        CompiledTemplate $compiledTemplate
-    ): array {
+    private function processTemplateFilePath(CompiledTemplate $compiledTemplate): array
+    {
         $fileAnalyser = $this->fileAnalyserProvider->provide();
 
         $collectorsRegistry = new \PHPStan\Collectors\Registry([]);
