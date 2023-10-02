@@ -76,8 +76,8 @@ final class ViewRuleHelper
      */
     private function processTemplateFilePath(
         CompiledTemplate $compiledTemplate,
-        string $filePath,
-        int $phpLine
+        string           $bladeFilePath,
+        int              $phpLine
     ): array {
 
         $fileAnalyser = $this->fileAnalyserProvider->provide();
@@ -100,7 +100,7 @@ final class ViewRuleHelper
         return $this->templateErrorsFactory->createErrors(
             $usefulRuleErrors,
             $phpLine,
-            $filePath,
+            $bladeFilePath,
             $compiledTemplate->getLineMap(),
         );
     }
