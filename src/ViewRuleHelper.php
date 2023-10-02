@@ -51,7 +51,7 @@ final class ViewRuleHelper
             $currentRuleErrors = $this->processTemplateFilePath(
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
-                $scope,
+                $scope->getFile(),
                 $call->getLine()
             );
 
@@ -69,7 +69,7 @@ final class ViewRuleHelper
     private function processTemplateFilePath(
         string $templateFilePath,
         array $variablesAndTypes,
-        Scope $scope,
+        string $filePath,
         int $phpLine
     ): array {
         $fileContents = file_get_contents($templateFilePath);
@@ -85,7 +85,7 @@ final class ViewRuleHelper
 
         $phpFileContents = $phpFileContentsWithLineMap->getPhpFileContents();
 
-        $tmpFilePath = sys_get_temp_dir() . '/' . md5($scope->getFile()) . '-blade-compiled.php';
+        $tmpFilePath = sys_get_temp_dir() . '/' . md5($filePath) . '-blade-compiled.php';
         file_put_contents($tmpFilePath, $phpFileContents);
 
         $fileAnalyser = $this->fileAnalyserProvider->provide();
@@ -108,7 +108,7 @@ final class ViewRuleHelper
         return $this->templateErrorsFactory->createErrors(
             $usefulRuleErrors,
             $phpLine,
-            $scope->getFile(),
+            $filePath,
             $phpFileContentsWithLineMap,
         );
     }
