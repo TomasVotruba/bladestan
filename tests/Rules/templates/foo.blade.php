@@ -1,7 +1,7 @@
 <html>
 <body>
 @if (1 === 1)
-    {{ $foo + 10 }}
+    {{ number_format($foo + 10) }}
 @endif
 
 @include('bar')
