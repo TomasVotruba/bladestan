@@ -22,7 +22,6 @@ use TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver;
 use TomasVotruba\Bladestan\PhpParser\ArrayStringToArrayConverter;
 use TomasVotruba\Bladestan\PhpParser\NodeVisitor\AddLoopVarTypeToForeachNodeVisitor;
 use TomasVotruba\Bladestan\PhpParser\NodeVisitor\RemoveEnvVariableNodeVisitor;
-use TomasVotruba\Bladestan\PhpParser\NodeVisitor\RemoveEscapeFunctionNodeVisitor;
 use TomasVotruba\Bladestan\PhpParser\SimplePhpParser;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
@@ -180,8 +179,6 @@ STRING;
         $this->traverseStmtsWithVisitors($stmts, [
             // get rid of $__env variables
             new RemoveEnvVariableNodeVisitor(),
-            // get rid of e() function calls
-            new RemoveEscapeFunctionNodeVisitor(),
             new AddLoopVarTypeToForeachNodeVisitor(),
         ]);
 

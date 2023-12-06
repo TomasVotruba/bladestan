@@ -21,7 +21,7 @@ if (isset($errors)) {
         foreach ($__currentLoopData as $error) {
             $loop = new \TomasVotruba\Bladestan\ValueObject\Loop();
             /** file: foo.blade.php, line: 6 */
-            echo $error;
+            echo e($error);
             unset($loop);
         }
         /** file: foo.blade.php, line: 10 */
