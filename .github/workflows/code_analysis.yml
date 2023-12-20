@@ -31,7 +31,7 @@ jobs:
 
                     -
                         name: 'Check Active Classes'
-                        run: vendor/bin/class-leak check src --ansi
+                        run: vendor/bin/class-leak check src --ansi --skip-type=TomasVotruba\\Bladestan\\ErrorReporting\\PHPStan\\ErrorFormatter\\BladeTemplateErrorFormatter
 
         name: ${{ matrix.actions.name }}
         runs-on: ubuntu-latest
