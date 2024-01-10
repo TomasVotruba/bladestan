@@ -47,7 +47,8 @@ final class LaravelViewFunctionMatcher
             return [];
         }
 
-        $template = $funcCall->getArgs()[0]->value;
+        $template = $funcCall->getArgs()[0]
+->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
         if ($resolvedTemplateFilePaths === []) {

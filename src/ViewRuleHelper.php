@@ -68,6 +68,11 @@ final class ViewRuleHelper
         return $ruleErrors;
     }
 
+    public function setRegistry(Registry $registry): void
+    {
+        $this->registry = $registry;
+    }
+
     /**
      * @return RuleError[]
      */
@@ -124,10 +129,5 @@ final class ViewRuleHelper
         file_put_contents($tmpFilePath, $phpFileContents);
 
         return new CompiledTemplate($filePath, $tmpFilePath, $phpFileContentsWithLineMap, $phpLine);
-    }
-
-    public function setRegistry(Registry $registry): void
-    {
-        $this->registry = $registry;
     }
 }

@@ -31,12 +31,12 @@ final class BladeViewMethodsMatcher
     /**
      * @var string
      */
-    private const MAKE = 'make';
+    public const VIEW = 'view';
 
     /**
      * @var string
      */
-    public const VIEW = 'view';
+    private const MAKE = 'make';
 
     /**
      * @var string[]
