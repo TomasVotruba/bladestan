@@ -56,7 +56,7 @@ final class ViewRuleHelper
                 $call->getLine()
             );
 
-            if ($compiledTemplate === null) {
+            if (! $compiledTemplate instanceof CompiledTemplate) {
                 continue;
             }
 
@@ -66,6 +66,11 @@ final class ViewRuleHelper
         }
 
         return $ruleErrors;
+    }
+
+    public function setRegistry(Registry $registry): void
+    {
+        $this->registry = $registry;
     }
 
     /**
@@ -105,7 +110,7 @@ final class ViewRuleHelper
         string $templateFilePath,
         array $variablesAndTypes,
         string $filePath,
-        int              $phpLine
+        int $phpLine
     ): ?CompiledTemplate {
         $fileContents = file_get_contents($templateFilePath);
         if ($fileContents === false) {
@@ -124,10 +129,5 @@ final class ViewRuleHelper
         file_put_contents($tmpFilePath, $phpFileContents);
 
         return new CompiledTemplate($filePath, $tmpFilePath, $phpFileContentsWithLineMap, $phpLine);
-    }
-
-    public function setRegistry(Registry $registry): void
-    {
-        $this->registry = $registry;
     }
 }

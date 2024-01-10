@@ -21,9 +21,6 @@ parameters:
         # this package relies havily on the file analyse
         - '#(Calling|Extending|) (.*?) is not covered by backward compatibility promise#'
 
-        # most likely exists in every laravel project
-        - '#class Illuminate\\Foundation\\Application#'
-
         # test fixture where this is expected
         -
             message: '#File ends with a trailing whitespace#'

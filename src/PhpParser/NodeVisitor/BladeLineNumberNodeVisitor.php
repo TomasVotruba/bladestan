@@ -12,17 +12,17 @@ use PhpParser\NodeVisitorAbstract;
 final class BladeLineNumberNodeVisitor extends NodeVisitorAbstract
 {
     /**
+     * @see https://regex101.com/r/GqrJOW/1
+     * @var string
+     */
+    private const TEMPLATE_FILE_NAME_AND_LINE_NUMBER_REGEX = '#/\*\* file: (.*?), line: (\d+) \*/#';
+
+    /**
      * Keyed by PHP line number. And inner array has `fileName` => `templateLineNumber`
      *
      * @var array<int, array<string, int>>
      */
     private array $phpLineToBladeTemplateLineMap = [];
-
-    /**
-     * @see https://regex101.com/r/GqrJOW/1
-     * @var string
-     */
-    private const TEMPLATE_FILE_NAME_AND_LINE_NUMBER_REGEX = '#/\*\* file: (.*?), line: (\d+) \*/#';
 
     /**
      * @param Stmt[] $nodes

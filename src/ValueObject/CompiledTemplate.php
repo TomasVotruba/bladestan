@@ -9,7 +9,7 @@ final class CompiledTemplate
     public function __construct(
         private readonly string $bladeFilePath,
         private readonly string $phpFilePath,
-        private readonly PhpFileContentsWithLineMap $lineMap,
+        private readonly PhpFileContentsWithLineMap $phpFileContentsWithLineMap,
         private readonly int $phpLine,
     ) {
     }
@@ -26,7 +26,7 @@ final class CompiledTemplate
 
     public function getLineMap(): PhpFileContentsWithLineMap
     {
-        return $this->lineMap;
+        return $this->phpFileContentsWithLineMap;
     }
 
     public function getPhpLine(): int

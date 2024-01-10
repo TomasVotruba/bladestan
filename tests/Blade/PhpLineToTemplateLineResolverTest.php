@@ -44,7 +44,8 @@ final class PhpLineToTemplateLineResolverTest extends PHPStanTestCase
                 echo 'foo';
                 /* file: foo.blade.php, line: 6 */
                 echo 'foo';
-PHP,
+PHP
+            ,
             [],
         ];
 
@@ -53,7 +54,8 @@ PHP,
                 <?php
                 /** file: foo.blade.php, line: 5 */
                 echo 'foo';
-PHP,
+PHP
+            ,
             [
                 3 => [
                     'foo.blade.php' => 5,
@@ -68,7 +70,8 @@ PHP,
                 echo 'foo';
                 /** file: foo.blade.php, line: 55 */
                 echo 'bar';
-PHP,
+PHP
+            ,
             [
                 3 => [
                     'foo.blade.php' => 5,
@@ -88,7 +91,8 @@ PHP,
                 echo 'bar';
                 /** file: bar.blade.php, line: 55 */
                 echo 'baz';
-PHP,
+PHP
+            ,
             [
                 3 => [
                     'foo.blade.php' => 5,

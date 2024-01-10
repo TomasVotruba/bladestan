@@ -11,10 +11,18 @@ final class PrivatesAccessor
 {
     public function getPrivateProperty(object $object, string $propertyName): mixed
     {
-        $propertyReflection = $this->resolvePropertyReflection($object, $propertyName);
-        $propertyReflection->setAccessible(true);
+        $reflectionProperty = $this->resolvePropertyReflection($object, $propertyName);
+        $reflectionProperty->setAccessible(true);
 
-        return $propertyReflection->getValue($object);
+        return $reflectionProperty->getValue($object);
+    }
+
+    public function setPrivateProperty(object $object, string $propertyName, mixed $value): void
+    {
+        $reflectionProperty = $this->resolvePropertyReflection($object, $propertyName);
+        $reflectionProperty->setAccessible(true);
+
+        $reflectionProperty->setValue($object, $value);
     }
 
     private function resolvePropertyReflection(object $object, string $propertyName): ReflectionProperty
@@ -30,13 +38,5 @@ final class PrivatesAccessor
 
         $errorMessage = sprintf('Property "$%s" was not found in "%s" class', $propertyName, $object::class);
         throw new RuntimeException($errorMessage);
-    }
-
-    public function setPrivateProperty(object $object, string $propertyName, mixed $value): void
-    {
-        $propertyReflection = $this->resolvePropertyReflection($object, $propertyName);
-        $propertyReflection->setAccessible(true);
-
-        $propertyReflection->setValue($object, $value);
     }
 }

@@ -31,12 +31,12 @@ final class BladeViewMethodsMatcher
     /**
      * @var string
      */
-    private const MAKE = 'make';
+    public const VIEW = 'view';
 
     /**
      * @var string
      */
-    public const VIEW = 'view';
+    private const MAKE = 'make';
 
     /**
      * @var string[]
@@ -125,9 +125,15 @@ final class BladeViewMethodsMatcher
             return false;
         }
 
-        return $objectType->isInstanceOf(Component::class)->yes()
-            || $objectType->isInstanceOf(Mailable::class)->yes()
-            || $objectType->isInstanceOf(MailMessage::class)->yes();
+        if ($objectType->isInstanceOf(Component::class)->yes()) {
+            return true;
+        }
+
+        if ($objectType->isInstanceOf(Mailable::class)->yes()) {
+            return true;
+        }
+
+        return $objectType->isInstanceOf(MailMessage::class)->yes();
     }
 
     private function isCalledOnTypeABladeView(Type $objectType, string $methodName): bool
@@ -151,7 +157,7 @@ final class BladeViewMethodsMatcher
     {
         $args = $methodCall->getArgs();
 
-        if (count($args) === 0) {
+        if ($args === []) {
             return null;
         }
 

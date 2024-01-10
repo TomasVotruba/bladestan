@@ -12,11 +12,6 @@ use TomasVotruba\Bladestan\Rules\BladeRule;
 
 final class BladeRuleTest extends RuleTestCase
 {
-    protected function getRule(): Rule
-    {
-        return self::getContainer()->getByType(BladeRule::class);
-    }
-
     /**
      * @param mixed[] $expectedErrorsWithLines
      */
@@ -103,5 +98,10 @@ final class BladeRuleTest extends RuleTestCase
     public static function getAdditionalConfigFiles(): array
     {
         return [__DIR__ . '/config/configured_extension.neon'];
+    }
+
+    protected function getRule(): Rule
+    {
+        return self::getContainer()->getByType(BladeRule::class);
     }
 }

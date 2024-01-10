@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
@@ -35,7 +36,7 @@ final class BladeRule implements Rule
 
     public function getNodeType(): string
     {
-        return Node\Expr\CallLike::class;
+        return CallLike::class;
     }
 
     public function processNode(Node $node, Scope $scope): array
