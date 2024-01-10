@@ -56,7 +56,7 @@ final class ViewRuleHelper
                 $call->getLine()
             );
 
-            if ($compiledTemplate === null) {
+            if (! $compiledTemplate instanceof CompiledTemplate) {
                 continue;
             }
 
