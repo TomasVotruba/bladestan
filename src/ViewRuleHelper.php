@@ -105,7 +105,7 @@ final class ViewRuleHelper
         string $templateFilePath,
         array $variablesAndTypes,
         string $filePath,
-        int              $phpLine
+        int $phpLine
     ): ?CompiledTemplate {
         $fileContents = file_get_contents($templateFilePath);
         if ($fileContents === false) {

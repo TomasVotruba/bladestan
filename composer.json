@@ -6,9 +6,9 @@
     "keywords": ["static analysis", "phpstan-extension"],
     "require": {
         "php": "^8.1",
-        "illuminate/contracts": "^8.8 || ^9.0 || ^10.0",
-        "illuminate/filesystem": "^8.8 || ^9.0 || ^10.0",
-        "illuminate/view": "^8.8 || ^9.0 || ^10.0",
+        "illuminate/contracts": "^9.0 || ^10.0 || ^11.0",
+        "illuminate/filesystem": "^9.0 || ^10.0 || ^11.0",
+        "illuminate/view": "^9.0 || ^10.0 || ^11.0",
         "phpstan/phpstan": "^1.10"
     },
     "require-dev": {
