@@ -124,12 +124,15 @@ final class BladeViewMethodsMatcher
         if (! $objectType instanceof ObjectType) {
             return false;
         }
+
         if ($objectType->isInstanceOf(Component::class)->yes()) {
             return true;
         }
+
         if ($objectType->isInstanceOf(Mailable::class)->yes()) {
             return true;
         }
+
         return $objectType->isInstanceOf(MailMessage::class)->yes();
     }
 
