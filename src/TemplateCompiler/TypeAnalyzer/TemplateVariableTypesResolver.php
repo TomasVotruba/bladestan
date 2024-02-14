@@ -8,9 +8,11 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PHPStan\Analyser\Scope;
+use PHPStan\BetterReflection\Reflection\Adapter\ReflectionClass;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\Generic\GenericObjectType;
+use PHPStan\Type\Type;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 
 final class TemplateVariableTypesResolver
@@ -18,7 +20,7 @@ final class TemplateVariableTypesResolver
     /**
      * @return VariableAndType[]
      */
-    public function resolveArray(Array_ $array, Scope $scope): array
+    public function resolveArray(Array_ $array, ?Type $calledOnType, Scope $scope): array
     {
         $variableNamesToTypes = [];
 
@@ -45,6 +47,23 @@ final class TemplateVariableTypesResolver
             }
 
             $variableNamesToTypes[] = new VariableAndType($keyName, $variableType);
+        }
+
+        if ($calledOnType) {
+            $calledOnReflection = $calledOnType->getClassReflection();
+            if ($calledOnReflection) {
+                $calledOnNativeReflection = $calledOnReflection->getNativeReflection();
+                if ($calledOnNativeReflection instanceof ReflectionClass) {
+                    foreach ($calledOnNativeReflection->getProperties() as $property) {
+                        if ($property->isPublic()) {
+                            $variableNamesToTypes[] = new VariableAndType(
+                                $property->getName(),
+                                $scope->getType($property)
+                            );
+                        }
+                    }
+                }
+            }
         }
 
         return $variableNamesToTypes;

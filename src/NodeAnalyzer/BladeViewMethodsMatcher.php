@@ -100,7 +100,7 @@ final class BladeViewMethodsMatcher
         $result = [];
 
         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
-            $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $parametersArray);
+            $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $parametersArray, $calledOnType);
         }
 
         return $result;
