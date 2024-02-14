@@ -8,6 +8,7 @@ use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
 use PHPStan\Command\Output;
+use PHPStan\File\RelativePathHelper;
 use PHPStan\File\SimpleRelativePathHelper;
 use Symfony\Component\Console\Command\Command;
 
@@ -15,8 +16,9 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
 {
     private readonly SimpleRelativePathHelper $simpleRelativePathHelper;
 
-    public function __construct()
-    {
+    public function __construct(
+        private RelativePathHelper $relativePathHelper,
+    ) {
         /** @var string $currentWorkingDirectory */
         $currentWorkingDirectory = getcwd();
         $this->simpleRelativePathHelper = new SimpleRelativePathHelper($currentWorkingDirectory);
@@ -27,6 +29,11 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
      */
     public function formatErrors(AnalysisResult $analysisResult, Output $output): int
     {
+        $projectConfigFile = 'phpstan.neon';
+        if ($analysisResult->getProjectConfigFile() !== null) {
+            $projectConfigFile = $this->relativePathHelper->getRelativePath($analysisResult->getProjectConfigFile());
+        }
+
         $outputStyle = $output->getStyle();
 
         if (! $analysisResult->hasErrors() && ! $analysisResult->hasWarnings()) {
@@ -50,6 +57,21 @@ final class BladeTemplateErrorFormatter implements ErrorFormatter
             /** @var Error $error */
             foreach ($errors as $error) {
                 $message = $error->getMessage();
+
+                if ($error->getTip() !== null) {
+                    $tip = $error->getTip();
+                    $tip = str_replace('%configurationFile%', $projectConfigFile, $tip);
+
+                    $message .= "\n";
+                    if (str_contains($tip, "\n")) {
+                        $lines = explode("\n", $tip);
+                        foreach ($lines as $line) {
+                            $message .= '💡 ' . ltrim($line, ' •') . "\n";
+                        }
+                    } else {
+                        $message .= '💡 ' . $tip;
+                    }
+                }
 
                 $rows[] = [(string) $error->getLine(), $message];
 
