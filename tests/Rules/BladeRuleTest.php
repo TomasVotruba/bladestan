@@ -58,6 +58,10 @@ final class BladeRuleTest extends RuleTestCase
             ['Variable $foos might not be defined.', 43],
         ]];
 
+        yield [__DIR__ . '/Fixture/laravel-view-function-view-not-found.php', [
+            ['View \'non-existing\' can not be found.', 3],
+        ]];
+
         yield [__DIR__ . '/Fixture/view-render-int.php', []];
 
         yield [__DIR__ . '/Fixture/skip-form-errors.php', []];
