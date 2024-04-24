@@ -75,8 +75,16 @@ STRING;
         private readonly array $components = [],
     ) {
         // Disable component rendering
+        // It happens before our pre-processer can intercept the compile
         $this->bladeCompiler->withoutComponentTags();
-
+        // Replaces <livewire /> tags with arrays so attributes can be analysed
+        $this->bladeCompiler->precompiler(
+            fn ($string) => (new LivewireTagCompiler($this->bladeCompiler))->compile($string)
+        );
+        // Replaces <x-... /> tags with arrays so attributes can be analysed
+        $this->bladeCompiler->precompiler(
+            fn (string $value) => (new ComponentTagCompiler($this->bladeCompiler))->compile($value)
+        );
         $this->setupBladeComponents();
     }
 
