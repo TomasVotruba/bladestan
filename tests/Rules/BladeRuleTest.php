@@ -88,6 +88,8 @@ final class BladeRuleTest extends RuleTestCase
             ['Binary operation "+" between string and \'bar\' results in an error.', 16],
         ]];
 
+        yield [__DIR__ . '/Fixture/laravel-mailable-public-properties.php', []];
+
         yield [__DIR__ . '/Fixture/laravel-mail_message-method.php', [
             ['Binary operation "+" between string and 10 results in an error.', 16],
             ['Binary operation "+" between string and \'bar\' results in an error.', 16],

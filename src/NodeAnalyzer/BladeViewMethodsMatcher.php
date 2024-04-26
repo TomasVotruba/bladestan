@@ -90,6 +90,18 @@ final class BladeViewMethodsMatcher
             $parametersArray = $this->viewDataParametersAnalyzer->resolveParametersArray($arg, $scope);
         }
 
+        if($calledOnType instanceof ObjectType) {
+            $properties = $calledOnType->getClassReflection()?->getNativeReflection()->getProperties(\ReflectionProperty::IS_PUBLIC) ?? [];
+            foreach($properties as $property) {
+                if ($property->isStatic()) {
+                    continue;
+                }
+                $name = $property->getBetterReflection()->getName();
+                $type = new New_(new FullyQualified($name));
+                $parametersArray->items[] = new ArrayItem($type, new String_($property->name));
+            }
+        }
+
         if ($calledOnType instanceof ObjectType && $calledOnType->isInstanceOf(Component::class)->yes()) {
             $type = new New_(new FullyQualified(HtmlString::class));
             $parametersArray->items[] = new ArrayItem($type, new String_('slot'));
