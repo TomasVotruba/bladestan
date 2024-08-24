@@ -10,6 +10,7 @@ use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
+use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\VerbosityLevel;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 
@@ -20,19 +21,23 @@ final class ViewVariableAnalyzer
      */
     public function resolve(Expr $expr, Scope $scope): Array_
     {
-        $array = new Array_();
+        $parametersArray = new Array_();
 
         $type = $scope->getType($expr);
 
-        $keyTypes = array_map(function ($keyType) {
-            return $keyType->getValue();
+        if (!$type instanceof ConstantArrayType) {
+            return $parametersArray;
+        }
+
+        $keyTypes = array_map(function ($keyType): string {
+            return (string) $keyType->getValue();
         }, $type->getKeyTypes());
 
         foreach (array_combine($keyTypes, $type->getValueTypes()) as $key => $value) {
             VarDocNodeFactory::setDocBlock($key, $value->describe(VerbosityLevel::typeOnly()));
-            $array->items[] = new ArrayItem(new Variable($key), new String_($key));
+            $parametersArray->items[] = new ArrayItem(new Variable($key), new String_($key));
         }
 
-        return $array;
+        return $parametersArray;
     }
 }
