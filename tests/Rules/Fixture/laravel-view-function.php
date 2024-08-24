@@ -41,3 +41,9 @@ view('static_content');
 view('empty');
 
 view('nested-foreach');
+
+$fooBar = [
+    'foo' => 'bar',
+];
+
+view('foo', $fooBar);
