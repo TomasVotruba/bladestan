@@ -25,7 +25,7 @@ final class ViewVariableAnalyzer
 
         $type = $scope->getType($expr);
 
-        if (!$type instanceof ConstantArrayType) {
+        if (! $type instanceof ConstantArrayType) {
             return $parametersArray;
         }
 
