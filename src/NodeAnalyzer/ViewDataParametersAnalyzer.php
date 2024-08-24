@@ -7,19 +7,25 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 
 final class ViewDataParametersAnalyzer
 {
     public function __construct(
-        private readonly CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver
+        private readonly CompactFunctionCallParameterResolver $compactFunctionCallParameterResolver,
+        private readonly ViewVariableAnalyzer $viewVariableAnalyzer,
     ) {
     }
 
     public function resolveParametersArray(Arg $arg, Scope $scope): Array_
     {
         $secondArgValue = $arg->value;
+
+        if ($secondArgValue instanceof Variable) {
+            return $this->viewVariableAnalyzer->resolve($secondArgValue, $scope);
+        }
 
         if ($secondArgValue instanceof Array_) {
             return $secondArgValue;

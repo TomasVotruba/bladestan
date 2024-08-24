@@ -11,17 +11,36 @@ use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\VariableAndType;
 final class VarDocNodeFactory
 {
     /**
+     * @var array <string, Nop>
+     */
+    private static array $docNodes = [];
+
+    public function __construct()
+    {
+        self::$docNodes = [];
+    }
+
+    /**
      * @param VariableAndType[] $variablesAndTypes
      * @return Nop[]
      */
     public function createDocNodes(array $variablesAndTypes): array
     {
-        $docNodes = [];
         foreach ($variablesAndTypes as $variableAndType) {
-            $docNodes[$variableAndType->getVariable()] = $this->createDocNop($variableAndType);
+            if (isset(self::$docNodes[$variableAndType->getVariable()])) {
+                // avoids overwriting the same variable, if it is preset
+                continue;
+            }
+
+            self::$docNodes[$variableAndType->getVariable()] = $this->createDocNop($variableAndType);
         }
 
-        return array_values($docNodes);
+        $values = array_values(self::$docNodes);
+
+        // reset for next run
+        self::$docNodes = [];
+
+        return $values;
     }
 
     private function createDocNop(VariableAndType $variableAndType): Nop
@@ -37,5 +56,28 @@ final class VarDocNodeFactory
         $docNop->setDocComment(new Doc($prependVarTypesDocBlocks));
 
         return $docNop;
+    }
+
+    /**
+     * Preset doc block statically.
+     *
+     * Enables setting doc block at runtime, which was needed when the array was not in PHPParser function call.
+     *
+     * @param string $variable
+     * @param string $type
+     * @return void
+     */
+    public static function setDocBlock(string $variable, string $type): void
+    {
+        $prependVarTypesDocBlocks = sprintf(
+            '/** @var %s $%s */',
+            $type,
+            $variable,
+        );
+
+        $docNop = new Nop();
+        $docNop->setDocComment(new Doc($prependVarTypesDocBlocks));
+
+        self::$docNodes[$variable] = $docNop;
     }
 }
