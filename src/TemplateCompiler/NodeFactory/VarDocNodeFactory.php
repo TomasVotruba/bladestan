@@ -21,6 +21,21 @@ final class VarDocNodeFactory
     }
 
     /**
+     * Preset doc block statically.
+     *
+     * Enables setting doc block at runtime, which was needed when the array was not in PHPParser function call.
+     */
+    public static function setDocBlock(string $variable, string $type): void
+    {
+        $prependVarTypesDocBlocks = sprintf('/** @var %s $%s */', $type, $variable);
+
+        $docNop = new Nop();
+        $docNop->setDocComment(new Doc($prependVarTypesDocBlocks));
+
+        self::$docNodes[$variable] = $docNop;
+    }
+
+    /**
      * @param VariableAndType[] $variablesAndTypes
      * @return Nop[]
      */
@@ -56,28 +71,5 @@ final class VarDocNodeFactory
         $docNop->setDocComment(new Doc($prependVarTypesDocBlocks));
 
         return $docNop;
-    }
-
-    /**
-     * Preset doc block statically.
-     *
-     * Enables setting doc block at runtime, which was needed when the array was not in PHPParser function call.
-     *
-     * @param string $variable
-     * @param string $type
-     * @return void
-     */
-    public static function setDocBlock(string $variable, string $type): void
-    {
-        $prependVarTypesDocBlocks = sprintf(
-            '/** @var %s $%s */',
-            $type,
-            $variable,
-        );
-
-        $docNop = new Nop();
-        $docNop->setDocComment(new Doc($prependVarTypesDocBlocks));
-
-        self::$docNodes[$variable] = $docNop;
     }
 }

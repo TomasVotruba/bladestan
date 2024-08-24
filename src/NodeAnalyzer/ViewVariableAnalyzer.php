@@ -17,10 +17,6 @@ final class ViewVariableAnalyzer
 {
     /**
      * Resolve view function call if the data is a variable.
-     *
-     * @param Expr $expr
-     * @param Scope $scope
-     * @return Array_
      */
     public function resolve(Expr $expr, Scope $scope): Array_
     {
