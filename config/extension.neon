@@ -40,6 +40,7 @@ services:
     - TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher
     - TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher
     - TomasVotruba\Bladestan\NodeAnalyzer\ViewDataParametersAnalyzer
+    - TomasVotruba\Bladestan\NodeAnalyzer\ViewVariableAnalyzer
     - TomasVotruba\Bladestan\NodeAnalyzer\CompactFunctionCallParameterResolver
     - TomasVotruba\Bladestan\NodeAnalyzer\MagicViewWithCallParameterResolver
     - TomasVotruba\Bladestan\NodeAnalyzer\ValueResolver
