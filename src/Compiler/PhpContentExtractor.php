@@ -27,7 +27,7 @@ final class PhpContentExtractor
 
         preg_match_all(self::PHP_OPEN_CLOSE_TAGS_REGEX, $bladeCompiledContent, $matches);
 
-        $phpContents = array_map(static fn ($a, $b): string => $a . rtrim((string) $b), $matches[1], $matches[2]);
+        $phpContents = array_map(static fn ($a, $b): string => $a . rtrim($b), $matches[1], $matches[2]);
 
         if ($addPHPOpeningTag) {
             array_unshift($phpContents, '<?php');

@@ -13,7 +13,7 @@ use PhpParser\Node\Scalar\String_;
 final class MagicViewWithCallParameterResolver
 {
     /**
-     * @return Node\Expr\ArrayItem[]
+     * @return ArrayItem[]
      */
     public function resolve(FuncCall $funcCall): array
     {
