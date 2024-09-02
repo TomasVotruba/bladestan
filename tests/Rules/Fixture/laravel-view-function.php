@@ -47,3 +47,14 @@ $fooBar = [
 ];
 
 view('foo', $fooBar);
+
+class MyDto implements \Illuminate\Contracts\Support\Arrayable {
+    /**
+     * @return array{foo: string}
+     */
+    public function toArray() {
+        return ['foo' => 'bar'];
+    }
+}
+
+view('foo', new MyDto());
