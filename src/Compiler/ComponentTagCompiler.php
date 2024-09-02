@@ -463,7 +463,11 @@ class ComponentTagCompiler
                 fn (string $value, string $attribute): string => $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric(
                     $value
                 )
-                        ? sprintf("'%s' => " . BladeCompiler::class . '::sanitizeComponentAttribute(%s)', $attribute, $value)
+                        ? sprintf(
+                            "'%s' => " . BladeCompiler::class . '::sanitizeComponentAttribute(%s)',
+                            $attribute,
+                            $value
+                        )
                         : sprintf("'%s' => %s", $attribute, $value)
             )
             ->implode(',');
