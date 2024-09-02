@@ -32,6 +32,7 @@ final class VariableAndType
             return $this->type->getStaticObjectType()
                 ->describe(VerbosityLevel::typeOnly());
         }
+
         return $this->type->describe(VerbosityLevel::typeOnly());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace TomasVotruba\Bladestan\Compiler;
 
+use Exception;
 use Illuminate\View\AnonymousComponent;
 
 class LivewireTagCompiler extends ComponentTagCompiler
@@ -38,7 +39,7 @@ class LivewireTagCompiler extends ComponentTagCompiler
             \/?>
         /x";
 
-        return preg_replace_callback($pattern, function (array $matches) {
+        return preg_replace_callback($pattern, function (array $matches): string {
             $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
 
             // Convert all kebab-cased to camelCase.
@@ -81,12 +82,13 @@ class LivewireTagCompiler extends ComponentTagCompiler
             if ($component === 'styles') {
                 return '@livewireStyles';
             }
+
             if ($component === 'scripts') {
                 return '@livewireScripts';
             }
 
             return $this->componentString(AnonymousComponent::class, $attributes);
-        }, $value) ?? throw new \Exception('preg_replace_callback error');
+        }, $value) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -95,6 +97,6 @@ class LivewireTagCompiler extends ComponentTagCompiler
     protected function componentString(string $component, array $attributes): string
     {
         $attrString = $this->attributesToString($attributes, $escapeBound = false);
-        return "<?php echo {$component}::resolve([{$attrString}])->render(); ?>";
+        return sprintf('<?php echo %s::resolve([%s])->render(); ?>', $component, $attrString);
     }
 }

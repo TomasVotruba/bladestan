@@ -79,11 +79,11 @@ STRING;
         $this->bladeCompiler->withoutComponentTags();
         // Replaces <livewire /> tags with arrays so attributes can be analysed
         $this->bladeCompiler->precompiler(
-            fn ($string) => (new LivewireTagCompiler($this->bladeCompiler))->compile($string)
+            fn ($string): string => (new LivewireTagCompiler($this->bladeCompiler))->compile($string)
         );
         // Replaces <x-... /> tags with arrays so attributes can be analysed
         $this->bladeCompiler->precompiler(
-            fn (string $value) => (new ComponentTagCompiler($this->bladeCompiler))->compile($value)
+            fn (string $value): string => (new ComponentTagCompiler($this->bladeCompiler))->compile($value)
         );
         $this->setupBladeComponents();
     }

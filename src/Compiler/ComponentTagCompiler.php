@@ -2,6 +2,8 @@
 
 namespace TomasVotruba\Bladestan\Compiler;
 
+use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\View\AnonymousComponent;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -11,7 +13,7 @@ class ComponentTagCompiler
     /**
      * The Blade compiler instance.
      */
-    protected \Illuminate\View\Compilers\BladeCompiler $blade;
+    protected BladeCompiler $blade;
 
     /**
      * The "bind:" attributes that have been compiled for the current component.
@@ -23,9 +25,9 @@ class ComponentTagCompiler
     /**
      * Create a new component tag compiler.
      */
-    public function __construct(BladeCompiler $blade)
+    public function __construct(BladeCompiler $bladeCompiler)
     {
-        $this->blade = $blade;
+        $this->blade = $bladeCompiler;
     }
 
     /**
@@ -45,9 +47,8 @@ class ComponentTagCompiler
     {
         $value = $this->compileSelfClosingTags($value);
         $value = $this->compileOpeningTags($value);
-        $value = $this->compileClosingTags($value);
 
-        return $value;
+        return $this->compileClosingTags($value);
     }
 
     /**
@@ -98,23 +99,23 @@ class ComponentTagCompiler
             >
         /x";
 
-        $value = preg_replace_callback($pattern, function ($matches) {
+        $value = preg_replace_callback($pattern, function (array $matches): string {
             $name = $this->stripQuotes($matches['inlineName'] ?: $matches['name']);
 
-            if (Str::contains($name, '-') && ! empty($matches['inlineName'])) {
+            if (Str::contains($name, '-') && ($matches['inlineName'] !== '' && $matches['inlineName'] !== '0')) {
                 $name = Str::camel($name);
             }
 
             if ($matches[2] !== ':') {
-                $name = "'{$name}'";
+                $name = sprintf("'%s'", $name);
             }
 
             $this->boundAttributes = [];
 
             $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
 
-            return " @slot({$name}, null, [" . $this->attributesToString($attributes) . ']) ';
-        }, $value) ?? throw new \Exception('preg_replace_callback error');
+            return sprintf(' @slot(%s, null, [', $name) . $this->attributesToString($attributes) . ']) ';
+        }, $value) ?? throw new Exception('preg_replace_callback error');
 
         return preg_replace('/<\/\s*x[\-\:]slot[^>]*>/', ' @endslot', $value) ?? $value;
     }
@@ -124,7 +125,7 @@ class ComponentTagCompiler
      */
     public function stripQuotes(string $value): string
     {
-        return Str::startsWith($value, ['"', '\''])
+        return Str::startsWith($value, ['"', "'"])
                     ? substr($value, 1, -1)
                     : $value;
     }
@@ -179,13 +180,13 @@ class ComponentTagCompiler
             >
         /x";
 
-        return preg_replace_callback($pattern, function (array $matches) {
+        return preg_replace_callback($pattern, function (array $matches): string {
             $this->boundAttributes = [];
 
             $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
 
             return $this->componentString($matches[1], $attributes);
-        }, $value) ?? throw new \Exception('preg_replace_callback error');
+        }, $value) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -238,13 +239,13 @@ class ComponentTagCompiler
             \/>
         /x";
 
-        return preg_replace_callback($pattern, function (array $matches) {
+        return preg_replace_callback($pattern, function (array $matches): string {
             $this->boundAttributes = [];
 
             $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
 
             return $this->componentString($matches[1], $attributes) . "\n";
-        }, $value) ?? throw new \Exception('preg_replace_callback error');
+        }, $value) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -254,14 +255,14 @@ class ComponentTagCompiler
     protected function componentString(string $component, array $attributes): string
     {
         $parameters = [
-            'view' => "'{$component}'",
+            'view' => sprintf("'%s'", $component),
             'data' => '[' . $this->attributesToString($attributes, $escapeBound = false) . ']',
         ];
 
         $class = AnonymousComponent::class;
         $attrString = $this->attributesToString($parameters, $escapeBound = false);
 
-        return "<?php {$class}::resolve([{$attrString}]); ?>";
+        return sprintf('<?php %s::resolve([%s]); ?>', $class, $attrString);
     }
 
     /**
@@ -345,9 +346,9 @@ class ComponentTagCompiler
 
         return preg_replace_callback(
             $pattern,
-            fn (array $matches) => " :{$matches[1]}=\"\${$matches[1]}\"",
+            fn (array $matches): string => sprintf(' :%s="$%s"', $matches[1], $matches[1]),
             $value
-        ) ?? throw new \Exception('preg_replace_callback error');
+        ) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -370,17 +371,17 @@ class ComponentTagCompiler
     {
         return preg_replace_callback(
             '/@(class)(\( ( (?>[^()]+) | (?2) )* \))/x',
-            function ($match) {
+            function (array $match): string {
                 if ($match[1] === 'class') {
                     $match[2] = str_replace('"', "'", $match[2]);
 
-                    return ":class=\"\Illuminate\Support\Arr::toCssClasses{$match[2]}\"";
+                    return sprintf(':class="' . Arr::class . '::toCssClasses%s"', $match[2]);
                 }
 
                 return $match[0];
             },
             $attributeString
-        ) ?? throw new \Exception('preg_replace_callback error');
+        ) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -390,17 +391,17 @@ class ComponentTagCompiler
     {
         return preg_replace_callback(
             '/@(style)(\( ( (?>[^()]+) | (?2) )* \))/x',
-            function ($match) {
+            function (array $match): string {
                 if ($match[1] === 'style') {
                     $match[2] = str_replace('"', "'", $match[2]);
 
-                    return ":style=\"\Illuminate\Support\Arr::toCssStyles{$match[2]}\"";
+                    return sprintf(':style="' . Arr::class . '::toCssStyles%s"', $match[2]);
                 }
 
                 return $match[0];
             },
             $attributeString
-        ) ?? throw new \Exception('preg_replace_callback error');
+        ) ?? throw new Exception('preg_replace_callback error');
     }
 
     /**
@@ -429,10 +430,9 @@ class ComponentTagCompiler
 
         $value = $this->escapeSingleQuotesOutsideOfPhpBlocks($value);
 
-        $value = str_replace('<?php echo ', '\'.', $value);
-        $value = str_replace('; ?>', '.\'', $value);
+        $value = str_replace('<?php echo ', "'.", $value);
 
-        return $value;
+        return str_replace('; ?>', ".'", $value);
     }
 
     /**
@@ -441,7 +441,7 @@ class ComponentTagCompiler
     protected function escapeSingleQuotesOutsideOfPhpBlocks(string $value): string
     {
         return collect(token_get_all($value))
-            ->map(function ($token) {
+            ->map(function ($token): string {
                 if (! is_array($token)) {
                     return $token;
                 }
@@ -460,11 +460,15 @@ class ComponentTagCompiler
     {
         return collect($attributes)
             ->map(
-                fn (string $value, string $attribute) => $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric(
+                fn (string $value, string $attribute): string => $escapeBound && isset($this->boundAttributes[$attribute]) && $value !== 'true' && ! is_numeric(
                     $value
                 )
-                        ? "'{$attribute}' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute({$value})"
-                        : "'{$attribute}' => {$value}"
+                        ? sprintf(
+                            "'%s' => " . BladeCompiler::class . '::sanitizeComponentAttribute(%s)',
+                            $attribute,
+                            $value
+                        )
+                        : sprintf("'%s' => %s", $attribute, $value)
             )
             ->implode(',');
     }

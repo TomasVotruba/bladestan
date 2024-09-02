@@ -23,7 +23,7 @@ use TomasVotruba\Bladestan\ViewRuleHelper;
 final class BladeRule implements Rule
 {
     /**
-     * @param Rule[] $rules
+     * @param list<Rule> $rules
      */
     public function __construct(
         array $rules,

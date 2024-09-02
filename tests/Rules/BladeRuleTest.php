@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Tests\Rules;
 
 use Iterator;
+use PhpParser\Node;
 use PHPStan\Rules\Rule;
 use PHPStan\Testing\RuleTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use TomasVotruba\Bladestan\Rules\BladeRule;
 
+/**
+ * @extends RuleTestCase<Rule>
+ */
 final class BladeRuleTest extends RuleTestCase
 {
     /**
@@ -102,6 +106,9 @@ final class BladeRuleTest extends RuleTestCase
         return [__DIR__ . '/config/configured_extension.neon'];
     }
 
+    /**
+     * @return Rule<Node>
+     */
     protected function getRule(): Rule
     {
         return self::getContainer()->getByType(BladeRule::class);
