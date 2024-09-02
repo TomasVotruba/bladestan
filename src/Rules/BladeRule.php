@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -36,7 +37,7 @@ final class BladeRule implements Rule
 
     public function getNodeType(): string
     {
-        return CallLike::class;
+        return Node::class;
     }
 
     public function processNode(Node $node, Scope $scope): array
@@ -49,13 +50,17 @@ final class BladeRule implements Rule
             return $this->processBladeView($node, $scope);
         }
 
+        if ($node instanceof ClassMethod) {
+            return $this->processLaravelViewFunction($node, $scope);
+        }
+
         return [];
     }
 
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(FuncCall $funcCall, Scope $scope): array
+    private function processLaravelViewFunction(FuncCall|ClassMethod $funcCall, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($funcCall, $scope);
 
