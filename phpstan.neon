@@ -1,3 +1,5 @@
+includes:
+    - phpstan-baseline.neon
 parameters:
     level: 8
 
@@ -5,24 +7,6 @@ parameters:
         - src
         - tests
 
-    reportUnmatchedIgnoredErrors: false
-
     excludePaths:
         - 'tests/*/Fixture/*'
         - 'tests/Rules/data/*'
-
-    checkGenericClassInNonGenericObjectType: false
-
-    ignoreErrors:
-        # this package relies havily on the file analyse
-        - '#Calling PHPStan\\Analyser\\FileAnalyser::analyseFile\(\) is not covered by backward compatibility promise#'
-        - '#Creating new PHPStan\\Collectors\\Registry is not covered by backward compatibility promise#'
-        - '#Class TomasVotruba\\Bladestan\\TemplateCompiler\\Rules\\TemplateRulesRegistry extends @final class PHPStan\\Rules\\DirectRegistry#'
-
-        # this package relies havily on the file analyse
-        - '#(Calling|Extending|) (.*?) is not covered by backward compatibility promise#'
-
-        # test fixture where this is expected
-        -
-            message: '#File ends with a trailing whitespace#'
-            path: tests/Rules/templates/empty.blade.php
