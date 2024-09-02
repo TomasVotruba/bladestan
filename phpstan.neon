@@ -17,6 +17,7 @@ parameters:
         # this package relies havily on the file analyse
         - '#Calling PHPStan\\Analyser\\FileAnalyser::analyseFile\(\) is not covered by backward compatibility promise#'
         - '#Creating new PHPStan\\Collectors\\Registry is not covered by backward compatibility promise#'
+        - '#Class TomasVotruba\\Bladestan\\TemplateCompiler\\Rules\\TemplateRulesRegistry extends @final class PHPStan\\Rules\\DirectRegistry#'
 
         # this package relies havily on the file analyse
         - '#(Calling|Extending|) (.*?) is not covered by backward compatibility promise#'
