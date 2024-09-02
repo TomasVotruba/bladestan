@@ -47,3 +47,5 @@ $fooBar = [
 ];
 
 view('foo', $fooBar);
+
+view('foreach-include-loop');

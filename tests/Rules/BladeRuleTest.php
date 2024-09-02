@@ -62,6 +62,7 @@ final class BladeRuleTest extends RuleTestCase
             ['Variable $foos might not be defined.', 43],
             ['Binary operation "+" between string and 10 results in an error.', 49],
             ['Binary operation "+" between string and \'bar\' results in an error.', 49],
+            ['Variable $foos might not be defined.', 45],
         ]];
 
         yield [__DIR__ . '/Fixture/view-render-int.php', []];
