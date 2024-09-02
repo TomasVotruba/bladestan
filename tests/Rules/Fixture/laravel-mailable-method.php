@@ -17,4 +17,14 @@ class MyMailable extends Mailable
             'foo' => 'bar',
         ]);
     }
+
+    /**
+     * @return $this
+     */
+    public function buildWith()
+    {
+        return $this->view('foo')->with([
+            'foo' => 'bar',
+        ]);
+    }
 }
