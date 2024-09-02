@@ -99,7 +99,7 @@ class ComponentTagCompiler
             >
         /x";
 
-        $value = preg_replace_callback($pattern, function ($matches): string {
+        $value = preg_replace_callback($pattern, function (array $matches): string {
             $name = $this->stripQuotes($matches['inlineName'] ?: $matches['name']);
 
             if (Str::contains($name, '-') && ($matches['inlineName'] !== '' && $matches['inlineName'] !== '0')) {
