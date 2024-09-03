@@ -35,25 +35,19 @@ final class LaravelViewFunctionMatcher
     public function match(FuncCall|StaticCall $funcCall, Scope $scope): array
     {
         $funcName = $funcCall->name;
-        if (! $funcName instanceof Name && ! $funcName instanceof Identifier) {
-            return [];
+
+	    if ($funcCall instanceof FuncCall) {
+	        if (! $funcName instanceof Name
+	            || $scope->resolveName($funcName) !== 'view') {
+                return [];
+            }
         }
 
         if ($funcCall instanceof StaticCall) {
-            $funcName = $funcName->toString();
-            if ($funcName !== 'make') {
-                return [];
-            }
-            if (! $funcCall->class instanceof Name) {
-                return [];
-            }
-            $functionClass = $funcCall->class->toString();
-            if ($functionClass !== View::class) {
-                return [];
-            }
-        } elseif ($funcName instanceof Name) {
-            $funcName = $scope->resolveName($funcName);
-            if ($funcName !== 'view') {
+            if (! $funcCall->class instanceof Name
+	            || (string)$funcCall->class !== View::class
+                || ! $funcName instanceof Identifier
+	            || (string)$funcName !== 'make') {
                 return [];
             }
         }
