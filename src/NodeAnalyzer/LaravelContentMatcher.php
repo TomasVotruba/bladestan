@@ -28,9 +28,7 @@ final class LaravelContentMatcher
             $argName = (string) $argument->name;
             if ($argName === 'view') {
                 $viewName = $argument->value;
-            }
-
-            if ($argName === 'with') {
+            } elseif ($argName === 'with') {
                 $viewWith = $this->viewDataParametersAnalyzer->resolveParametersArray($argument, $scope);
             }
         }
@@ -40,11 +38,7 @@ final class LaravelContentMatcher
         }
 
         $result = [];
-        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
-            $viewName,
-            $scope
-        );
-
+        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($viewName, $scope);
         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
             $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
         }

@@ -36,11 +36,8 @@ final class ViewRuleHelper
      *
      * @return RuleError[]
      */
-    public function processNode(
-        CallLike $callLike,
-        Scope $scope,
-        array $renderTemplatesWithParameters
-    ): array {
+    public function processNode(CallLike $callLike, Scope $scope, array $renderTemplatesWithParameters): array
+    {
         $ruleErrors = [];
         foreach ($renderTemplatesWithParameters as $renderTemplateWithParameter) {
             $variablesAndTypes = $this->templateVariableTypesResolver->resolveArray(
