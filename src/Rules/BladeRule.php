@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\Rules;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt\ClassMethod;
