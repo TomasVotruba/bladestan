@@ -36,9 +36,9 @@ final class LaravelViewFunctionMatcher
     {
         $funcName = $funcCall->name;
 
-	    if ($funcCall instanceof FuncCall) {
-	        if (! $funcName instanceof Name
-	            || $scope->resolveName($funcName) !== 'view') {
+        if ($funcCall instanceof FuncCall) {
+            if (! $funcName instanceof Name
+                || $scope->resolveName($funcName) !== 'view') {
                 return [];
             }
         }
