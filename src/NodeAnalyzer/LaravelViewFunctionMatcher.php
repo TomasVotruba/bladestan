@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
@@ -11,6 +12,8 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
@@ -29,16 +32,24 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(FuncCall $funcCall, Scope $scope): array
+    public function match(FuncCall|StaticCall $funcCall, Scope $scope): array
     {
         $funcName = $funcCall->name;
-        if (! $funcName instanceof Name) {
-            return [];
+
+        if ($funcCall instanceof FuncCall) {
+            if (! $funcName instanceof Name
+                || $scope->resolveName($funcName) !== 'view') {
+                return [];
+            }
         }
 
-        $funcName = $scope->resolveName($funcName);
-        if ($funcName !== 'view') {
-            return [];
+        if ($funcCall instanceof StaticCall) {
+            if (! $funcCall->class instanceof Name
+                || (string) $funcCall->class !== View::class
+                || ! $funcName instanceof Identifier
+                || (string) $funcName !== 'make') {
+                return [];
+            }
         }
 
         // TODO: maybe make sure this function is coming from Laravel
