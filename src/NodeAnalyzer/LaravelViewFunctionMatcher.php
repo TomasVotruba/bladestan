@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Mail\Mailables\Content;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
-use Illuminate\Mail\Mailables\Content;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Stmt\Return_;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Identifier;
+use PhpParser\Node\Stmt\Return_;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
@@ -43,17 +43,16 @@ final class LaravelViewFunctionMatcher
 
         if ($funcName instanceof Name) {
             $funcName = $scope->resolveName($funcName);
-        } else if ($funcName instanceof Identifier) {
+        } elseif ($funcName instanceof Identifier) {
             $funcName = $funcName->toString();
         }
 
         if ($funcName === 'view' && $funcCall instanceof FuncCall) {
             return $this->matchView($funcCall, $scope);
-        } else if ($funcName === 'content' && $funcCall instanceof ClassMethod) {
+        } elseif ($funcName === 'content' && $funcCall instanceof ClassMethod) {
             return $this->matchContent($funcCall, $scope);
-        } else {
-            return [];
         }
+        return [];
     }
 
     /**
@@ -97,11 +96,13 @@ final class LaravelViewFunctionMatcher
                 }
                 if ($viewName !== null) {
                         $result = [];
-                        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($viewName, $scope);
+                        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
+                            $viewName,
+                            $scope
+                        );
                         foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
                             $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
                         }
-
                         return $result;
                 }
             }
