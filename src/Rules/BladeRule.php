@@ -8,6 +8,7 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -41,6 +42,10 @@ final class BladeRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
+        if ($node instanceof StaticCall) {
+            return $this->processLaravelViewFunction($node, $scope);
+        }
+
         if ($node instanceof FuncCall) {
             return $this->processLaravelViewFunction($node, $scope);
         }
@@ -55,7 +60,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(FuncCall $funcCall, Scope $scope): array
+    private function processLaravelViewFunction(FuncCall|StaticCall $funcCall, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($funcCall, $scope);
 

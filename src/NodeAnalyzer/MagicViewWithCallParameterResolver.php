@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Scalar\String_;
 
 final class MagicViewWithCallParameterResolver
@@ -15,7 +16,7 @@ final class MagicViewWithCallParameterResolver
     /**
      * @return Node\Expr\ArrayItem[]
      */
-    public function resolve(FuncCall $funcCall): array
+    public function resolve(FuncCall|StaticCall $funcCall): array
     {
         $result = [];
 
