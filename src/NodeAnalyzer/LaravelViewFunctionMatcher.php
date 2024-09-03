@@ -95,15 +95,15 @@ final class LaravelViewFunctionMatcher
                     }
                 }
                 if ($viewName !== null) {
-                        $result = [];
-                        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
-                            $viewName,
-                            $scope
-                        );
-                        foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
-                            $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
-                        }
-                        return $result;
+                    $result = [];
+                    $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
+                        $viewName,
+                        $scope
+                    );
+                    foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
+                        $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
+                    }
+                    return $result;
                 }
             }
         }
