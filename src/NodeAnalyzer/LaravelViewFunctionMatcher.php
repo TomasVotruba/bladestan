@@ -32,33 +32,40 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(FuncCall|StaticCall $funcCall, Scope $scope): array
+    public function match(FuncCall|StaticCall $callLike, Scope $scope): array
     {
-        $funcName = $funcCall->name;
-
-        if ($funcCall instanceof FuncCall) {
-            if (! $funcName instanceof Name
-                || $scope->resolveName($funcName) !== 'view') {
-                return [];
-            }
+        // view('', []);
+        if ($callLike instanceof FuncCall
+            && $callLike->name instanceof Name
+            && $scope->resolveName($callLike->name) === 'view'
+        ) {
+            // TODO: maybe make sure this function is coming from Laravel
+            return $this->matchView($callLike, $scope);
         }
 
-        if ($funcCall instanceof StaticCall) {
-            if (! $funcCall->class instanceof Name
-                || (string) $funcCall->class !== View::class
-                || ! $funcName instanceof Identifier
-                || (string) $funcName !== 'make') {
-                return [];
-            }
+        // View::make('', []);
+        if ($callLike instanceof StaticCall
+            && $callLike->class instanceof Name
+            && (string) $callLike->class === View::class
+            && $callLike->name instanceof Identifier
+            && (string) $callLike->name === 'make'
+        ) {
+            return $this->matchView($callLike, $scope);
         }
 
-        // TODO: maybe make sure this function is coming from Laravel
+        return [];
+    }
 
-        if (count($funcCall->getArgs()) < 1) {
+    /**
+     * @return RenderTemplateWithParameters[]
+     */
+    private function matchView(FuncCall|StaticCall $callLike, Scope $scope): array
+    {
+        if (count($callLike->getArgs()) < 1) {
             return [];
         }
 
-        $template = $funcCall->getArgs()[0]
+        $template = $callLike->getArgs()[0]
 ->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
@@ -66,7 +73,7 @@ final class LaravelViewFunctionMatcher
             return [];
         }
 
-        $args = $funcCall->getArgs();
+        $args = $callLike->getArgs();
 
         if (count($args) !== 2) {
             $parametersArray = new Array_();
@@ -75,7 +82,7 @@ final class LaravelViewFunctionMatcher
         }
 
         $parametersArray->items = $this->magicViewWithCallParameterResolver->resolve(
-            $funcCall
+            $callLike
         ) + $parametersArray->items;
 
         if ($scope->isInClass() && $scope->getClassReflection()->is(Component::class)) {

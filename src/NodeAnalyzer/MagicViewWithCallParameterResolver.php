@@ -7,8 +7,7 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 use Illuminate\Support\Str;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ArrayItem;
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Scalar\String_;
 
 final class MagicViewWithCallParameterResolver
@@ -16,16 +15,16 @@ final class MagicViewWithCallParameterResolver
     /**
      * @return ArrayItem[]
      */
-    public function resolve(FuncCall|StaticCall $funcCall): array
+    public function resolve(CallLike $callLike): array
     {
         $result = [];
 
-        if (! $funcCall->hasAttribute('viewWithArgs')) {
+        if (! $callLike->hasAttribute('viewWithArgs')) {
             return $result;
         }
 
         /** @var array<string, Node\Arg[]> $viewWithArgs */
-        $viewWithArgs = $funcCall->getAttribute('viewWithArgs');
+        $viewWithArgs = $callLike->getAttribute('viewWithArgs');
 
         foreach ($viewWithArgs as $variableName => $args) {
             if ($variableName === 'with') {

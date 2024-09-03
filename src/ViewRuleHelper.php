@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan;
 
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Expr\MethodCall;
-use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\CallLike;
 use PHPStan\Analyser\Error;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
@@ -38,11 +36,8 @@ final class ViewRuleHelper
      *
      * @return RuleError[]
      */
-    public function processNode(
-        FuncCall|MethodCall|StaticCall $call,
-        Scope $scope,
-        array $renderTemplatesWithParameters
-    ): array {
+    public function processNode(CallLike $callLike, Scope $scope, array $renderTemplatesWithParameters): array
+    {
         $ruleErrors = [];
         foreach ($renderTemplatesWithParameters as $renderTemplateWithParameter) {
             $variablesAndTypes = $this->templateVariableTypesResolver->resolveArray(
@@ -54,7 +49,7 @@ final class ViewRuleHelper
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
                 $scope->getFile(),
-                $call->getLine()
+                $callLike->getLine()
             );
 
             if (! $compiledTemplate instanceof CompiledTemplate) {
