@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan;
 
 use PhpParser\Node\Expr\CallLike;
-use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Error;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Registry;
@@ -38,7 +37,7 @@ final class ViewRuleHelper
      * @return RuleError[]
      */
     public function processNode(
-        ClassMethod|CallLike $call,
+        CallLike $call,
         Scope $scope,
         array $renderTemplatesWithParameters
     ): array {

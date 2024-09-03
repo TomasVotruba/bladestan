@@ -8,8 +8,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
@@ -38,14 +38,14 @@ final class BladeRule implements Rule
 
     public function getNodeType(): string
     {
-        return Node::class;
+        return CallLike::class;
     }
 
     public function processNode(Node $node, Scope $scope): array
     {
         if ($node instanceof StaticCall
             || $node instanceof FuncCall
-            || $node instanceof ClassMethod
+            || $node instanceof New_
         ) {
             return $this->processLaravelViewFunction($node, $scope);
         }
@@ -60,7 +60,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(ClassMethod|CallLike $funcCall, Scope $scope): array
+    private function processLaravelViewFunction(CallLike $funcCall, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($funcCall, $scope);
 

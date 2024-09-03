@@ -19,7 +19,6 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
@@ -36,8 +35,9 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(CallLike|ClassMethod $funcCall, Scope $scope): array
+    public function match(CallLike $funcCall, Scope $scope): array
     {
+        // view('', []);
         if ($funcCall instanceof FuncCall
             && $funcCall->name instanceof Name
             && $scope->resolveName($funcCall->name) === 'view'
@@ -45,6 +45,7 @@ final class LaravelViewFunctionMatcher
             return $this->matchView($funcCall, $scope);
         }
 
+        // View::make('', []);
         if ($funcCall instanceof StaticCall
             && $funcCall->class instanceof Name
             && (string) $funcCall->class === View::class
@@ -54,9 +55,8 @@ final class LaravelViewFunctionMatcher
             return $this->matchView($funcCall, $scope);
         }
 
-        if ($funcCall instanceof ClassMethod
-            && (string) $funcCall->name === 'content'
-        ) {
+        // new Content(view:'', with:[]);
+        if ($funcCall instanceof New_) {
             return $this->matchContent($funcCall, $scope);
         }
 
@@ -66,56 +66,34 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    private function matchContent(ClassMethod $funcCall, Scope $scope): array
+    private function matchContent(New_ $newExpression, Scope $scope): array
     {
-        $returnType = $funcCall->getReturnType();
-        if (! $returnType instanceof Name) {
-            return [];
-        }
-
-        if ($returnType->toString() !== Content::class) {
-            return [];
-        }
-
-        $statements = $funcCall->getStmts();
-
-        if ($statements === null) {
-            return [];
-        }
-
-        foreach ($statements as $stmt) {
-            if (! $stmt instanceof Return_) {
-                continue;
+        $viewName = null;
+        $viewWith = new Array_();
+        foreach ($newExpression->getArgs() as $argument) {
+            $argName = (string) $argument->name;
+            if ($argName === 'view') {
+                $viewName = $argument->value;
             }
-            $newExpression = $stmt->expr;
-            if ($newExpression instanceof New_) {
-                $viewName = null;
-                $viewWith = new Array_();
-
-                // Collect
-                foreach ($newExpression->getArgs() as $argument) {
-                    $argName = $argument->name?->toString();
-                    if ($argName === 'view') {
-                        $viewName = $argument->value;
-                    }
-                    if ($argName === 'with') {
-                        $viewWith = $this->viewDataParametersAnalyzer->resolveParametersArray($argument, $scope);
-                    }
-                }
-                if ($viewName !== null) {
-                    $result = [];
-                    $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
-                        $viewName,
-                        $scope
-                    );
-                    foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
-                        $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
-                    }
-                    return $result;
-                }
+            if ($argName === 'with') {
+                $viewWith = $this->viewDataParametersAnalyzer->resolveParametersArray($argument, $scope);
             }
         }
-        return [];
+        if ($viewName === null) {
+            return [];
+        }
+
+        $result = [];
+        $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths(
+            $viewName,
+            $scope
+        );
+
+        foreach ($resolvedTemplateFilePaths as $resolvedTemplateFilePath) {
+            $result[] = new RenderTemplateWithParameters($resolvedTemplateFilePath, $viewWith);
+        }
+
+        return $result;
     }
 
     /**
