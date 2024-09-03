@@ -48,8 +48,6 @@ $fooBar = [
 
 view('foo', $fooBar);
 
-$fooBar = [
-    'foo' => 'bar',
-];
-
-\Illuminate\Support\Facades\View::make('foo', $fooBar);
+\Illuminate\Support\Facades\View::make('foo', [
+    'foo' => 'bar'
+]);
