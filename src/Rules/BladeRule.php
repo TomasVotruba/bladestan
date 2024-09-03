@@ -73,7 +73,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(CallLike $callLike, Scope $scope): array
+    private function processLaravelViewFunction(FuncCall|StaticCall $callLike, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($callLike, $scope);
 

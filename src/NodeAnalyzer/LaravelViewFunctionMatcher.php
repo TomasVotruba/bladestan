@@ -10,7 +10,6 @@ use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
-use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\StaticCall;
@@ -33,13 +32,14 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(CallLike $callLike, Scope $scope): array
+    public function match(FuncCall|StaticCall $callLike, Scope $scope): array
     {
         // view('', []);
         if ($callLike instanceof FuncCall
             && $callLike->name instanceof Name
             && $scope->resolveName($callLike->name) === 'view'
         ) {
+            // TODO: maybe make sure this function is coming from Laravel
             return $this->matchView($callLike, $scope);
         }
 
@@ -59,10 +59,8 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    private function matchView(CallLike $callLike, Scope $scope): array
+    private function matchView(FuncCall|StaticCall $callLike, Scope $scope): array
     {
-        // TODO: maybe make sure this function is coming from Laravel
-
         if (count($callLike->getArgs()) < 1) {
             return [];
         }
