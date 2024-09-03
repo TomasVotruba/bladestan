@@ -37,7 +37,7 @@ final class ViewRuleHelper
      * @return RuleError[]
      */
     public function processNode(
-        CallLike $call,
+        CallLike $callLike,
         Scope $scope,
         array $renderTemplatesWithParameters
     ): array {
@@ -52,7 +52,7 @@ final class ViewRuleHelper
                 $renderTemplateWithParameter->getTemplateFilePath(),
                 $variablesAndTypes,
                 $scope->getFile(),
-                $call->getLine()
+                $callLike->getLine()
             );
 
             if (! $compiledTemplate instanceof CompiledTemplate) {

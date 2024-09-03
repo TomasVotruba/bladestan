@@ -15,16 +15,16 @@ final class MagicViewWithCallParameterResolver
     /**
      * @return ArrayItem[]
      */
-    public function resolve(CallLike $funcCall): array
+    public function resolve(CallLike $callLike): array
     {
         $result = [];
 
-        if (! $funcCall->hasAttribute('viewWithArgs')) {
+        if (! $callLike->hasAttribute('viewWithArgs')) {
             return $result;
         }
 
         /** @var array<string, Node\Arg[]> $viewWithArgs */
-        $viewWithArgs = $funcCall->getAttribute('viewWithArgs');
+        $viewWithArgs = $callLike->getAttribute('viewWithArgs');
 
         foreach ($viewWithArgs as $variableName => $args) {
             if ($variableName === 'with') {
