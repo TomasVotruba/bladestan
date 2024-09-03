@@ -11,9 +11,9 @@ use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
+use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
@@ -55,7 +55,7 @@ final class LaravelViewFunctionMatcher
         }
 
         if ($funcCall instanceof ClassMethod
-            && (string)$funcCall->name === 'content'
+            && (string) $funcCall->name === 'content'
         ) {
             return $this->matchContent($funcCall, $scope);
         }
@@ -129,7 +129,8 @@ final class LaravelViewFunctionMatcher
             return [];
         }
 
-        $template = $funcCall->getArgs()[0]->value;
+        $template = $funcCall->getArgs()[0]
+->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
         if ($resolvedTemplateFilePaths === []) {
