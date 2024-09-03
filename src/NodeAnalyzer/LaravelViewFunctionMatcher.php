@@ -45,9 +45,9 @@ final class LaravelViewFunctionMatcher
 
         if ($funcCall instanceof StaticCall) {
             if (! $funcCall->class instanceof Name
-	            || (string)$funcCall->class !== View::class
+                || (string) $funcCall->class !== View::class
                 || ! $funcName instanceof Identifier
-	            || (string)$funcName !== 'make') {
+                || (string) $funcName !== 'make') {
                 return [];
             }
         }
