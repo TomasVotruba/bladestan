@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Mail\Mailables\Content;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
 use TomasVotruba\Bladestan\TemplateCompiler\ValueObject\RenderTemplateWithParameters;
 
-final class LaravelContentMatcher
+final class MailablesContentMatcher
 {
     public function __construct(
         private readonly TemplateFilePathResolver $templateFilePathResolver,
@@ -22,6 +24,10 @@ final class LaravelContentMatcher
      */
     public function match(New_ $new, Scope $scope): array
     {
+        if (! $new->class instanceof Name || (string) $new->class !== Content::class) {
+            return [];
+        }
+
         $viewName = null;
         $viewWith = new Array_();
         foreach ($new->getArgs() as $argument) {

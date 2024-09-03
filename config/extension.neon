@@ -37,8 +37,8 @@ services:
     - TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver
     - TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory
     - TomasVotruba\Bladestan\NodeAnalyzer\TemplateFilePathResolver
-    - TomasVotruba\Bladestan\NodeAnalyzer\LaravelContentMatcher
     - TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher
+    - TomasVotruba\Bladestan\NodeAnalyzer\MailablesContentMatcher
     - TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher
     - TomasVotruba\Bladestan\NodeAnalyzer\ViewDataParametersAnalyzer
     - TomasVotruba\Bladestan\NodeAnalyzer\ViewVariableAnalyzer

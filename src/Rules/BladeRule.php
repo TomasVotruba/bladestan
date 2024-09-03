@@ -14,8 +14,8 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use TomasVotruba\Bladestan\NodeAnalyzer\BladeViewMethodsMatcher;
-use TomasVotruba\Bladestan\NodeAnalyzer\LaravelContentMatcher;
 use TomasVotruba\Bladestan\NodeAnalyzer\LaravelViewFunctionMatcher;
+use TomasVotruba\Bladestan\NodeAnalyzer\MailablesContentMatcher;
 use TomasVotruba\Bladestan\TemplateCompiler\Rules\TemplateRulesRegistry;
 use TomasVotruba\Bladestan\ViewRuleHelper;
 
@@ -31,8 +31,8 @@ final class BladeRule implements Rule
     public function __construct(
         array $rules,
         private readonly BladeViewMethodsMatcher $bladeViewMethodsMatcher,
-        private readonly LaravelContentMatcher $laravelContentMatcher,
         private readonly LaravelViewFunctionMatcher $laravelViewFunctionMatcher,
+        private readonly MailablesContentMatcher $mailablesContentMatcher,
         private readonly ViewRuleHelper $viewRuleHelper
     ) {
         $this->viewRuleHelper->setRegistry(new TemplateRulesRegistry($rules));
@@ -54,7 +54,7 @@ final class BladeRule implements Rule
         }
 
         if ($node instanceof New_) {
-            return $this->processLaravelContent($node, $scope);
+            return $this->processMailablesContent($node, $scope);
         }
 
         return [];
@@ -63,9 +63,9 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelContent(New_ $new, Scope $scope): array
+    private function processMailablesContent(New_ $new, Scope $scope): array
     {
-        $renderTemplatesWithParameters = $this->laravelContentMatcher->match($new, $scope);
+        $renderTemplatesWithParameters = $this->mailablesContentMatcher->match($new, $scope);
 
         return $this->viewRuleHelper->processNode($new, $scope, $renderTemplatesWithParameters);
     }
