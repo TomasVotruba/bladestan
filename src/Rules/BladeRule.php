@@ -7,6 +7,8 @@ namespace TomasVotruba\Bladestan\Rules;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
@@ -41,16 +43,15 @@ final class BladeRule implements Rule
 
     public function processNode(Node $node, Scope $scope): array
     {
-        if ($node instanceof FuncCall) {
+        if ($node instanceof StaticCall
+            || $node instanceof FuncCall
+            || $node instanceof ClassMethod
+        ) {
             return $this->processLaravelViewFunction($node, $scope);
         }
 
         if ($node instanceof MethodCall) {
             return $this->processBladeView($node, $scope);
-        }
-
-        if ($node instanceof ClassMethod) {
-            return $this->processLaravelViewFunction($node, $scope);
         }
 
         return [];
@@ -59,7 +60,7 @@ final class BladeRule implements Rule
     /**
      * @return RuleError[]
      */
-    private function processLaravelViewFunction(FuncCall|ClassMethod $funcCall, Scope $scope): array
+    private function processLaravelViewFunction(ClassMethod|CallLike $funcCall, Scope $scope): array
     {
         $renderTemplatesWithParameters = $this->laravelViewFunctionMatcher->match($funcCall, $scope);
 

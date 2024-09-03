@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan;
 
-use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\CallLike;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Analyser\Error;
 use PHPStan\Analyser\Scope;
@@ -39,7 +38,7 @@ final class ViewRuleHelper
      * @return RuleError[]
      */
     public function processNode(
-        FuncCall|MethodCall|ClassMethod $call,
+        ClassMethod|CallLike $call,
         Scope $scope,
         array $renderTemplatesWithParameters
     ): array {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
 use Illuminate\Mail\Mailables\Content;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Component;
 use Illuminate\View\ComponentAttributeBag;
@@ -12,6 +13,8 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\CallLike;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Name\FullyQualified;
@@ -33,25 +36,30 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    public function match(FuncCall|ClassMethod $funcCall, Scope $scope): array
+    public function match(CallLike|ClassMethod $funcCall, Scope $scope): array
     {
-        $funcName = $funcCall->name;
-
-        if (! $funcName instanceof Name && ! $funcName instanceof Identifier) {
-            return [];
-        }
-
-        if ($funcName instanceof Name) {
-            $funcName = $scope->resolveName($funcName);
-        } elseif ($funcName instanceof Identifier) {
-            $funcName = $funcName->toString();
-        }
-
-        if ($funcName === 'view' && $funcCall instanceof FuncCall) {
+        if ($funcCall instanceof FuncCall
+            && $funcCall->name instanceof Name
+            && $scope->resolveName($funcCall->name) === 'view'
+        ) {
             return $this->matchView($funcCall, $scope);
-        } elseif ($funcName === 'content' && $funcCall instanceof ClassMethod) {
+        }
+
+        if ($funcCall instanceof StaticCall
+            && $funcCall->class instanceof Name
+            && (string) $funcCall->class === View::class
+            && $funcCall->name instanceof Identifier
+            && (string) $funcCall->name === 'make'
+        ) {
+            return $this->matchView($funcCall, $scope);
+        }
+
+        if ($funcCall instanceof ClassMethod
+            && (string)$funcCall->name === 'content'
+        ) {
             return $this->matchContent($funcCall, $scope);
         }
+
         return [];
     }
 
@@ -113,7 +121,7 @@ final class LaravelViewFunctionMatcher
     /**
      * @return RenderTemplateWithParameters[]
      */
-    private function matchView(FuncCall $funcCall, Scope $scope): array
+    private function matchView(CallLike $funcCall, Scope $scope): array
     {
         // TODO: maybe make sure this function is coming from Laravel
 
@@ -121,8 +129,7 @@ final class LaravelViewFunctionMatcher
             return [];
         }
 
-        $template = $funcCall->getArgs()[0]
-->value;
+        $template = $funcCall->getArgs()[0]->value;
 
         $resolvedTemplateFilePaths = $this->templateFilePathResolver->resolveExistingFilePaths($template, $scope);
         if ($resolvedTemplateFilePaths === []) {

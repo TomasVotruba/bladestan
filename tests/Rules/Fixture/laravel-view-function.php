@@ -47,3 +47,7 @@ $fooBar = [
 ];
 
 view('foo', $fooBar);
+
+\Illuminate\Support\Facades\View::make('foo', [
+    'foo' => 'bar'
+]);
