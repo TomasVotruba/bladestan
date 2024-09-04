@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace TomasVotruba\Bladestan\NodeAnalyzer;
 
+use Illuminate\Contracts\Support\Arrayable;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
@@ -11,6 +12,7 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
 use PHPStan\Type\Constant\ConstantArrayType;
+use PHPStan\Type\ObjectType;
 use PHPStan\Type\VerbosityLevel;
 use TomasVotruba\Bladestan\TemplateCompiler\NodeFactory\VarDocNodeFactory;
 
@@ -24,6 +26,16 @@ final class ViewVariableAnalyzer
         $parametersArray = new Array_();
 
         $type = $scope->getType($expr);
+
+        if ($type instanceof ObjectType) {
+            if (! $type->isInstanceOf(Arrayable::class)->yes()) {
+                return $parametersArray;
+            }
+
+            $type = $type->getMethod('toArray', $scope)
+                ->getVariants()[0]
+                ->getReturnType();
+        }
 
         if (! $type instanceof ConstantArrayType) {
             return $parametersArray;

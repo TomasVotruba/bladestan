@@ -66,6 +66,13 @@ final class BladeRuleTest extends RuleTestCase
             ['Binary operation "+" between string and \'bar\' results in an error.', 51],
         ]];
 
+        yield [__DIR__ . '/Fixture/arrayable.php', [
+            ['Binary operation "+" between string and 10 results in an error.', 10],
+            ['Binary operation "+" between string and \'bar\' results in an error.', 10],
+            ['Binary operation "+" between string and 10 results in an error.', 13],
+            ['Binary operation "+" between string and \'bar\' results in an error.', 13],
+        ]];
+
         yield [__DIR__ . '/Fixture/view-render-int.php', []];
 
         yield [__DIR__ . '/Fixture/skip-form-errors.php', []];

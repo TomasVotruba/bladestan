@@ -7,6 +7,7 @@ namespace TomasVotruba\Bladestan\NodeAnalyzer;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
@@ -23,7 +24,7 @@ final class ViewDataParametersAnalyzer
     {
         $secondArgValue = $arg->value;
 
-        if ($secondArgValue instanceof Variable) {
+        if ($secondArgValue instanceof Variable || $secondArgValue instanceof New_) {
             return $this->viewVariableAnalyzer->resolve($secondArgValue, $scope);
         }
 
