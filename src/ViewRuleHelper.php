@@ -42,6 +42,7 @@ final class ViewRuleHelper
         foreach ($renderTemplatesWithParameters as $renderTemplateWithParameter) {
             $variablesAndTypes = $this->templateVariableTypesResolver->resolveArray(
                 $renderTemplateWithParameter->getParametersArray(),
+                $renderTemplateWithParameter->getCalledOnType(),
                 $scope
             );
 
